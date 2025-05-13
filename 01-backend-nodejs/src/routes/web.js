@@ -2,16 +2,12 @@ import express from "express";
 
 const router = express.Router();
 
-/**
- * 
- * @param {*} app : express app
- */
-const initWebRoutes = (app) => {
-    router.get("/", (req, res) => {
-        return res.send("Hello world");
-    })
+router.get("/", (req, res) => {
+    res.render("home.ejs"); // bạn có thể đổi thành `res.send("Home")` nếu chưa có EJS
+});
 
-    return app.use("/", router);
-}
+const initWebRoutes = (app) => {
+    app.use("/", router);
+};
 
 export default initWebRoutes;
