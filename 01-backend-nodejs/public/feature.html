@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Speech to Text Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px auto;
+      max-width: 600px;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    h1 {
+      color: #0077cc;
+    }
+
+    #recordBtn {
+      padding: 10px 20px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #recordBtn:hover {
+      background-color: #005fa3;
+    }
+
+    #status {
+      margin-top: 15px;
+      font-style: italic;
+    }
+
+    #transcript {
+      margin-top: 20px;
+      font-size: 18px;
+      padding: 10px;
+      background: #f2f2f2;
+      border-radius: 5px;
+      min-height: 50px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>🎙️ Speak and See Your Words</h1>
+  <button id="recordBtn">🎤 Start Speaking</button>
+  <p id="status">Status: Ready</p>
+  <p id="timer">Time: 0s</p>
+
+  <h3>Transcript:</h3>
+  <div id="transcript">...</div>
+
+  <script>
+    let recognizing = false;
+    let recognition;
+    let timerInterval;
+    let seconds = 0;
+
+    const recordBtn = document.getElementById("recordBtn");
+    const timerDisplay = document.getElementById("timer");
+    const transcriptDisplay = document.getElementById("transcript");
+    const statusDisplay = document.getElementById("status");
+
+    if (!("webkitSpeechRecognition" in window)) {
+      alert("Your browser does not support Web Speech API. Please use Google Chrome.");
+      statusDisplay.innerText = "❌ Web Speech API not supported.";
+      recordBtn.disabled = true;
+    } else {
+      recognition = new webkitSpeechRecognition();
+      recognition.lang = "en-US"; // English
+      recognition.continuous = true;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        recognizing = true;
+        seconds = 0;
+        timerDisplay.innerText = "Time: 0s";
+        statusDisplay.innerText = "🎤 Listening...";
+        transcriptDisplay.innerText = "...";
+        recordBtn.innerText = "🛑 Stop";
+
+        timerInterval = setInterval(() => {
+          seconds++;
+          timerDisplay.innerText = `Time: ${seconds}s`;
+        }, 1000);
+      };
+
+      recognition.onresult = (event) => {
+        let fullTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          fullTranscript += event.results[i][0].transcript + " ";
+        }
+        transcriptDisplay.innerText = fullTranscript.trim();
+      };
+
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        statusDisplay.innerText = `❌ Error: ${event.error}`;
+        transcriptDisplay.innerText = "...";
+      };
+
+      recognition.onend = () => {
+        recognizing = false;
+        clearInterval(timerInterval);
+        recordBtn.innerText = "🎤 Start Speaking";
+
+        if (statusDisplay.innerText === "🎤 Listening...") {
+          statusDisplay.innerText = "⚠️ No speech detected. Try again.";
+        }
+      };
+    }
+
+    recordBtn.addEventListener("click", () => {
+      if (!recognizing) {
+        recognition.start();
+      } else {
+        recognition.stop();
+        statusDisplay.innerText = "🛑 Stopped.";
+      }
+    });
+  </script>
+</body>
+
+</html>

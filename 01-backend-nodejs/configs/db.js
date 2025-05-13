@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-require('dotenv').config();  // Đảm bảo dotenv được sử dụng để đọc biến môi trường từ file .env
+require('dotenv').config({ path: './src/.env' });  // Đảm bảo dotenv được sử dụng để đọc biến môi trường từ file .env
 
 const connectDB = async () => {
   const mongoURI = process.env.MONGO_URI;

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Linglooma</h1>
+    <button id="login-btn">Đăng Nhập</button>
+    <button id="register-btn">Đăng Ký</button>
+
+    <script>
+        // Lắng nghe sự kiện click của nút
+        document.getElementById("login-btn").addEventListener("click", function() {
+            // Chuyển hướng tới API của trang khác
+            window.location.href = "login.html"; // Thay bằng URL của API bạn muốn
+        });
+
+        document.getElementById("register-btn").addEventListener("click", function() {
+            // Chuyển hướng tới API của trang khác
+            window.location.href = "register.html"; // Thay bằng URL của API bạn muốn
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Đăng nhập / Đăng ký</title>
+  <link rel="stylesheet" href="LoginStyle.css">
+</head>
+<body>
+  <div class="container">
+    <div class="section">
+      <h2>Đăng nhập</h2>
+      <input type="text" id="loginUsername" placeholder="Tên đăng nhập">
+      <input type="password" id="loginPassword" placeholder="Mật khẩu">
+      <button onclick="login()">Đăng nhập</button>
+    </div>
+  </div>
+
+  <script>
+    async function login() {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+
+      if (!username || !password) {
+        alert('Vui lòng nhập đầy đủ thông tin đăng nhập.');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+        const data = await res.json();
+        
+        if (data.redirect) {
+          window.location.href = data.redirect;
+        } else {
+          alert(data.msg || 'Đăng nhập thất bại');
+        }
+      } catch (error) {
+        console.error('Lỗi:', error);
+        alert('Đăng nhập thất bại. Vui lòng thử lại.');
+      }
+    }
+  </script>
+</body>
+</html>

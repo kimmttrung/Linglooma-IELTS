@@ -1,20 +1,41 @@
-require("dotenv").config();
-import express from "express";
-import configViewEngine from "./configs/viewEngine";
-import initWebRoutes from "./routes/web";
+// require('dotenv').config({ path: './src/.env' });
+// const express = require('express');
+// const cors = require('cors');
+// const bodyParser = require('body-parser');
+// const path = require('path');
 
-// init 
-const app = express();
+// const authRoutes = require('./routes/authController');
+// const connectDB = require('./configs/db');
+// const Transcript = require('./models/Transcript');
 
-// config view engine
-configViewEngine(app);
+// const app = express();
+// const port = process.env.PORT || 3000;
 
+// // Kết nối MongoDB
+// connectDB();
 
-// init web routes
-initWebRoutes(app);
+// // Middleware
+// app.use(cors());
+// app.use(bodyParser.json());
+// app.use(express.static(path.join(__dirname, 'public')));
 
+// // Routes
+// app.use('/api/auth', authRoutes);
 
-const PORT = process.env.POR || 8080;
-app.listen(PORT, () => {
-    console.log(">>> JWT Backend is running on the port " + PORT);
-})
+// // Route lưu transcript vào MongoDB
+// app.post('/api/save-transcript', async (req, res) => {
+//   const { transcript } = req.body;
+//   try {
+//     const saved = await Transcript.create({ transcript });
+//     console.log(`[+] Saved transcript at ${saved.createdAt}`);
+//     res.json({ success: true });
+//   } catch (err) {
+//     console.error('❌ Error saving transcript:', err);
+//     res.status(500).json({ success: false, error: 'Failed to save transcript.' });
+//   }
+// });
+
+// // Start server
+// app.listen(port, () => {
+//   console.log(`🚀 Server đang chạy ở http://localhost:${port}`);
+// });
