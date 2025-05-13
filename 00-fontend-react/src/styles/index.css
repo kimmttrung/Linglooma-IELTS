@@ -1,0 +1,32 @@
+@import './tailwind.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inria+Sans:wght@300;400;700&display=swap');
+
+/* Global styles */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Import fonts */
+
+
+/* Add smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove outline on focused elements */
+*:focus {
+  outline: none;
+}
+
+/* Add transitions for interactive elements */
+button,
+a {
+  transition: all 0.2s ease-in-out;
+}

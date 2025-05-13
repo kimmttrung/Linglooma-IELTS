@@ -1,0 +1,30 @@
+import React from 'react';
+import Button from '../ui/Button';
+
+const Header = () => {
+  return (
+    <header className="bg-[#e5fdff] py-4 w-full">
+      <div className="container mx-auto flex justify-between items-center px-4">
+        <div className="flex items-center">
+          <img src="/images/img_logo.png" alt="Linglooma Logo" className="h-[100px]" />
+        </div>
+        <div className="flex space-x-4">
+          <Button 
+            className="bg-[#00FFFF] text-black font-bold py-2 px-6 rounded-[24px]"
+            onClick={() => console.log('Login clicked')}
+          >
+            Login
+          </Button>
+          <Button 
+            className="bg-[#00FF00] text-black font-bold py-2 px-6 rounded-[24px]"
+            onClick={() => console.log('Sign up clicked')}
+          >
+            Sign up
+          </Button>
+        </div>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
