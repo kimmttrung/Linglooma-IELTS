@@ -9,14 +9,14 @@ const Header = () => {
           <img src="/images/img_logo.png" alt="Linglooma Logo" className="h-[100px]" />
         </div>
         <div className="flex space-x-4">
-          <Button 
-            className="bg-[#00FFFF] text-black font-bold py-2 px-6 rounded-[24px]"
+          <Button
+            className="bg-[#71cdcd] text-black font-bold py-2 px-6 rounded-[24px]"
             onClick={() => console.log('Login clicked')}
           >
             Login
           </Button>
-          <Button 
-            className="bg-[#00FF00] text-black font-bold py-2 px-6 rounded-[24px]"
+          <Button
+            className="bg-[#537bd1] text-black font-bold py-2 px-6 rounded-[24px]"
             onClick={() => console.log('Sign up clicked')}
           >
             Sign up
