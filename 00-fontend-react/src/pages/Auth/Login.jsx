@@ -45,7 +45,10 @@ const PageLogin = () => {
                     </div>
                 </div>
 
-                <button className="w-full p-3 bg-[#71da90] rounded-xl mt-2 hover:bg-[#0FC446] text-base md:text-sm text-white font-bold">
+                <button
+                    className="w-full p-3 bg-[#71da90] rounded-xl mt-2 hover:bg-[#0FC446] text-base md:text-sm text-white font-bold"
+                    onClick={() => navigate("/dashboard")}
+                >
                     Login
                 </button>
                 <h3 onClick={() => navigate("/")} className="cursor-pointer text-sm md:text-base mt-2">Go to home page</h3>
