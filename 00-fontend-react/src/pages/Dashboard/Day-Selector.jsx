@@ -2,7 +2,8 @@ import { cn } from "@/components/lib/utils";
 import { useState } from "react";
 
 const DaySelector = () => {
-    const [selectedDay, setSelectedDay] = useState(17);
+    // const [selectedDay, setSelectedDay] = useState(17);
+    const today = new Date().getDate();
 
     const days = [
         { number: 12, day: "Mon" },
@@ -27,7 +28,7 @@ const DaySelector = () => {
                     onClick={() => setSelectedDay(day.number)}
                     className={cn(
                         "flex flex-col items-center justify-center min-w-[60px] h-[80px] rounded-lg p-2 transition-colors",
-                        selectedDay === day.number ? "bg-indigo-950 text-white" : "bg-white text-gray-700 hover:bg-gray-100",
+                        today === day.number ? "bg-indigo-950 text-white" : "bg-white text-gray-700 hover:bg-gray-100",
                     )}
                 >
                     <span className="text-lg font-semibold">{day.number}</span>
