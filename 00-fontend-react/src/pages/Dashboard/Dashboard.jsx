@@ -1,6 +1,7 @@
 import Calendar from "./Calendar";
 import DashboardHeader from "./Dashboard-header";
 import DaySelector from "./Day-Selector";
+import RecentActivity from "./Recent-activity";
 import StudyPlanner from "./Study-Planner";
 
 
@@ -17,7 +18,7 @@ const Dashboard = () => {
                         </div>
                         <div className="w-full lg:basis-[40%]">
                             <Calendar />
-                            {/* <RecentActivity /> */}
+                            <RecentActivity />
                         </div>
                     </div>
                 </div>
