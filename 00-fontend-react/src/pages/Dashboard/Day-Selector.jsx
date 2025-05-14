@@ -2,7 +2,7 @@ import { cn } from "@/components/lib/utils";
 import { useState } from "react";
 
 const DaySelector = () => {
-    const [selectedDay, setSelectedDay] = useState(17)
+    const [selectedDay, setSelectedDay] = useState(17);
 
     const days = [
         { number: 12, day: "Mon" },

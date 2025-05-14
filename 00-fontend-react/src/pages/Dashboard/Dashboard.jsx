@@ -1,6 +1,7 @@
 import Calendar from "./Calendar";
 import DashboardHeader from "./Dashboard-header";
 import DaySelector from "./Day-Selector";
+import StudyPlanner from "./Study-Planner";
 
 
 const Dashboard = () => {
@@ -12,6 +13,7 @@ const Dashboard = () => {
                     <div className="flex flex-col lg:flex-row gap-6 mt-6">
                         <div className="w-full lg:basis-[60%]">
                             <DaySelector />
+                            <StudyPlanner />
                         </div>
                         <div className="w-full lg:basis-[40%]">
                             <Calendar />

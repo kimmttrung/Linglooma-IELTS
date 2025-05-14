@@ -4,7 +4,8 @@ import { useState } from "react"
 
 
 const Calendar = () => {
-    const [selectedDay, setSelectedDay] = useState(17);
+    // const [selectedDay, setSelectedDay] = useState(17);
+    const today = new Date().getDate();
 
     // Days of the week
     const daysOfWeek = ["M", "T", "W", "T", "F", "S", "S"]
@@ -13,7 +14,7 @@ const Calendar = () => {
     const days = Array.from({ length: 31 }, (_, i) => i + 1)
 
     return (
-        <div className="bg-white rounded-lg shadow p-4">
+        <div className="bg-white rounded-lg shadow p-4 w-full max-w-[500px] mx-auto">
             <div className="flex justify-between items-center mb-4">
                 <button className="p-1">
                     <ChevronLeft className="h-5 w-5" />
@@ -44,10 +45,12 @@ const Calendar = () => {
                 {days.map((day) => (
                     <button
                         key={day}
-                        onClick={() => setSelectedDay(day)}
+                        // onClick={() => setSelectedDay(day)}
                         className={cn(
                             "aspect-square rounded-full flex items-center justify-center text-sm",
-                            selectedDay === day ? "bg-indigo-950 text-white" : "hover:bg-gray-100"
+                            day === today
+                                ? "bg-indigo-950 text-white font-semibold"
+                                : "text-gray-500"
                         )}
                     >
                         {day}

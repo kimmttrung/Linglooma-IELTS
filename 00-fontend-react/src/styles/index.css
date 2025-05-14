@@ -30,3 +30,15 @@ button,
 a {
   transition: all 0.2s ease-in-out;
 }
+
+* Ẩn scrollbar trên tất cả trình duyệt */ .hide-scrollbar {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
