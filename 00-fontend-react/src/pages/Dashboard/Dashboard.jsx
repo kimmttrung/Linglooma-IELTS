@@ -1,3 +1,4 @@
+import Calendar from "./Calendar";
 import DashboardHeader from "./Dashboard-header";
 
 
@@ -13,8 +14,8 @@ const Dashboard = () => {
                             <StudyPlanner /> */}
                         </div>
                         <div className="space-y-6">
-                            {/* <Calendar />
-                            <RecentActivity /> */}
+                            <Calendar />
+                            {/* <RecentActivity /> */}
                         </div>
                     </div>
                 </div>
