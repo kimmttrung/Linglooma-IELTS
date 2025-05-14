@@ -1,7 +1,10 @@
 import React from 'react';
 import Button from '../ui/Button';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <header className="bg-[#e5fdff] py-4 w-full">
       <div className="container mx-auto flex justify-between items-center px-4">
@@ -11,7 +14,7 @@ const Header = () => {
         <div className="flex space-x-4">
           <Button
             className="bg-[#71cdcd] text-black font-bold py-2 px-6 rounded-[24px]"
-            onClick={() => console.log('Login clicked')}
+            onClick={() => navigate("/login")}
           >
             Login
           </Button>
