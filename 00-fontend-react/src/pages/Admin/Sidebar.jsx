@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import SidebarLink from "./sidebar-link";
-import { Home, BookOpen, BarChart2, Settings } from "lucide-react";
+import { Home, BookOpen, BarChart2, Settings, ClipboardList } from "lucide-react";
 
 
 const Sidebar = () => {
@@ -15,10 +15,10 @@ const Sidebar = () => {
             </div>
             <nav className="flex-1 overflow-y-auto py-4">
                 <ul className="space-y-1">
-                    <SidebarLink href="/dashboard" icon={<Home className="h-5 w-5" />} active>
+                    <SidebarLink href="/admin/dashboard" icon={<Home className="h-5 w-5" />} active>
                         Dashboard
                     </SidebarLink>
-                    <SidebarLink href="/features" icon={<BookOpen className="h-5 w-5" />}>
+                    <SidebarLink href="/admin/features" icon={<ClipboardList className="h-5 w-5" />}>
                         Features
                     </SidebarLink>
                     <SidebarLink href="/result-view" icon={<BarChart2 className="h-5 w-5" />}>
