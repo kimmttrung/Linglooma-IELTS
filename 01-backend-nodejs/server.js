@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const authRoutes = require('./routes/authController');
+const recordRoutes = require('./routes/record.routes');
 const connectDB = require('./configs/db');
 const Transcript = require('./models/Transcript');
 
@@ -21,6 +22,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/record', recordRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Route lưu transcript vào MongoDB
 app.post('/api/save-transcript', async (req, res) => {
