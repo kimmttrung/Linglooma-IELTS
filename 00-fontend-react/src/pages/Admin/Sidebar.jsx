@@ -1,18 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import SidebarLink from "./sidebar-link";
 import { Home, BookOpen, BarChart2, Settings, ClipboardList } from "lucide-react";
-import { useState } from "react";
 
 
 const Sidebar = () => {
     const navigate = useNavigate();
-
-    const [settingsOpen, setSettingsOpen] = useState(false);
-
-    // Toggle function to open/close the settings submenu
-    const toggleSettingsMenu = () => {
-        setSettingsOpen(!settingsOpen);
-    };
 
     return (
         <div className="w-64 bg-slate-800 text-white flex flex-col h-full">
