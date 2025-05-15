@@ -25,8 +25,8 @@ const AppRoutes = () => {
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 
-        <Route path="/view-results" element={<ViewResultsPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
+        {/* <Route path="/view-results" element={<ViewResultsPage />} />
+        <Route path="/settings" element={<SettingsPage />} /> */}
       </Routes>
     </Router>
   );

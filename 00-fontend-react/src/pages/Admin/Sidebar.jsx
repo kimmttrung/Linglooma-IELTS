@@ -1,10 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import SidebarLink from "./sidebar-link";
 import { Home, BookOpen, BarChart2, Settings, ClipboardList } from "lucide-react";
+import { useState } from "react";
 
 
 const Sidebar = () => {
     const navigate = useNavigate();
+
+    const [settingsOpen, setSettingsOpen] = useState(false);
+
+    // Toggle function to open/close the settings submenu
+    const toggleSettingsMenu = () => {
+        setSettingsOpen(!settingsOpen);
+    };
 
     return (
         <div className="w-64 bg-slate-800 text-white flex flex-col h-full">
@@ -28,9 +36,10 @@ const Sidebar = () => {
                     <SidebarLink href="/admin/view-results" icon={<BarChart2 className="h-5 w-5" />}>
                         Results View
                     </SidebarLink>
-                    <SidebarLink href="/admin/settings" icon={<BarChart2 className="h-5 w-5" />}>
+                    <SidebarLink href="/admin/settings" icon={<Settings className="h-5 w-5" />}>
                         Settings
                     </SidebarLink>
+
                 </ul>
             </nav>
             <div className="p-4 border-t border-slate-700">

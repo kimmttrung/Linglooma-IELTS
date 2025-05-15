@@ -1,7 +1,10 @@
 import React from "react";
 import CourseCard from "./CourseCard";
+import { useNavigate } from "react-router-dom";
 
 const LessonSpeaking = () => {
+    const navigate = useNavigate();
+
     return (
         <main className="ml-5 w-[98%] max-md:ml-0 max-md:w-full">
             <div className="overflow-hidden grow w-full h-[907px] min-h-[796px] min-w-80 max-md:mt-9 max-md:max-w-full">
@@ -13,7 +16,10 @@ const LessonSpeaking = () => {
                                     <div className="grow max-md:mt-10 max-md:max-w-full">
                                         <div className="flex gap-5 max-md:flex-col">
                                             <div className="w-[18%] max-md:ml-0 max-md:w-full">
-                                                <button className="px-8 py-3.5 mt-1.5 w-full text-sm font-medium leading-none text-center text-white whitespace-nowrap rounded bg-slate-500 max-md:px-5 max-md:mt-6">
+                                                <button
+                                                    className="px-8 py-3.5 mt-1.5 w-full text-sm font-medium leading-none text-center text-white whitespace-nowrap rounded bg-slate-500 max-md:px-5 max-md:mt-6"
+                                                    onClick={() => navigate("/admin/features")}
+                                                >
                                                     EXit
                                                 </button>
                                             </div>
