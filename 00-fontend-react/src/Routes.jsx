@@ -8,6 +8,7 @@ import Admin from './pages/Admin/Admin';
 import Skill4 from './pages/Features/Skill4/Skill4';
 import LessonSpeaking from './pages/Features/LessonSpeaking/Lesson';
 import SettingsPage from './pages/Settings/Settings';
+import ViewResultsPage from './pages/ViewResults/ViewResults';
 
 const AppRoutes = () => {
   return (
@@ -20,9 +21,11 @@ const AppRoutes = () => {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="features" element={<Skill4 />} />
           <Route path="lesson" element={<LessonSpeaking />} />
+          <Route path="view-results" element={<ViewResultsPage />} />
           <Route path="settings" element={<SettingsPage />} />
         </Route>
 
+        <Route path="/view-results" element={<ViewResultsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </Router>
