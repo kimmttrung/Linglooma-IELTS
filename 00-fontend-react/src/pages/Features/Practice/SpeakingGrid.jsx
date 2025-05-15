@@ -15,8 +15,8 @@ const GridButton = ({ number, active = false }) => {
 
 const SpeakingGrid = () => {
     return (
-        <section className="flex-1 p-5 bg-white rounded-lg shadow-sm">
-            <div className="flex flex-col items-center">
+        <section className="flex-1 p-5 bg-white rounded-lg shadow-sm h-[700px]">
+            <div className="flex flex-col items-center gap-10">
                 <h2 className="py-1.5 mb-5 text-lg font-extrabold text-sky-800 border-[0.67px] border-zinc-100">
                     Speaking
                 </h2>

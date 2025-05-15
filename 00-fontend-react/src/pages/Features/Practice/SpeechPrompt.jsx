@@ -4,7 +4,7 @@ import React from "react";
 
 const SpeechPrompt = () => {
   return (
-    <div className="p-5 bg-white rounded-lg shadow-sm">
+    <div className="p-5 bg-white rounded-lg shadow-sm h-[300px]">
       <div className="flex flex-col items-center">
         <h2 className="py-1.5 mb-5 text-lg font-extrabold text-sky-800 border-[0.67px] border-zinc-100">
           Speech Prompt
