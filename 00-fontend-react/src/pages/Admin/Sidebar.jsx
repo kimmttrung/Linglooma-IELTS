@@ -25,10 +25,10 @@ const Sidebar = () => {
                     >
                         Features
                     </SidebarLink>
-                    <SidebarLink href="/result-view" icon={<BarChart2 className="h-5 w-5" />}>
+                    <SidebarLink href="/admin/view-results" icon={<BarChart2 className="h-5 w-5" />}>
                         Results View
                     </SidebarLink>
-                    <SidebarLink href="/login" icon={<Settings className="h-5 w-5" />}>
+                    <SidebarLink href="/admin/settings" icon={<BarChart2 className="h-5 w-5" />}>
                         Settings
                     </SidebarLink>
                 </ul>
