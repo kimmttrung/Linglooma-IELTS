@@ -6,7 +6,7 @@ export const PracticeCard = ({ title, description }) => {
 
     const handleLearnClick = () => {
         if (title.includes("Speaking Practice")) {
-            navigate("/admin/features/lesson");
+            navigate("/admin/lesson");
         } else {
             console.log("Learn button clicked for:", title);
             // Bạn có thể thêm logic khác tại đây nếu muốn xử lý cho từng card
