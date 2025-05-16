@@ -35,7 +35,7 @@ const PageRegister = () => {
             <div className="w-[95%] max-w-xl p-6 bg-gray-100 flex-col flex items-center gap-6 rounded-2xl shadow-slate-500 shadow-2xl">
                 <h1 className="text-3xl md:text-5xl font-bold">Linglooma</h1>
                 <p className="text-lg md:text-xl text-gray-600 text-center">
-                    Good to see you again
+                    hello
                 </p>
 
                 <div className="w-full flex flex-col gap-6">
