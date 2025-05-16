@@ -12,7 +12,8 @@ import ViewResultsPage from './pages/ViewResults/ViewResults';
 import Recording from './pages/Features/Recording'
 import Skill4 from './pages/Features/Skill4';
 import IeltsSpeakingPractice from './pages/Features/Practice';
-import PageSubmitRecording from './pages/Features/Practice/PageSubmitRecording';
+// import PageSubmitRecording from './pages/Features/Practice/PageSubmitRecording';
+import PageRegister from './pages/Auth/Register';
 
 const AppRoutes = () => {
   return (
@@ -20,6 +21,7 @@ const AppRoutes = () => {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<PageLogin />} />
+        <Route path="/register" element={<PageRegister />} />
 
         <Route path="/admin" element={<Admin />}>
           <Route path="dashboard" element={<Dashboard />} />

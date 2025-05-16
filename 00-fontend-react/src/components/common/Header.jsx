@@ -20,7 +20,7 @@ const Header = () => {
           </Button>
           <Button
             className="bg-[#537bd1] text-black font-bold py-2 px-6 rounded-[24px]"
-            onClick={() => console.log('Sign up clicked')}
+            onClick={() => navigate("/register")}
           >
             Sign up
           </Button>
