@@ -21,10 +21,10 @@ const AppRoutes = () => {
         <Route path="/admin" element={<Admin />}>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="features" element={<Skill4 />} />
-          <Route path="lesson" element={<LessonSpeaking />} />
+          <Route path="features/lesson" element={<LessonSpeaking />} />
           <Route path="view-results" element={<ViewResultsPage />} />
           <Route path="settings" element={<SettingsPage />} />
-          <Route path="recording" element={<Recording />} />
+          <Route path="features/recording" element={<Recording />} />
         </Route>
 
         {/* <Route path="/view-results" element={<ViewResultsPage />} />

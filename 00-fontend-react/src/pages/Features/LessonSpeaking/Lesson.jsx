@@ -12,7 +12,7 @@ const LessonSpeaking = () => {
             <div className="mb-6">
                 <button
                     className="px-6 py-3 text-sm font-semibold text-white bg-slate-500 rounded-md"
-                    onClick={() => navigate("/admin/recording")}
+                    onClick={() => navigate("/admin/features")}
                 >
                     EXIT
                 </button>
