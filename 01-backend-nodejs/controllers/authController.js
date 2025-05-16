@@ -4,10 +4,14 @@ const User = require('../models/userModel');
 exports.register = async (req, res) => {
   const { username, password } = req.body;
 
+  if (!username || !password) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
   try {
     // Kiểm tra trùng username
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
+    const existingUser = await User.findUser(username);
+    if (!existingUser) {
       return res.status(400).json({ msg: 'Tên người dùng đã tồn tại' });
     }
 
@@ -15,8 +19,7 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Tạo người dùng mới
-    const newUser = new User({ username, password: hashedPassword });
-    await newUser.save();
+    User.insertUser(username, hashedPassword)
 
     res.json({ msg: 'Đăng ký thành công', success: true });
   } catch (err) {
@@ -28,14 +31,22 @@ exports.register = async (req, res) => {
 exports.login = async (req, res) => {
   const { username, password } = req.body;
 
+  if (!username || !password) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+
   try {
-    const user = await User.findOne({ username });
-    if (!user) {
+    const userResult = await User.findUser(username);
+
+    if (userResult.rows.length === 0) {
       return res.status(401).json({ msg: 'Sai tài khoản hoặc mật khẩu' });
     }
 
-    const match = await bcrypt.compare(password, user.password);
-    if (match) {
+    const user = userResult.rows[0];
+
+    // So sánh password gốc với hash đã lưu
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) {
       // Ở đây bạn có thể tạo JWT hoặc session nếu muốn
       res.json({ redirect: '/dashboard.html' });
     } else {

@@ -6,7 +6,7 @@ const CourseCard = ({ title, imageUrl }) => {
     const navigate = useNavigate();
     const handleLearnClick = () => {
         if (title.includes("Technology")) {
-            navigate("/admin/recording");
+            navigate("/admin/features/recording");
         } else {
             console.log("Learn button clicked for:", title);
             // Bạn có thể thêm logic khác tại đây nếu muốn xử lý cho từng card
