@@ -9,6 +9,7 @@ import Skill4 from './pages/Features/Skill4/Skill4';
 import LessonSpeaking from './pages/Features/LessonSpeaking/Lesson';
 import SettingsPage from './pages/Settings/Settings';
 import ViewResultsPage from './pages/ViewResults/ViewResults';
+import Recording from './pages/Features/Recording'
 
 const AppRoutes = () => {
   return (
@@ -23,6 +24,7 @@ const AppRoutes = () => {
           <Route path="lesson" element={<LessonSpeaking />} />
           <Route path="view-results" element={<ViewResultsPage />} />
           <Route path="settings" element={<SettingsPage />} />
+          <Route path="recording" element={<Recording />} />
         </Route>
 
         {/* <Route path="/view-results" element={<ViewResultsPage />} />

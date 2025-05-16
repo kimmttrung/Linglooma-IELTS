@@ -5,13 +5,14 @@ import { useNavigate } from "react-router-dom";
 const LessonSpeaking = () => {
     const navigate = useNavigate();
 
+    
     return (
         <main className="p-6 w-full bg-white min-h-screen">
             {/* Exit button */}
             <div className="mb-6">
                 <button
                     className="px-6 py-3 text-sm font-semibold text-white bg-slate-500 rounded-md"
-                    onClick={() => navigate("/admin/features")}
+                    onClick={() => navigate("/admin/recording")}
                 >
                     EXIT
                 </button>
