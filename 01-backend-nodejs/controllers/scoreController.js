@@ -3,6 +3,7 @@ const fs = require("fs");
 const { saveBase64AudioToFile } = require("../utils/fileUtils");
 const { assessPronunciation } = require("../services/azurePronunciationService");
 const { calculateIELTSBand } = require("../services/ieltsScoringService");
+const { findMismatchedWords } = require("../services/miscueService");
 
 exports.scoreAudio = async (req, res) => {
   try {
@@ -17,7 +18,10 @@ exports.scoreAudio = async (req, res) => {
 
     await saveBase64AudioToFile(audio, filepath);
 
-    const assessment = await assessPronunciation(filepath, referenceText);
+    const { assessment, transcriptText } = await assessPronunciation(filepath, referenceText);
+
+    // Tìm từ sai dựa trên transcript
+    const miscueWordsFromTranscript = findMismatchedWords(referenceText, transcriptText);
 
     fs.unlink(filepath, (err) => {
       if (err) console.error("Lỗi xóa file tạm:", err);
@@ -26,7 +30,6 @@ exports.scoreAudio = async (req, res) => {
     // Tính điểm band IELTS từ kết quả đánh giá Azure
     const ieltsResult = calculateIELTSBand(assessment);
 
-    // Trả thêm điểm từng phần riêng lẻ
     res.json({
       score: ieltsResult.band,
       rawScore: ieltsResult.totalScore,
@@ -35,6 +38,8 @@ exports.scoreAudio = async (req, res) => {
       fluencyScore: assessment.FluencyScore || null,
       completenessScore: assessment.CompletenessScore || null,
       pronScore: assessment.PronScore || null,
+      transcript: transcriptText,
+      miscueWords: miscueWordsFromTranscript,
       details: assessment,
     });
   } catch (error) {

@@ -1,5 +1,6 @@
 import React from "react";
 import Button from "@/components/ui/Button";
+import { useNavigate } from "react-router-dom";
 
 const GridButton = ({ number, active = false }) => {
     return (
@@ -14,6 +15,8 @@ const GridButton = ({ number, active = false }) => {
 };
 
 const SpeakingGrid = () => {
+    const navigate = useNavigate();
+
     return (
         <section className="flex-1 p-5 bg-white rounded-lg shadow-sm h-[700px]">
             <div className="flex flex-col items-center gap-10">
@@ -29,7 +32,7 @@ const SpeakingGrid = () => {
                         <GridButton key={num} number={num} />
                     ))}
                 </div>
-                <Button variant="primary" className="mt-5">
+                <Button variant="primary" className="mt-5" onClick={() => navigate("/admin/features/lesson")}>
                     Exit
                 </Button>
             </div>

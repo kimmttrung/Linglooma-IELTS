@@ -20,18 +20,25 @@ async function assessPronunciation(audioFilePath, referenceText) {
 
   const recognizer = new sdk.SpeechRecognizer(speechConfig, audioConfig);
 
-  return new Promise((resolve, reject) => {
-    pronunciationConfig.applyTo(recognizer);
+  pronunciationConfig.applyTo(recognizer);
 
+  return new Promise((resolve, reject) => {
     recognizer.recognizeOnceAsync(
       (result) => {
         if (result.reason === sdk.ResultReason.RecognizedSpeech) {
           try {
-            const json = JSON.parse(
-              result.properties.getProperty(sdk.PropertyId.SpeechServiceResponse_JsonResult)
-            );
+            const jsonString = result.properties.getProperty(sdk.PropertyId.SpeechServiceResponse_JsonResult);
+            const json = JSON.parse(jsonString);
+            const assessment = json.NBest[0].PronunciationAssessment;
+            if (!assessment.Miscue) assessment.Miscue = [];
 
-            resolve(json.NBest[0].PronunciationAssessment);
+            // Lấy transcript text (lời nói đã được nhận dạng)
+            const transcriptText = result.text;
+
+            resolve({
+              assessment,
+              transcriptText,
+            });
           } catch (e) {
             reject(e);
           }
