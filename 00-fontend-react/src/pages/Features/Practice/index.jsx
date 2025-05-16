@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import SpeakingGrid from "./SpeakingGrid";
 import SpeechPrompt from "./SpeechPrompt";
-import Recording from "./Recording";
+import RecordingPractice from "./RecordingPractice";
+import PageSubmitRecording from "./PageSubmitRecording";
 
 const IeltsSpeakingPractice = () => {
+    const [onSubmit, setOnSubmit] = useState(false);
+    // setOnSubmit(false);
+
     return (
         <main className="min-h-screen h-screen flex flex-col bg-gradient-to-b from-[#F5F7FA] to-white">
             <div className="flex-1 flex flex-col p-5 gap-6 max-w-6xl w-full mx-auto h-full">
@@ -20,12 +24,12 @@ const IeltsSpeakingPractice = () => {
                     {/* Left Side */}
                     <div className="flex flex-col w-full md:w-2/3 gap-10">
                         <SpeechPrompt />
-                        <Recording />
+                        <RecordingPractice />
                     </div>
 
                     {/* Right Side */}
                     <div className="w-full md:w-1/3 h-full">
-                        <SpeakingGrid />
+                        {onSubmit === true ? <PageSubmitRecording /> : <SpeakingGrid />}
                     </div>
                 </div>
             </div>

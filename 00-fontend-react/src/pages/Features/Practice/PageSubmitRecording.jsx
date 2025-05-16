@@ -3,8 +3,8 @@ import ColoredText from './ColorText';
 import { useNavigate } from 'react-router-dom';
 
 
-const ResultCard = () => {
-    const navigate = useNavigate();
+const PageSubmitRecording = () => {
+    const navigate = useNavigate();;
 
     return (
         <article className="flex flex-col items-center px-5 pt-5 pb-10 bg-white rounded-lg max-w-[442px] shadow-[0px_2px_10px_rgba(0,0,0,0.1)]">
@@ -45,7 +45,7 @@ const ResultCard = () => {
             <section className="flex gap-5 justify-between mt-10 w-full text-sm font-medium leading-none text-center text-white whitespace-nowrap max-w-[307px]">
                 <button
                     className="px-11 py-3 rounded bg-slate-500 hover:bg-slate-600 transition-colors"
-                    onClick={() => navigate("/admin/features/practice")}
+                    onClick={() => { }}
                 >
                     Retry
                 </button>
@@ -60,4 +60,4 @@ const ResultCard = () => {
     );
 };
 
-export default ResultCard;
+export default PageSubmitRecording;
