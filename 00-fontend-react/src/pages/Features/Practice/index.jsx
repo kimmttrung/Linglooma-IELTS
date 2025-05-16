@@ -23,7 +23,7 @@ const IeltsSpeakingPractice = () => {
                 <div className="flex flex-col md:flex-row gap-6 flex-1">
                     {/* Left Side */}
                     <div className="flex flex-col w-full md:w-2/3 gap-10">
-                        <SpeechPrompt />
+                        {/* <SpeechPrompt /> */}
                         <RecordingPractice />
                     </div>
 
