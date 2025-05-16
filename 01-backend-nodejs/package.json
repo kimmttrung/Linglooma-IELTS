@@ -21,7 +21,8 @@
     "express": "5.1.0",
     "linglooma-nodejs": "file:",
     "mongoose": "^8.14.2",
-    "multer": "^1.4.5-lts.2"
+    "multer": "^1.4.5-lts.2",
+    "pg": "^8.16.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

@@ -1,8 +1,23 @@
-const mongoose = require('mongoose');
+const client = require('../db');
 
-const userSchema = new mongoose.Schema({
-  username: String,
-  password: String
-});
+const findUser = async (username) => {
+    const result = client.query(
+        'SELECT * FROM users WHERE username = $1',
+        [username]
+    )
 
-module.exports = mongoose.model('User', userSchema);
+    return result;
+}
+
+const insertUser = async (username, hashedPassword) => {
+    client.query(
+        'INSERT INTO users (username, password) VALUES ($1, $2)',
+        [username, hashedPassword]
+    );
+}
+
+module.exports = {
+    findUser,
+    insertUser
+};
+

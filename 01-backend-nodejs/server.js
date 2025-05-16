@@ -5,15 +5,11 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const authRoutes = require('./routes/authController');
-const recordRoutes = require('./routes/record.routes');
-const connectDB = require('./configs/db');
-const Transcript = require('./models/Transcript');
+//const recordRoutes = require('./routes/recordroute');
+//const Transcript = require('./models/Transcript');
 
 const app = express();
-const port = process.env.PORT || 3000;
-
-// Kết nối MongoDB
-connectDB();
+const port = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
@@ -22,21 +18,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/record', recordRoutes);
+//app.use('/api/record', recordRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Route lưu transcript vào MongoDB
-app.post('/api/save-transcript', async (req, res) => {
-  const { transcript } = req.body;
-  try {
-    const saved = await Transcript.create({ transcript });
-    console.log(`[+] Saved transcript at ${saved.createdAt}`);
-    res.json({ success: true });
-  } catch (err) {
-    console.error('❌ Error saving transcript:', err);
-    res.status(500).json({ success: false, error: 'Failed to save transcript.' });
-  }
-});
 
 // Start server
 app.listen(port, () => {
