@@ -1,14 +1,45 @@
 import React, { useState, useRef } from "react";
 import RecordRTC from "recordrtc";
 
+function HighlightText({ text, errorWords }) {
+  if (!text) return null;
+  const words = text.split(/(\s+)/);
+
+  return (
+    <p style={{ fontSize: 18, fontStyle: "italic", lineHeight: 1.5 }}>
+      {words.map((word, idx) => {
+        // Loại bỏ dấu câu, chuyển về chữ thường để so sánh
+        const cleanWord = word.replace(/[.,!?]/g, "").toLowerCase();
+        const isError = errorWords.some(
+          (ew) => ew.toLowerCase() === cleanWord
+        );
+
+        return (
+          <span
+            key={idx}
+            style={{
+              color: isError ? "red" : "black",
+              backgroundColor: isError ? "#ffe6e6" : "transparent",
+              textDecoration: isError ? "underline" : "none",
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            {word}
+          </span>
+        );
+      })}
+    </p>
+  );
+}
+
 export default function AudioRecorder() {
   const [recording, setRecording] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
   const [status, setStatus] = useState("Sẵn sàng ghi âm");
   const [referenceText, setReferenceText] = useState(
-    "This is the sample sentence you should read."
+    "The quick brown fox jumps over the lazy dog."
   );
-  const [scoreData, setScoreData] = useState(null); // lưu kết quả điểm và feedback
+  const [scoreData, setScoreData] = useState(null);
   const recorderRef = useRef(null);
 
   const startRecording = async () => {
@@ -24,7 +55,7 @@ export default function AudioRecorder() {
       recorderRef.current.startRecording();
       setRecording(true);
       setStatus("Đang ghi âm...");
-      setScoreData(null); // reset điểm cũ khi bắt đầu ghi âm mới
+      setScoreData(null); // Reset dữ liệu
     } catch (err) {
       setStatus("Lỗi khi lấy micro: " + err.message);
     }
@@ -46,6 +77,7 @@ export default function AudioRecorder() {
     });
   };
 
+  // Chuyển Blob audio thành base64 để gửi backend
   const blobToBase64 = (blob) => {
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -56,6 +88,7 @@ export default function AudioRecorder() {
     });
   };
 
+  // Gửi audio base64 và câu mẫu lên backend để chấm điểm
   const sendAudioToBackend = async (base64Audio, referenceText) => {
     setStatus("Đang gửi audio lên server...");
     try {
@@ -69,7 +102,7 @@ export default function AudioRecorder() {
         setScoreData(data);
         setStatus("Đã nhận kết quả từ server");
       } else {
-        setStatus("Lỗi khi gửi audio: " + data.error);
+        setStatus("Lỗi khi gửi audio: " + (data.error || "Không xác định"));
         setScoreData(null);
       }
     } catch (err) {
@@ -88,15 +121,20 @@ export default function AudioRecorder() {
           padding: 15,
           borderRadius: 5,
           marginBottom: 20,
-          fontStyle: "italic",
           fontSize: 18,
           minHeight: 60,
           lineHeight: "1.5",
-          whiteSpace: "pre-wrap",
           userSelect: "text",
+          whiteSpace: "pre-wrap",
+          fontStyle: "italic",
         }}
       >
-        {referenceText}
+        {/* Highlight từ sai nếu có */}
+        {scoreData?.miscueWords?.length > 0 ? (
+          <HighlightText text={referenceText} errorWords={scoreData.miscueWords} />
+        ) : (
+          <span>{referenceText}</span>
+        )}
       </div>
 
       <button
@@ -132,9 +170,9 @@ export default function AudioRecorder() {
           }}
         >
           <h3>Kết quả chấm điểm</h3>
-          <p><b>Band IELTS:</b> {scoreData.score}</p>
-          <p><b>Điểm tổng (raw score):</b> {scoreData.rawScore}</p>
-          <p><b>Phản hồi:</b> {scoreData.feedback}</p>
+          <p><b>Band IELTS:</b> {scoreData.score ?? "N/A"}</p>
+          <p><b>Điểm tổng (raw score):</b> {scoreData.rawScore ?? "N/A"}</p>
+          <p><b>Phản hồi:</b> {scoreData.feedback ?? "Không có phản hồi"}</p>
 
           <h4>Điểm chi tiết</h4>
           <ul>
