@@ -18,15 +18,20 @@ const Sidebar = () => {
                     <SidebarLink href="/admin/dashboard" icon={<Home className="h-5 w-5" />} active>
                         Dashboard
                     </SidebarLink>
-                    <SidebarLink href="/admin/features" icon={<ClipboardList className="h-5 w-5" />}>
+                    <SidebarLink
+                        href="/admin/features"
+                        icon={<ClipboardList className="h-5 w-5" />}
+                        matchPaths={["/admin/lesson"]} // ✅ coi lesson là 1 phần của Features
+                    >
                         Features
                     </SidebarLink>
-                    <SidebarLink href="/result-view" icon={<BarChart2 className="h-5 w-5" />}>
+                    <SidebarLink href="/admin/view-results" icon={<BarChart2 className="h-5 w-5" />}>
                         Results View
                     </SidebarLink>
-                    <SidebarLink href="/login" icon={<Settings className="h-5 w-5" />}>
+                    <SidebarLink href="/admin/settings" icon={<Settings className="h-5 w-5" />}>
                         Settings
                     </SidebarLink>
+
                 </ul>
             </nav>
             <div className="p-4 border-t border-slate-700">
