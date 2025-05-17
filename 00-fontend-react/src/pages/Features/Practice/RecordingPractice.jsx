@@ -1,14 +1,95 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import RecordRTC from "recordrtc";
 import { FaMicrophone } from "react-icons/fa6";
 import Button from "@/components/ui/Button";
-import HighlightText from "./HighlightText";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
+
+// Component highlight từ sai với tooltip xịn hơn
+const HighlightTextWithTooltip = ({ text, wordsAssessment }) => {
+  if (!wordsAssessment || wordsAssessment.length === 0) return <span>{text}</span>;
+
+  const textWords = text.split(/\s+/);
+  const wordMap = {};
+  wordsAssessment.forEach(({ word, isCorrect, errorType }, index) => {
+    wordMap[word.toLowerCase()] = { isCorrect, errorType, id: `word-${index}` };
+  });
+
+  return (
+    <>
+      {textWords.map((w, i) => {
+        const key = w.toLowerCase();
+        const assessment = wordMap[key];
+
+        if (assessment && !assessment.isCorrect) {
+          return (
+            <React.Fragment key={i}>
+              <span
+                data-tooltip-id={assessment.id}
+                data-tooltip-content={`Lỗi phát âm: ${assessment.errorType}`}
+                style={{
+                  color: "red",
+                  fontWeight: "700",
+                  cursor: "help",
+                  textDecoration: "underline",
+                  textDecorationColor: "red",
+                }}
+              >
+                {w}
+              </span>
+              {i !== textWords.length - 1 ? " " : ""}
+              <Tooltip id={assessment.id} place="top" />
+            </React.Fragment>
+          );
+        }
+        return w + (i !== textWords.length - 1 ? " " : "");
+      })}
+    </>
+  );
+};
+
+const PhonemeDetails = ({ phonemeDetails }) => {
+  if (!phonemeDetails || phonemeDetails.length === 0) return null;
+
+  const groupedByWord = phonemeDetails.reduce((acc, item) => {
+    if (!acc[item.wordIndex]) acc[item.wordIndex] = { word: item.word, phonemes: [] };
+    acc[item.wordIndex].phonemes.push(item);
+    return acc;
+  }, {});
+
+  return (
+    <div className="mt-8 bg-gray-100 rounded p-4 shadow-inner max-h-64 overflow-y-auto">
+      <h4 className="font-bold mb-2 text-blue-800 text-center">Phoneme Details</h4>
+      {Object.values(groupedByWord).map(({ word, phonemes }, idx) => (
+        <div key={idx} className="mb-4">
+          <div className="font-semibold text-lg mb-1">Word: "{word}"</div>
+          <div className="flex flex-wrap gap-3">
+            {phonemes.map(({ phoneme, accuracyScore, errorType }, i) => (
+              <div
+                key={i}
+                className={`p-2 rounded border ${
+                  errorType === "Good"
+                    ? "border-green-500 text-green-600"
+                    : "border-red-500 text-red-600"
+                }`}
+                title={`Error type: ${errorType}`}
+              >
+                <div>IPA: <strong>{phoneme}</strong></div>
+                <div>Score: {accuracyScore.toFixed(1)}%</div>
+                <div>Status: {errorType}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
   const [recording, setRecording] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
   const [status, setStatus] = useState("Ready to record");
-
   const [scoreData, setScoreData] = useState(null);
   const recorderRef = useRef(null);
   const audioRef = useRef(null);
@@ -41,6 +122,10 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
       setAudioURL(url);
       setRecording(false);
       setStatus("Recording stopped");
+
+      if (recorderRef.current.stream) {
+        recorderRef.current.stream.getTracks().forEach((track) => track.stop());
+      }
     });
   };
 
@@ -97,10 +182,13 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
       {/* Reference text */}
       <div
         className="mb-6 p-4 bg-blue-50 rounded text-center text-lg font-semibold text-blue-700 select-text"
-        style={{ minHeight: 70, display: "flex", justifyContent: "center", alignItems: "center" }}
+        style={{ minHeight: 70,  textAlign: "center", lineHeight: "1.5",  whiteSpace: "normal" }}
       >
-        {scoreData?.miscueWords?.length > 0 ? (
-          <HighlightText text={referenceText} errorWords={scoreData.miscueWords} />
+        {scoreData?.wordsAssessment?.length > 0 ? (
+          <HighlightTextWithTooltip
+            text={referenceText}
+            wordsAssessment={scoreData.wordsAssessment}
+          />
         ) : (
           <span>{referenceText}</span>
         )}
@@ -192,9 +280,14 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
           {scoreData.miscueWords?.length > 0 && (
             <div className="mt-6 p-4 bg-red-50 border border-red-300 rounded text-red-700">
               <h4 className="font-semibold mb-2">Incorrect Words Highlighted</h4>
-              <HighlightText text={referenceText} errorWords={scoreData.miscueWords} />
+              <HighlightTextWithTooltip
+                text={referenceText}
+                wordsAssessment={scoreData.wordsAssessment}
+              />
             </div>
           )}
+
+          <PhonemeDetails phonemeDetails={scoreData.phonemeDetails} />
         </div>
       )}
     </section>

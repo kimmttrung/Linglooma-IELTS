@@ -1,27 +1,57 @@
 import React from "react";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
-function HighlightText({ text, errorWords }) {
-  if (!text) return null;
-  const words = text.split(/(\s+)/);
+const HighlightTextWithTooltip = ({ text, wordsAssessment }) => {
+  if (!wordsAssessment || wordsAssessment.length === 0) return <span>{text}</span>;
+
+  const textWords = text.split(/\s+/);
+  const wordMap = {};
+  wordsAssessment.forEach(({ word, isCorrect, errorType }, index) => {
+    wordMap[word.toLowerCase()] = { isCorrect, errorType, id: `word-${index}` };
+  });
+
+  const tooltips = wordsAssessment
+    .filter(w => !w.isCorrect)
+    .map(({ errorType, id }) => <Tooltip key={id} id={id} place="top" />);
+
   return (
-    <p className="text-lg italic leading-relaxed select-text">
-      {words.map((word, idx) => {
-        const cleanWord = word.replace(/[.,!?]/g, "").toLowerCase();
-        const isError = errorWords.some(
-          (ew) => ew.toLowerCase() === cleanWord
-        );
+    <>
+      {textWords.map((w, i) => {
+        const key = w.toLowerCase();
+        const assessment = wordMap[key];
+
+        if (assessment && !assessment.isCorrect) {
+          return (
+            <React.Fragment key={i}>
+              <span
+                data-tooltip-id={assessment.id}
+                data-tooltip-content={`Lỗi phát âm: ${assessment.errorType}`}
+                style={{
+                  color: "red",
+                  fontWeight: "700",
+                  cursor: "help",
+                  textDecoration: "underline",
+                  textDecorationColor: "red",
+                }}
+              >
+                {w}
+              </span>
+              {i !== textWords.length - 1 ? " " : ""}
+            </React.Fragment>
+          );
+        }
+        // Trả về JSX cho từ đúng để giữ khoảng trắng chuẩn
         return (
-          <span
-            key={idx}
-            className={isError ? "text-red-600 bg-red-100 underline" : ""}
-            style={{ whiteSpace: "pre-wrap" }}
-          >
-            {word}
-          </span>
+          <React.Fragment key={i}>
+            {w}
+            {i !== textWords.length - 1 ? " " : ""}
+          </React.Fragment>
         );
       })}
-    </p>
+      {tooltips}
+    </>
   );
-}
+};
 
-export default HighlightText;
+export default HighlightTextWithTooltip;
