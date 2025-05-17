@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import SpeakingGrid from "./SpeakingGrid";
-import SpeechPrompt from "./SpeechPrompt";
+// import SpeechPrompt from "./SpeechPrompt";
 import RecordingPractice from "./RecordingPractice";
-import PageSubmitRecording from "./PageSubmitRecording";
+// import PageSubmitRecording from "./PageSubmitRecording";
 
 const IeltsSpeakingPractice = () => {
-    const [onSubmit, setOnSubmit] = useState(false);
-    // setOnSubmit(false);
+    // const [onSubmit, setOnSubmit] = useState(false);
+    const [currentQuestion, setCurrentQuestion] = useState(null);
 
     return (
         <main className="min-h-screen h-screen flex flex-col bg-gradient-to-b from-[#F5F7FA] to-white">
@@ -24,12 +24,18 @@ const IeltsSpeakingPractice = () => {
                     {/* Left Side */}
                     <div className="flex flex-col w-full md:w-2/3 gap-10">
                         {/* <SpeechPrompt /> */}
-                        <RecordingPractice />
+                        <RecordingPractice
+                            currentQuestion={currentQuestion}
+                            referenceText={currentQuestion?.content || "Chọn một câu hỏi"}
+                        />
                     </div>
 
                     {/* Right Side */}
                     <div className="w-full md:w-1/3 h-full">
-                        {onSubmit === true ? <PageSubmitRecording /> : <SpeakingGrid />}
+                        {/* {onSubmit === true ? <PageSubmitRecording /> : <SpeakingGrid />} */}
+                        <SpeakingGrid
+                            setCurrentQuestion={setCurrentQuestion}
+                        />
                     </div>
                 </div>
             </div>

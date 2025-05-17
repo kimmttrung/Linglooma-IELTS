@@ -2,15 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import RecordRTC from "recordrtc";
 import { FaMicrophone } from "react-icons/fa6";
 import Button from "@/components/ui/Button";
-import HighlightText from "./HighlightText"; 
+import HighlightText from "./HighlightText";
 
-const RecordingPractice = ({ setOnSubmit }) => {
+const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
   const [recording, setRecording] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
   const [status, setStatus] = useState("Ready to record");
-  const [referenceText, setReferenceText] = useState(
-    "The quick brown fox jumps over the lazy dog."
-  );
+
   const [scoreData, setScoreData] = useState(null);
   const recorderRef = useRef(null);
   const audioRef = useRef(null);
