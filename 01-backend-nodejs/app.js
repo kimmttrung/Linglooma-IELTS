@@ -15,6 +15,7 @@ app.use(cors());
 app.use(express.json({ limit: "50mb" })); // tăng giới hạn size vì audio base64 có thể lớn
 
 app.use("/api", scoreRoutes);
+app.use("/api", questionRoutes)
 
 // truy xuất dữ liệu 
 app.use("/api", authRoutes);

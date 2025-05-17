@@ -6,6 +6,8 @@ const { calculateIELTSBand } = require("../services/ieltsScoringService");
 const { findMismatchedWords } = require("../services/miscueService");
 const { analyzePhonemes } = require("../utils/analyzePhonemes");
 const { vietnameseWordsAssessment } = require("../utils/wordsAssessmentHelper");
+const { analyzePhonemes } = require("../utils/analyzePhonemes");
+const { vietnameseWordsAssessment } = require("../utils/wordsAssessmentHelper");
 
 exports.scoreAudio = async (req, res) => {
   try {
@@ -21,15 +23,19 @@ exports.scoreAudio = async (req, res) => {
     await saveBase64AudioToFile(audio, filepath);
 
     const { assessment, transcriptText, wordsAssessment } = await assessPronunciation(filepath, referenceText);
+    const { assessment, transcriptText, wordsAssessment } = await assessPronunciation(filepath, referenceText);
 
     const miscueWordsFromTranscript = findMismatchedWords(referenceText, transcriptText);
 
     // Delete temp file
+    // Xóa file tạm
     fs.unlink(filepath, (err) => {
       if (err) console.error("Error deleting temp file:", err);
     });
 
     const ieltsResult = calculateIELTSBand(assessment);
+    const phonemeDetails = analyzePhonemes(assessment);
+    const wordsAssessmentVn = vietnameseWordsAssessment(wordsAssessment);
     const phonemeDetails = analyzePhonemes(assessment);
     const wordsAssessmentVn = vietnameseWordsAssessment(wordsAssessment);
 
@@ -43,6 +49,8 @@ exports.scoreAudio = async (req, res) => {
       pronScore: assessment.PronScore || null,
       transcript: transcriptText,
       miscueWords: miscueWordsFromTranscript,
+      phonemeDetails,
+      wordsAssessment: wordsAssessmentVn,
       phonemeDetails,
       wordsAssessment: wordsAssessmentVn,
       details: assessment,
