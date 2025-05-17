@@ -4,6 +4,8 @@ const { saveBase64AudioToFile } = require("../utils/fileUtils");
 const { assessPronunciation } = require("../services/azurePronunciationService");
 const { calculateIELTSBand } = require("../services/ieltsScoringService");
 const { findMismatchedWords } = require("../services/miscueService");
+const { analyzePhonemes } = require("../utils/analyzePhonemes");
+const { vietnameseWordsAssessment } = require("../utils/wordsAssessmentHelper");
 
 exports.scoreAudio = async (req, res) => {
   try {
@@ -18,17 +20,20 @@ exports.scoreAudio = async (req, res) => {
 
     await saveBase64AudioToFile(audio, filepath);
 
-    const { assessment, transcriptText } = await assessPronunciation(filepath, referenceText);
+    const { assessment, transcriptText, wordsAssessment } = await assessPronunciation(filepath, referenceText);
 
-    // Tìm từ sai dựa trên transcript
+    console.log("Pronunciation assessment data:", JSON.stringify(assessment, null, 2));
+
     const miscueWordsFromTranscript = findMismatchedWords(referenceText, transcriptText);
 
+    // Xóa file tạm
     fs.unlink(filepath, (err) => {
       if (err) console.error("Lỗi xóa file tạm:", err);
     });
 
-    // Tính điểm band IELTS từ kết quả đánh giá Azure
     const ieltsResult = calculateIELTSBand(assessment);
+    const phonemeDetails = analyzePhonemes(assessment);
+    const wordsAssessmentVn = vietnameseWordsAssessment(wordsAssessment);
 
     res.json({
       score: ieltsResult.band,
@@ -40,6 +45,8 @@ exports.scoreAudio = async (req, res) => {
       pronScore: assessment.PronScore || null,
       transcript: transcriptText,
       miscueWords: miscueWordsFromTranscript,
+      phonemeDetails,
+      wordsAssessment: wordsAssessmentVn,
       details: assessment,
     });
   } catch (error) {
