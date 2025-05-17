@@ -6,16 +6,14 @@ const { calculateIELTSBand } = require("../services/ieltsScoringService");
 const { findMismatchedWords } = require("../services/miscueService");
 const { analyzePhonemes } = require("../utils/analyzePhonemes");
 const { vietnameseWordsAssessment } = require("../utils/wordsAssessmentHelper");
-const { analyzePhonemes } = require("../utils/analyzePhonemes");
-const { vietnameseWordsAssessment } = require("../utils/wordsAssessmentHelper");
 
 exports.scoreAudio = async (req, res) => {
   try {
     const { audio, referenceText } = req.body;
 
-    if (!audio) return res.status(400).json({ error: "Missing audio data" });
+    if (!audio) return res.status(400).json({ error: "Thiếu dữ liệu audio" });
     if (!referenceText || referenceText.trim() === "")
-      return res.status(400).json({ error: "Missing reference sentence (referenceText)" });
+      return res.status(400).json({ error: "Thiếu câu mẫu (referenceText)" });
 
     const filename = `audio_${Date.now()}.wav`;
     const filepath = path.join(__dirname, "..", "temp", filename);
@@ -26,10 +24,9 @@ exports.scoreAudio = async (req, res) => {
 
     const miscueWordsFromTranscript = findMismatchedWords(referenceText, transcriptText);
 
-    // Delete temp file
     // Xóa file tạm
     fs.unlink(filepath, (err) => {
-      if (err) console.error("Error deleting temp file:", err);
+      if (err) console.error("Lỗi xóa file tạm:", err);
     });
 
     const ieltsResult = calculateIELTSBand(assessment);
@@ -48,12 +45,10 @@ exports.scoreAudio = async (req, res) => {
       miscueWords: miscueWordsFromTranscript,
       phonemeDetails,
       wordsAssessment: wordsAssessmentVn,
-      phonemeDetails,
-      wordsAssessment: wordsAssessmentVn,
       details: assessment,
     });
   } catch (error) {
-    console.error("Error scoring:", error);
-    res.status(500).json({ error: "Server error while scoring" });
+    console.error("Lỗi khi chấm điểm:", error);
+    res.status(500).json({ error: "Lỗi server khi chấm điểm" });
   }
 };

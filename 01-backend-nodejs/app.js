@@ -7,7 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const lessonRoutes = require("./routes/lessonRoute");
 const lessonResultRoutes = require('./routes/lessonResultRoute');
 const questionRoutes = require('./routes/questionRoute');
-const questionResultRoutes = require('./routes/questionResultRoot')
+const questionResultRoutes = require('./routes/questionResultRoute')
 
 const app = express();
 
