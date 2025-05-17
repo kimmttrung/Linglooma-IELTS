@@ -23,7 +23,6 @@ exports.scoreAudio = async (req, res) => {
     await saveBase64AudioToFile(audio, filepath);
 
     const { assessment, transcriptText, wordsAssessment } = await assessPronunciation(filepath, referenceText);
-    const { assessment, transcriptText, wordsAssessment } = await assessPronunciation(filepath, referenceText);
 
     const miscueWordsFromTranscript = findMismatchedWords(referenceText, transcriptText);
 
@@ -34,8 +33,6 @@ exports.scoreAudio = async (req, res) => {
     });
 
     const ieltsResult = calculateIELTSBand(assessment);
-    const phonemeDetails = analyzePhonemes(assessment);
-    const wordsAssessmentVn = vietnameseWordsAssessment(wordsAssessment);
     const phonemeDetails = analyzePhonemes(assessment);
     const wordsAssessmentVn = vietnameseWordsAssessment(wordsAssessment);
 
