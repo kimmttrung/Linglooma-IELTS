@@ -9,6 +9,6 @@ router.post('/', lessonResultController.insertLessonResultController);
 router.get('/', lessonResultController.getLessonResultController);
 
 // GET: Lấy 7 kết quả gần nhất của học sinh
-router.get('/recent', lessonResultController.getRecentlyLessonResultController);
+router.get('/recent/:studentId', lessonResultController.getRecentlyLessonResultController);
 
 module.exports = router;

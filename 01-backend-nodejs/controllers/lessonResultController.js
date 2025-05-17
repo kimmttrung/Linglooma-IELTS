@@ -9,49 +9,49 @@ const insertLessonResultController = async (req, res) => {
     const { studentId, lessonId, finishedTime, averageScore, feedback } = req.body;
     
     if (!studentId || !lessonId || !finishedTime || !averageScore) {
-        return res.status(400).json({ message: "Thiếu tham số để truy xuất dữ liệu" });
+        return res.status(400).json({ message: "Missing parameters to insert data" });
     }
 
     try {
         await insertLessonResult(studentId, lessonId, finishedTime, averageScore, feedback);
-        res.status(200).json({ message: "Thêm dữ liệu thành công" });
+        res.status(200).json({ message: "Data added successfully" });
     } catch (err) {
-        console.error("Lỗi khi thêm dữ liệu:", err);
-        res.status(500).json({ message: 'Lỗi thêm dữ liệu' });
+        console.error("Error adding data:", err);
+        res.status(500).json({ message: 'Error adding data' });
     }
 };
 
 // Lấy kết quả của 1 học sinh cho 1 bài học
 const getLessonResultController = async (req, res) => {
-    const { studentId, lessonId } = req.body;
+    const { studentId, lessonId } = req.params;
 
     if (!studentId || !lessonId) {
-        return res.status(400).json({ message: "Thiếu studentId hoặc lessonId" });
+        return res.status(400).json({ message: "Missing parameters to retrieve data" });
     }
 
     try {
         const result = await getLessonResult(studentId, lessonId);
         res.status(200).json(result.rows);
     } catch (err) {
-        console.error("Lỗi khi truy xuất dữ liệu:", err);
-        res.status(500).json({ message: 'Lỗi khi lấy dữ liệu' });
+        console.error("Error retrieving data:", err);
+        res.status(500).json({ message: 'Error retrieving data' });
     }
 };
 
 // Lấy 7 kết quả gần nhất của học sinh
 const getRecentlyLessonResultController = async (req, res) => {
-    const { studentId } = req.body;
+    const { studentId } = req.params;
 
     if (!studentId) {
-        return res.status(400).json({ message: "Thiếu studentId" });
+        return res.status(400).json({ message: "Missing parameters to retrieve data" });
     }
 
     try {
         const result = await getRecentlyLessonResult(studentId);
         res.status(200).json(result.rows);
     } catch (err) {
-        console.error("Lỗi khi lấy dữ liệu gần đây:", err);
-        res.status(500).json({ message: 'Lỗi khi lấy dữ liệu gần đây' });
+        console.error("Error retriving data", err);
+        res.status(500).json({ message: 'Error retriving data' });
     }
 };
 

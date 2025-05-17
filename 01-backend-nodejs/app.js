@@ -23,6 +23,7 @@ app.use("/api/lessons/results", lessonResultRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/questions/results", questionResultRoutes);
 
+// 404 handler đặt cuối cùng
 app.use((req, res) => {
   res.status(404).json({ error: "Not Found" });
 });

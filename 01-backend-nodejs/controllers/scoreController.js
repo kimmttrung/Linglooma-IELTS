@@ -4,31 +4,34 @@ const { saveBase64AudioToFile } = require("../utils/fileUtils");
 const { assessPronunciation } = require("../services/azurePronunciationService");
 const { calculateIELTSBand } = require("../services/ieltsScoringService");
 const { findMismatchedWords } = require("../services/miscueService");
+const { analyzePhonemes } = require("../utils/analyzePhonemes");
+const { vietnameseWordsAssessment } = require("../utils/wordsAssessmentHelper");
 
 exports.scoreAudio = async (req, res) => {
   try {
     const { audio, referenceText } = req.body;
 
-    if (!audio) return res.status(400).json({ error: "Thiếu dữ liệu audio" });
+    if (!audio) return res.status(400).json({ error: "Missing audio data" });
     if (!referenceText || referenceText.trim() === "")
-      return res.status(400).json({ error: "Thiếu câu mẫu (referenceText)" });
+      return res.status(400).json({ error: "Missing reference sentence (referenceText)" });
 
     const filename = `audio_${Date.now()}.wav`;
     const filepath = path.join(__dirname, "..", "temp", filename);
 
     await saveBase64AudioToFile(audio, filepath);
 
-    const { assessment, transcriptText } = await assessPronunciation(filepath, referenceText);
+    const { assessment, transcriptText, wordsAssessment } = await assessPronunciation(filepath, referenceText);
 
-    // Tìm từ sai dựa trên transcript
     const miscueWordsFromTranscript = findMismatchedWords(referenceText, transcriptText);
 
+    // Delete temp file
     fs.unlink(filepath, (err) => {
-      if (err) console.error("Lỗi xóa file tạm:", err);
+      if (err) console.error("Error deleting temp file:", err);
     });
 
-    // Tính điểm band IELTS từ kết quả đánh giá Azure
     const ieltsResult = calculateIELTSBand(assessment);
+    const phonemeDetails = analyzePhonemes(assessment);
+    const wordsAssessmentVn = vietnameseWordsAssessment(wordsAssessment);
 
     res.json({
       score: ieltsResult.band,
@@ -40,10 +43,12 @@ exports.scoreAudio = async (req, res) => {
       pronScore: assessment.PronScore || null,
       transcript: transcriptText,
       miscueWords: miscueWordsFromTranscript,
+      phonemeDetails,
+      wordsAssessment: wordsAssessmentVn,
       details: assessment,
     });
   } catch (error) {
-    console.error("Lỗi khi chấm điểm:", error);
-    res.status(500).json({ error: "Lỗi server khi chấm điểm" });
+    console.error("Error scoring:", error);
+    res.status(500).json({ error: "Server error while scoring" });
   }
 };

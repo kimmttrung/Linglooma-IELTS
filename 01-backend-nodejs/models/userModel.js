@@ -1,18 +1,18 @@
 const client = require('../db');
 
-const findUser = async (username) => {
+const findUser = async (email) => {
     const result = client.query(
-        'SELECT * FROM users WHERE username = $1',
-        [username]
+        'SELECT * FROM users WHERE email = $1',
+        [email]
     )
 
     return result;
 }
 
-const insertUser = async (username, hashedPassword) => {
+const insertUser = async (email, hashedPassword) => {
     client.query(
-        'INSERT INTO users (username, password) VALUES ($1, $2)',
-        [username, hashedPassword]
+        'INSERT INTO users (email, password) VALUES ($1, $2)',
+        [email, hashedPassword]
     );
 }
 

@@ -3,6 +3,6 @@ const router = express.Router();
 const questionController = require('../controllers/questionController');
 
 // GET: Lấy danh sách câu hỏi theo lessonId
-router.get('/', questionController.getQuestionsByLessonController);
+router.get('/:lessonId', questionController.getQuestionsByLessonController);
 
 module.exports = router;

@@ -1,74 +1,99 @@
 /**
- * Hàm tính điểm IELTS speaking dựa trên điểm Azure
- * @param {object} assessment - đối tượng PronunciationAssessment trả về từ Azure
- * @returns {object} chứa điểm band và feedback dạng text chi tiết
+ * Hàm tính điểm IELTS speaking chuẩn dựa trên điểm Azure và trả feedback sát thực tế
+ * @param {object} assessment
+ * @returns {object}
  */
 function calculateIELTSBand(assessment) {
-  const accuracy = assessment.AccuracyScore || 0;
-  const fluency = assessment.FluencyScore || 0;
-  const completeness = assessment.CompletenessScore || 0;
-  const pronScore = assessment.PronScore || 0;
+  const accuracyRaw = assessment.AccuracyScore || 0;      // tương tự Grammar+Accuracy trong IELTS
+  const fluencyRaw = assessment.FluencyScore || 0;    
+  const completenessRaw = assessment.CompletenessScore || 0; 
+  const pronScoreRaw = assessment.PronScore || 0;          // Pronunciation
 
-  // Trọng số từng phần
+  // Chuẩn hóa điểm về thang 0-9
+  const scaleTo9 = (score) => (score / 100) * 9;
+
+  const accuracy = scaleTo9(accuracyRaw);
+  const fluency = scaleTo9(fluencyRaw);
+  const completeness = scaleTo9(completenessRaw);
+  const pronunciation = scaleTo9(pronScoreRaw);
+
   const weights = {
-    accuracy: 0.2,
-    fluency: 0.3,
-    completeness: 0.1,
-    pronScore: 0.4,
+    accuracy: 0.25,
+    fluency: 0.2,
+    completeness: 0.25,
+    pronunciation: 0.3,
   };
 
-  const totalScore =
+  const weightedAverage =
     accuracy * weights.accuracy +
     fluency * weights.fluency +
     completeness * weights.completeness +
-    pronScore * weights.pronScore;
+    pronunciation * weights.pronunciation;
 
-  // Quy đổi điểm tổng thành band IELTS
-  let band = 0;
-  if (totalScore >= 90) band = 9;
-  else if (totalScore >= 80) band = 8;
-  else if (totalScore >= 70) band = 7;
-  else if (totalScore >= 60) band = 6;
-  else if (totalScore >= 50) band = 5;
-  else if (totalScore >= 40) band = 4;
-  else if (totalScore >= 30) band = 3;
-  else if (totalScore >= 20) band = 2;
-  else band = 1;
+  function roundBand(score) {
+    const floor = Math.floor(score);
+    const diff = score - floor;
 
-  // Feedback chi tiết từng phần
-  let feedbackParts = [];
+    if (diff < 0.25) return floor;
+    else if (diff < 0.75) return floor + 0.5;
+    else return floor + 1;
+  }
 
-  if (accuracy >= 85) feedbackParts.push("Phát âm chính xác, ít lỗi sai từ.");
-  else if (accuracy >= 70) feedbackParts.push("Phát âm khá tốt nhưng vẫn còn một số lỗi nhỏ.");
-  else if (accuracy >= 50) feedbackParts.push("Phát âm chưa chuẩn, cần chú ý hơn.");
-  else feedbackParts.push("Phát âm sai nhiều từ, cần luyện tập kỹ hơn.");
+  const band = roundBand(weightedAverage);
 
-  if (fluency >= 85) feedbackParts.push("Lưu loát tự nhiên, ngữ điệu tốt.");
-  else if (fluency >= 70) feedbackParts.push("Lưu loát khá, nhưng đôi lúc ngắt quãng.");
-  else if (fluency >= 50) feedbackParts.push("Ngắt quãng nhiều, tốc độ chưa phù hợp.");
-  else feedbackParts.push("Phát biểu chưa trôi chảy, cần cải thiện tốc độ và ngữ điệu.");
+const feedbackParts = [];
 
-  if (completeness >= 85) feedbackParts.push("Phần nói đầy đủ, không bỏ sót ý.");
-  else if (completeness >= 70) feedbackParts.push("Phần nói tương đối đầy đủ.");
-  else if (completeness >= 50) feedbackParts.push("Có một số ý chưa được thể hiện rõ.");
-  else feedbackParts.push("Nội dung chưa đầy đủ, cần bổ sung ý hơn.");
+if (fluency >= 8)
+  feedbackParts.push("Lưu loát và mạch lạc: Nói trôi chảy, chỉ thỉnh thoảng lặp lại hoặc tự sửa lỗi.");
+else if (fluency >= 6.5)
+  feedbackParts.push("Lưu loát và mạch lạc: Nói khá trôi chảy, đôi khi ngắt quãng hoặc lặp lại.");
+else if (fluency >= 5)
+  feedbackParts.push("Lưu loát và mạch lạc: Có một số ngắt quãng và lặp lại, khó duy trì mạch nói.");
+else
+  feedbackParts.push("Lưu loát và mạch lạc: Thường xuyên ngắt quãng và lặp lại, câu nói thiếu mạch lạc.");
 
-  if (pronScore >= 85) feedbackParts.push("Phát âm rõ ràng, dễ hiểu.");
-  else if (pronScore >= 70) feedbackParts.push("Phát âm tốt nhưng cần luyện thêm về âm khó.");
-  else if (pronScore >= 50) feedbackParts.push("Phát âm chưa tốt, dễ gây hiểu nhầm.");
-  else feedbackParts.push("Phát âm yếu, nên luyện tập nhiều hơn.");
+if (completeness >= 8)
+  feedbackParts.push("Từ vựng: Sử dụng vốn từ phong phú, tự nhiên và chính xác.");
+else if (completeness >= 6.5)
+  feedbackParts.push("Từ vựng: Vốn từ đủ dùng, có sự linh hoạt nhất định.");
+else if (completeness >= 5)
+  feedbackParts.push("Từ vựng: Vốn từ hạn chế, hay dùng từ đơn giản hoặc lặp lại.");
+else
+  feedbackParts.push("Từ vựng: Vốn từ rất hạn chế, thường xuyên sai sót trong lựa chọn từ.");
 
-  let overallFeedback = "";
-  if (band >= 8) overallFeedback = "Rất tốt! Giữ vững phong độ.";
-  else if (band >= 6) overallFeedback = "Khá tốt, tiếp tục luyện tập để nâng cao.";
-  else if (band >= 4) overallFeedback = "Cần cải thiện nhiều hơn nữa.";
-  else overallFeedback = "Cần luyện tập và rèn luyện nhiều hơn.";
+if (accuracy >= 8)
+  feedbackParts.push("Ngữ pháp: Sử dụng đa dạng cấu trúc với rất ít lỗi.");
+else if (accuracy >= 6.5)
+  feedbackParts.push("Ngữ pháp: Kiểm soát tốt, lỗi sai không thường xuyên.");
+else if (accuracy >= 5)
+  feedbackParts.push("Ngữ pháp: Kiểm soát hạn chế, lỗi sai thường xuyên nhưng vẫn hiểu được ý.");
+else
+  feedbackParts.push("Ngữ pháp: Lỗi sai nhiều và thường gây khó hiểu.");
 
-  const feedback = feedbackParts.join(" ") + " " + overallFeedback;
+if (pronunciation >= 8)
+  feedbackParts.push("Phát âm: Sử dụng nhiều đặc điểm phát âm chuẩn xác và rõ ràng.");
+else if (pronunciation >= 6.5)
+  feedbackParts.push("Phát âm: Phát âm rõ ràng, đôi khi có lỗi nhỏ.");
+else if (pronunciation >= 5)
+  feedbackParts.push("Phát âm: Một số lỗi phát âm gây khó khăn cho người nghe.");
+else
+  feedbackParts.push("Phát âm: Lỗi phát âm thường xuyên, gây khó hiểu.");
+
+let overallFeedback = "";
+if (band >= 8)
+  overallFeedback = "Tổng thể: Người nói rất thành thạo, kiểm soát ngôn ngữ xuất sắc.";
+else if (band >= 6.5)
+  overallFeedback = "Tổng thể: Người nói có khả năng sử dụng tiếng Anh hiệu quả dù còn một số lỗi.";
+else if (band >= 5)
+  overallFeedback = "Tổng thể: Người nói có khả năng giao tiếp cơ bản, nhưng còn nhiều hạn chế.";
+else
+  overallFeedback = "Tổng thể: Người nói còn hạn chế, giao tiếp còn nhiều khó khăn.";
+
+const feedback = feedbackParts.join("\n") + "\n" + overallFeedback;
 
   return {
     band,
-    totalScore: totalScore.toFixed(2),
+    totalScore: weightedAverage.toFixed(2),
     feedback,
   };
 }

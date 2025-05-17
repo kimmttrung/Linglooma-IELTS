@@ -29,15 +29,33 @@ async function assessPronunciation(audioFilePath, referenceText) {
           try {
             const jsonString = result.properties.getProperty(sdk.PropertyId.SpeechServiceResponse_JsonResult);
             const json = JSON.parse(jsonString);
+
             const assessment = json.NBest[0].PronunciationAssessment;
             if (!assessment.Miscue) assessment.Miscue = [];
 
-            // Lấy transcript text (lời nói đã được nhận dạng)
             const transcriptText = result.text;
+
+            // Lấy mảng từ và đánh giá từng từ
+            const words = json.NBest[0].Words || [];
+
+            const wordsAssessment = words.map((w) => {
+              const accuracy = w.PronunciationAssessment?.AccuracyScore ?? 0;
+              const errorType = w.PronunciationAssessment?.ErrorType ?? "None";
+
+              const isCorrect = (errorType === "None" && accuracy >= 50);
+
+              return {
+                word: w.Word,
+                accuracyScore: accuracy,
+                errorType,
+                isCorrect,
+              };
+            });
 
             resolve({
               assessment,
               transcriptText,
+              wordsAssessment,
             });
           } catch (e) {
             reject(e);

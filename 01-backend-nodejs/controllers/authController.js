@@ -2,44 +2,44 @@ const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
 
 exports.register = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ message: "Hãy điền tất cả các thông tin" });
+  if (!email || !password) {
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
-    // Kiểm tra trùng username
-    const existingUser = await User.findUser(username);
+    // Kiểm tra trùng email
+    const existingUser = await User.findUser(email);
     if (!existingUser[0]) {
-      return res.status(400).json({ msg: 'Tên người dùng đã tồn tại' });
+      return res.status(400).json({ msg: 'User have already existed' });
     }
 
     // Mã hoá mật khẩu
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Tạo người dùng mới
-    User.insertUser(username, hashedPassword)
+    User.insertUser(email, hashedPassword)
 
-    res.json({ msg: 'Đăng ký thành công', success: true });
+    res.json({ msg: 'Register successfully', success: true });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Đã có lỗi xảy ra khi đăng ký', success: false });
+    res.status(500).json({ msg: 'Register failed', success: false });
   }
 };
 
 exports.login = async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  if (!username || !password) {
-    return res.status(400).json({ message: "Hãy điền tất cả các thông tin" });
+  if (!email || !password) {
+    return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
-    const userResult = await User.findUser(username);
+    const userResult = await User.findUser(email);
 
     if (userResult.rows.length === 0) {
-      return res.status(401).json({ msg: 'Sai tài khoản hoặc mật khẩu' });
+      return res.status(401).json({ msg: 'Email or password is wrong' });
     }
 
     const user = userResult.rows[0];
@@ -50,10 +50,10 @@ exports.login = async (req, res) => {
       // Ở đây bạn có thể tạo JWT hoặc session nếu muốn
       res.json({ redirect: '/dashboard.html' });
     } else {
-      res.status(401).json({ msg: 'Sai mật khẩu' });
+      res.status(401).json({ msg: 'Retriving user failed' });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Lỗi khi đăng nhập' });
+    res.status(500).json({ msg: 'Login failed' });
   }
 };

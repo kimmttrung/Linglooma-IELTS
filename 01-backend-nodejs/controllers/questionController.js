@@ -1,22 +1,28 @@
-const { findQuestionBasedOnLesson } = require('../models/questionModel');
+const { findQuestionBasedOnLesson } = require("../models/questionModel");
 
-// Lấy danh sách câu hỏi theo lessonId
-const getQuestionsByLessonController = async (req, res) => {
-    const { lessonId } = req.body;
+
+const getQuestionsByLesson = async (req, res) => {
+    const { lessonId } = req.params;
 
     if (!lessonId) {
-        return res.status(400).json({ message: "Thiếu lessonId" });
+        return res.status(400).json({ message: "Missing lessonId" });
     }
 
     try {
         const result = await findQuestionBasedOnLesson(lessonId);
-        res.status(200).json(result.rows);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "No questions found for this lesson" });
+        }
+
+        res.json({ questions: result.rows });
     } catch (err) {
-        console.error("Lỗi khi lấy câu hỏi theo lessonId:", err);
-        res.status(500).json({ message: 'Lỗi khi lấy câu hỏi' });
+        console.error("Error fetching questions:", err);
+        res.status(500).json({ error: "Internal server error" });
     }
 };
 
 module.exports = {
-    getQuestionsByLessonController
+    getQuestionsByLesson,
 };
+
