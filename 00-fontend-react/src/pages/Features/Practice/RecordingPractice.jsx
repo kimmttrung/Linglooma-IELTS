@@ -4,49 +4,8 @@ import { FaMicrophone } from "react-icons/fa6";
 import Button from "@/components/ui/Button";
 import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
+import HighlightTextWithTooltip from "./HighlightText";
 
-// Component highlight từ sai với tooltip xịn hơn
-const HighlightTextWithTooltip = ({ text, wordsAssessment }) => {
-  if (!wordsAssessment || wordsAssessment.length === 0) return <span>{text}</span>;
-
-  const textWords = text.split(/\s+/);
-  const wordMap = {};
-  wordsAssessment.forEach(({ word, isCorrect, errorType }, index) => {
-    wordMap[word.toLowerCase()] = { isCorrect, errorType, id: `word-${index}` };
-  });
-
-  return (
-    <>
-      {textWords.map((w, i) => {
-        const key = w.toLowerCase();
-        const assessment = wordMap[key];
-
-        if (assessment && !assessment.isCorrect) {
-          return (
-            <React.Fragment key={i}>
-              <span
-                data-tooltip-id={assessment.id}
-                data-tooltip-content={`Lỗi phát âm: ${assessment.errorType}`}
-                style={{
-                  color: "red",
-                  fontWeight: "700",
-                  cursor: "help",
-                  textDecoration: "underline",
-                  textDecorationColor: "red",
-                }}
-              >
-                {w}
-              </span>
-              {i !== textWords.length - 1 ? " " : ""}
-              <Tooltip id={assessment.id} place="top" />
-            </React.Fragment>
-          );
-        }
-        return w + (i !== textWords.length - 1 ? " " : "");
-      })}
-    </>
-  );
-};
 
 const PhonemeDetails = ({ phonemeDetails }) => {
   if (!phonemeDetails || phonemeDetails.length === 0) return null;
@@ -266,9 +225,12 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
             <strong>Band IELTS:</strong>{" "}
             <span className="text-red-600">{scoreData.score ?? "N/A"}</span>
           </p>
-          <p className="text-center italic text-gray-700 mb-4">
-            Feedback: {scoreData.feedback ?? "No feedback provided."}
-          </p>
+<p
+  className="text-center italic text-gray-700 mb-4"
+  style={{ whiteSpace: "pre-wrap",  textAlign: "left"  }}
+>
+  {scoreData.feedback ?? "No feedback provided."}
+</p>
 
           <div className="grid grid-cols-2 gap-4 text-gray-800 font-semibold">
             <div>Accuracy: {scoreData.accuracyScore ?? "N/A"}</div>
@@ -277,7 +239,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
             <div>Pronunciation: {scoreData.pronScore ?? "N/A"}</div>
           </div>
 
-          {scoreData.miscueWords?.length > 0 && (
+          {/* {scoreData.miscueWords?.length > 0 && (
             <div className="mt-6 p-4 bg-red-50 border border-red-300 rounded text-red-700">
               <h4 className="font-semibold mb-2">Incorrect Words Highlighted</h4>
               <HighlightTextWithTooltip
@@ -285,7 +247,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
                 wordsAssessment={scoreData.wordsAssessment}
               />
             </div>
-          )}
+          )} */}
 
           <PhonemeDetails phonemeDetails={scoreData.phonemeDetails} />
         </div>
