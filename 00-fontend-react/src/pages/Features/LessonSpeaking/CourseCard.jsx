@@ -1,15 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-const CourseCard = ({ title, imageUrl }) => {
+const CourseCard = ({ title, imageUrl, lessonId }) => {
 
     const navigate = useNavigate();
     const handleLearnClick = () => {
-        if (title.includes("Technology")) {
-            navigate("/admin/features/practice");
+        if (lessonId) {
+            navigate(`/admin/features/practice/${lessonId}`);
         } else {
-            console.log("Learn button clicked for:", title);
-            // Bạn có thể thêm logic khác tại đây nếu muốn xử lý cho từng card
+            console.log("Không có lessonId cho:", title);
         }
     }
 

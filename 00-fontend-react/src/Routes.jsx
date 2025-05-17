@@ -30,7 +30,7 @@ const AppRoutes = () => {
           <Route path="features/lesson" element={<LessonSpeaking />} />
           <Route path="view-results" element={<ViewResultsPage />} />
           <Route path="settings" element={<SettingsPage />} />
-          <Route path="features/practice" element={<IeltsSpeakingPractice />} />
+          <Route path="features/practice/:lessonId" element={<IeltsSpeakingPractice />} />
           <Route path="features/recording" element={<Recording />} />
           {/* <Route path="features/submit" element={<PageSubmitRecording />} /> */}
         </Route>

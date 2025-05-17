@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Button from "@/components/ui/Button";
-import { useNavigate } from "react-router-dom";
-import { number } from "prop-types";
+import { useNavigate, useParams } from "react-router-dom";
 
 const GridButton = ({ number, active, onClick }) => {
     return (
@@ -18,19 +17,24 @@ const GridButton = ({ number, active, onClick }) => {
 
 const SpeakingGrid = ({ setCurrentQuestion }) => {
     const navigate = useNavigate();
+    const { lessonId } = useParams();
+
     const [activeNumber, setActiveNumber] = useState(1);
     const [questions, setQuestions] = useState([]);
+    const [lessonTitle, setLessonTitle] = useState("");
 
     const handleClick = (index) => {
-        setActiveNumber(index + 1); // để button active đúng
+        setActiveNumber(index + 1);
         const question = questions[index];
-        if (question) setCurrentQuestion(question);
+        if (question) {
+            setCurrentQuestion(question);
+        }
     };
 
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/questions/1`);
+                const res = await fetch(`http://localhost:5000/api/${lessonId}`);
                 const data = await res.json();
                 console.log(">>> data", data);
 
@@ -38,6 +42,7 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
                     setQuestions(data.questions);
                     if (data.questions.length > 0) {
                         setCurrentQuestion(data.questions[0]);
+                        setLessonTitle(data.questions[0].name); // ✅ Set title
                     }
                 } else {
                     console.error("Dữ liệu không hợp lệ:", data);
@@ -48,9 +53,9 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
                 setQuestions([]);
             }
         };
-        fetchQuestions();
-    }, [setCurrentQuestion]);
 
+        fetchQuestions();
+    }, [lessonId, setCurrentQuestion]);
 
     return (
         <section className="flex-1 p-5 bg-white rounded-lg shadow-sm h-[700px]">
@@ -59,7 +64,7 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
                     Speaking
                 </h2>
                 <h3 className="mb-5 text-lg font-extrabold text-sky-800">
-                    Bài 1 Technology
+                    Bài {lessonId} {lessonTitle}
                 </h3>
                 <div className="grid grid-cols-3 gap-5 w-full max-w-[400px]">
                     {questions.map((q, idx) => (
@@ -67,7 +72,7 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
                             key={q.id}
                             number={idx + 1}
                             active={activeNumber === (idx + 1)}
-                            onClick={() => handleClick(idx)} // truyền đúng index
+                            onClick={() => handleClick(idx)}
                         />
                     ))}
                 </div>
