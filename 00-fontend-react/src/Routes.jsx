@@ -14,6 +14,7 @@ import Skill4 from './pages/Features/Skill4';
 import IeltsSpeakingPractice from './pages/Features/Practice';
 // import PageSubmitRecording from './pages/Features/Practice/PageSubmitRecording';
 import PageRegister from './pages/Auth/Register';
+import { ToastContainer } from 'react-toastify';
 
 const AppRoutes = () => {
   return (
@@ -35,6 +36,19 @@ const AppRoutes = () => {
         </Route>
 
       </Routes>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        rtl={false}
+      />
+
     </Router>
   );
 };

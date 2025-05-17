@@ -22,8 +22,6 @@ exports.scoreAudio = async (req, res) => {
 
     const { assessment, transcriptText, wordsAssessment } = await assessPronunciation(filepath, referenceText);
 
-    console.log("Pronunciation assessment data:", JSON.stringify(assessment, null, 2));
-
     const miscueWordsFromTranscript = findMismatchedWords(referenceText, transcriptText);
 
     // Xóa file tạm
