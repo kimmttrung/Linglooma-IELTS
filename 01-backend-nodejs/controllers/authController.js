@@ -5,13 +5,13 @@ exports.register = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({ message: "Hãy điền tất cả các thông tin" });
   }
 
   try {
     // Kiểm tra trùng username
     const existingUser = await User.findUser(username);
-    if (!existingUser) {
+    if (!existingUser[0]) {
       return res.status(400).json({ msg: 'Tên người dùng đã tồn tại' });
     }
 
@@ -32,7 +32,7 @@ exports.login = async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({ message: "Hãy điền tất cả các thông tin" });
   }
 
   try {

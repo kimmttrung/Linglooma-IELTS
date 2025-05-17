@@ -1,5 +1,7 @@
 const client = require('../db');
 
+const lastestScore = 7;
+
 const insertLessonResult = async (studentId, lessonId, finishedTime, averageScore, feedback) => {
     await client.query(
         `
@@ -26,9 +28,9 @@ const getRecentlyLessonResult = async (studentId) => {
         FROM lessonresult
         WHERE studentId=$1
         ORDER BY finishedTime DESC
-        LIMIT 7;
+        LIMIT $2;
         `,
-        [studentId]
+        [studentId, lastestScore]
     )
 
     return result;
