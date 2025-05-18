@@ -1,5 +1,5 @@
 import express from "express";
-
+//import scoreRoutes from "./scoreRoutes.js";
 const router = express.Router();
 
 /**
@@ -12,6 +12,8 @@ const initWebRoutes = (app) => {
     })
 
     return app.use("/", router);
+    //app.use("/", router);
+    //app.use("/api/score", scoreRoutes);
 }
 
 export default initWebRoutes;
