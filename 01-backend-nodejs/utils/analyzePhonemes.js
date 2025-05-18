@@ -1,24 +1,20 @@
-    /**
-     * Phân tích và in điểm từng phoneme (âm) trong kết quả đánh giá phát âm
-     * @param {object} result - Kết quả đánh giá phát âm từ Azure hoặc tương tự
-     */
+// 
 function analyzePhonemes(result) {
-  if (!result.detailResult || !result.detailResult.Words) {
-    return null; // hoặc []
+  if (!result || !result.wordsAssessment || !Array.isArray(result.wordsAssessment)) {
+    return [];
   }
 
   const phonemeDetails = [];
-
-  result.detailResult.Words.forEach((word, wordIndex) => {
-    if (word.PronunciationAssessment && word.PronunciationAssessment.Phonemes) {
-      word.PronunciationAssessment.Phonemes.forEach((phoneme, phonemeIndex) => {
+  result.wordsAssessment.forEach((wordAssessment, wordIndex) => {
+    if (wordAssessment.phonemes && Array.isArray(wordAssessment.phonemes)) {
+      wordAssessment.phonemes.forEach((phoneme, phonemeIndex) => {
         phonemeDetails.push({
           wordIndex,
-          word: word.Word,
+          word: wordAssessment.word,
           phonemeIndex,
-          phoneme: phoneme.Phoneme,
-          accuracyScore: phoneme.AccuracyScore,
-          errorType: phoneme.ErrorType || "Good",
+          phoneme: phoneme.phoneme || "",
+          accuracyScore: phoneme.accuracyScore || 0,
+          errorType: phoneme.errorType || "Good",
         });
       });
     }
@@ -27,4 +23,44 @@ function analyzePhonemes(result) {
   return phonemeDetails;
 }
 
-module.exports = { analyzePhonemes };
+function generateStandardIPA(result) {
+  if (!result || !result.wordsAssessment || !Array.isArray(result.wordsAssessment)) {
+    return "";
+  }
+
+  const ipaParts = result.wordsAssessment
+    .map((w) => {
+      const phonemes = w.phonemes || [];
+      return phonemes.length ? `/${phonemes.map((p) => p.phoneme).join("")}/` : "";
+    })
+    .filter(Boolean);
+
+  return ipaParts.length ? ipaParts.join(" ") : "Không có phiên âm chuẩn";
+}
+
+function findIncorrectPhonemes(result) {
+  if (!result || !result.wordsAssessment || !Array.isArray(result.wordsAssessment)) {
+    return [];
+  }
+
+  const incorrectPhonemes = [];
+  result.wordsAssessment.forEach((wordAssessment) => {
+    if (wordAssessment.phonemes && Array.isArray(wordAssessment.phonemes)) {
+      wordAssessment.phonemes.forEach((phoneme) => {
+        if (phoneme.accuracyScore < 50 || phoneme.errorType !== "None") {
+          incorrectPhonemes.push({
+            word: wordAssessment.word,
+            expected: phoneme.phoneme || "",
+            actual: phoneme.phoneme || "",
+            accuracyScore: phoneme.accuracyScore || 0,
+            errorType: phoneme.errorType || "Mispronunciation",
+          });
+        }
+      });
+    }
+  });
+
+  return incorrectPhonemes;
+}
+
+module.exports = { analyzePhonemes, generateStandardIPA, findIncorrectPhonemes };
