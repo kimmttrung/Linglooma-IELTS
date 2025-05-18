@@ -111,6 +111,9 @@ const PageRegister = () => {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             className="bg-transparent border-0 w-full outline-none text-base md:text-lg"
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") handleRegister();
+                            }}
                         />
                         {showConfirmPassword ? (
                             <FaRegEyeSlash

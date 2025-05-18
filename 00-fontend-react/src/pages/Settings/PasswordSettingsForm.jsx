@@ -17,7 +17,15 @@ function PasswordSettingsForm() {
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="password" className="block mb-2">Password</label>
+                        <label htmlFor="password" className="block mb-2">Current Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            className="p-3 w-full rounded-lg border border-solid"
+                        />
+                    </div>
+                    <div className="mb-6">
+                        <label htmlFor="password" className="block mb-2">New Password</label>
                         <input
                             type="password"
                             id="password"
@@ -38,10 +46,11 @@ function PasswordSettingsForm() {
                             type="text"
                             id="genderInput"
                             className="p-3 w-full rounded-lg border border-solid"
+                            section=""
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="languageInput" className="block mb-2">Language</label>
+                        <label htmlFor="languageInput" className="block mb-2">Nationality</label>
                         <input
                             type="text"
                             id="languageInput"
