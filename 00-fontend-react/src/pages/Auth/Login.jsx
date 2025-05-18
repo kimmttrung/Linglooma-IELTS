@@ -48,9 +48,9 @@ const PageLogin = () => {
                     theme: "light"
                 }
                 );
-                // const { email, name, phone, gender, nationality } = res.data.user;
-                // localStorage.setItem("user", JSON.stringify({ email, name, phone, gender, nationality }));
-                // console.log("User info saved:", { email, name, phone, gender, nationality });
+                const { email, name, phone, gender, nationality } = res.data.user;
+                localStorage.setItem("user", JSON.stringify({ email, name, phone, gender, nationality }));
+                console.log("User info saved:", { email, name, phone, gender, nationality });
                 navigate("/admin");
             }
         } catch (err) {
