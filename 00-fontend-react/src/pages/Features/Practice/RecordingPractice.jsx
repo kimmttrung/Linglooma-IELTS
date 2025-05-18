@@ -6,6 +6,77 @@ import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import HighlightTextWithTooltip from "./HighlightText";
 
+const IncorrectPhonemesTable = ({ data }) => {
+  if (!data || data.length === 0) return null;
+
+  // Tìm số phoneme tối đa để tạo header
+  const maxPhonemes = data.reduce(
+    (max, item) => Math.max(max, item.phonemes.length),
+    0
+  );
+
+  // Tạo mảng header cho phoneme: Phoneme 1, Phoneme 2, ...
+  const phonemeHeaders = Array.from({ length: maxPhonemes }, (_, i) => `Phoneme ${i + 1}`);
+
+  return (
+    <div className="mt-8 bg-white rounded shadow p-4 overflow-x-auto border border-red-300">
+      <h4 className="text-red-700 font-bold mb-3 text-center">
+        Incorrect Phonemes Detail
+      </h4>
+      <table className="min-w-full border-collapse border border-gray-300 text-sm">
+        <thead>
+          <tr className="bg-red-100">
+            <th className="border border-gray-300 px-3 py-1 text-left">Word</th>
+            <th className="border border-gray-300 px-3 py-1">Accuracy Score</th>
+            <th className="border border-gray-300 px-3 py-1">Error Type</th>
+            {phonemeHeaders.map((header) => (
+              <th key={header} className="border border-gray-300 px-3 py-1 text-center">
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {data.map(({ word, accuracyScore, errorType, phonemes }, idx) => (
+            <tr key={idx} className={errorType !== "None" ? "bg-red-50" : ""}>
+              <td className="border border-gray-300 px-3 py-1 font-medium">{word}</td>
+              <td className="border border-gray-300 px-3 py-1 text-center">{accuracyScore}</td>
+              <td className="border border-gray-300 px-3 py-1 text-center">{errorType}</td>
+
+              {/* Hiển thị từng phoneme trong cột riêng */}
+              {Array.from({ length: maxPhonemes }).map((_, i) => {
+                const p = phonemes[i];
+                if (!p) return <td key={i} className="border border-gray-300 px-3 py-1"></td>;
+
+                const isLowScore = p.accuracyScore < 50;
+                const isErrorType = p.errorType !== "None";
+
+                let className = "px-3 py-1 border border-gray-300 text-center text-gray-600";
+
+                if (isErrorType) {
+                  className += " bg-red-200 text-red-800 font-semibold";
+                }
+
+                if (isLowScore) {
+                  // Override highlight điểm thấp
+                  className += " bg-yellow-300 text-yellow-900 font-bold";
+                }
+
+                return (
+                  <td key={i} className={className} title={`Score: ${p.accuracyScore.toFixed(1)}%, Error: ${p.errorType}`}>
+                    {p.phoneme}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+
 
 const PhonemeDetails = ({ phonemeDetails }) => {
   if (!phonemeDetails || phonemeDetails.length === 0) return null;
@@ -124,7 +195,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
         setStatus("Results received");
         if (setOnSubmit) setOnSubmit(true);
       } else {
-        setStatus("Error from server: " + (data.error || "Unknown error"));
+        setStatus("Lỗi xảy ra: " + (data.error || "Unknown error"));
         setScoreData(null);
       }
     } catch (err) {
@@ -216,8 +287,9 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
         )}
       </div>
 
-      {/* Results */}
-      {scoreData && (
+{/* Results */}
+    {scoreData && (
+      <>
         <div className="mt-8 bg-gray-50 rounded p-4 shadow-inner">
           <h3 className="text-center text-xl font-bold mb-4 text-blue-700">
             Test Results
@@ -240,21 +312,19 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
             <div>Pronunciation: {scoreData.pronScore ?? "N/A"}</div>
           </div>
 
-          {/* {scoreData.miscueWords?.length > 0 && (
-            <div className="mt-6 p-4 bg-red-50 border border-red-300 rounded text-red-700">
-              <h4 className="font-semibold mb-2">Incorrect Words Highlighted</h4>
-              <HighlightTextWithTooltip
-                text={referenceText}
-                wordsAssessment={scoreData.wordsAssessment}
-              />
-            </div>
-          )} */}
-
           <PhonemeDetails phonemeDetails={scoreData.phonemeDetails} />
         </div>
-      )}
-    </section>
-  );
+
+        {/* Bảng lỗi phát âm tách riêng ở dưới */}
+        {scoreData.incorrectPhonemes && scoreData.incorrectPhonemes.length > 0 && (
+          <div className="mt-6 max-w-xl mx-auto">
+            <IncorrectPhonemesTable data={scoreData.incorrectPhonemes} />
+          </div>
+        )}
+      </>
+    )}
+  </section>
+);
 };
 
 export default RecordingPractice;

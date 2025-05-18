@@ -39,6 +39,7 @@ const PageLogin = () => {
         }
         try {
             const res = await axios.post(`${API_URL}/api/login`, { email, password });
+
             if (res.data.success === true) {
                 toast.success(
                     "Login success! Welcome to Linglooma", {
@@ -47,6 +48,9 @@ const PageLogin = () => {
                     theme: "light"
                 }
                 );
+                const { email, name, phone, gender, nationality } = res.data.user;
+                localStorage.setItem("user", JSON.stringify({ email, name, phone, gender, nationality }));
+                console.log("User info saved:", { email, name, phone, gender, nationality });
                 navigate("/admin");
             }
         } catch (err) {
@@ -63,7 +67,7 @@ const PageLogin = () => {
             <div className="w-[95%] max-w-xl  p-6 bg-gray-100 flex-col flex items-center gap-6 rounded-2xl shadow-slate-500 shadow-2xl">
                 <h1 className="text-3xl md:text-5xl font-bold">Linglooma</h1>
                 <p className="text-lg md:text-xl text-gray-600 text-center">
-                    Good to see you ganin
+                    Good to see you again
                 </p>
 
                 <div className="w-full flex flex-col gap-6">
@@ -84,6 +88,9 @@ const PageLogin = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             className="bg-transparent border-0 w-full outline-none text-base md:text-lg"
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter") handleSubmitLogin();
+                            }}
                         />
                         {showPassword ? (
                             <FaRegEyeSlash

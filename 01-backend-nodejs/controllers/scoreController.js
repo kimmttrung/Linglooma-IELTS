@@ -33,12 +33,11 @@ exports.scoreAudio = async (req, res) => {
     const phonemeDetails = analyzePhonemes(assessment);
     const wordsAssessmentVn = vietnameseWordsAssessment(wordsAssessment);
     const standardIPA = generateStandardIPA(assessment);
-    const incorrectPhonemes = findIncorrectPhonemes(assessment);
 
     //test 
   
-    // console.log("standardIPA:", standardIPA);
-    // console.log("incorrectPhonemes:", incorrectPhonemes);
+    console.log(JSON.stringify(wordsAssessment, null, 2));
+   // console.log("incorrectPhonemes:", wordsAssessment);
 
     res.json({
       score: ieltsResult.band,
@@ -54,12 +53,12 @@ exports.scoreAudio = async (req, res) => {
       wordsAssessment: wordsAssessmentVn,
       //hung them
       standardIPA,
-      incorrectPhonemes,
+      incorrectPhonemes: wordsAssessment,
       //hung them
       details: assessment,
     });
   } catch (error) {
     console.error("Lỗi khi chấm điểm:", error);
-    res.status(500).json({ error: "Lỗi server khi chấm điểm" });
+    res.status(500).json({ error: "Không nhận dạng được giọng nói" });
   }
 };

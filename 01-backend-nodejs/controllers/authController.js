@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
+// const { name } = require('ejs');
+// const { use } = require('react');
 
 exports.register = async (req, res) => {
   const { email, password } = req.body;
@@ -51,7 +53,13 @@ exports.login = async (req, res) => {
       res.status(200).json({
         msg: 'Login successful',
         success: true,
-        user: { email: user.email } // hoặc thêm userId, token nếu có
+        user: {
+          email: user.email,
+          name: user.username, // ← Gửi name đúng tên key mong muốn ở FE
+          phone: user.phonenumber,
+          gender: user.gender,
+          nationality: user.nationality
+        } // hoặc thêm userId, token nếu có
       });
     } else {
       res.status(401).json({ msg: 'Retriving user failed' });
