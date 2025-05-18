@@ -26,11 +26,10 @@ const PhonemeDetails = ({ phonemeDetails }) => {
             {phonemes.map(({ phoneme, accuracyScore, errorType }, i) => (
               <div
                 key={i}
-                className={`p-2 rounded border ${
-                  errorType === "Good"
-                    ? "border-green-500 text-green-600"
-                    : "border-red-500 text-red-600"
-                }`}
+                className={`p-2 rounded border ${errorType === "Good"
+                  ? "border-green-500 text-green-600"
+                  : "border-red-500 text-red-600"
+                  }`}
                 title={`Error type: ${errorType}`}
               >
                 <div>IPA: <strong>{phoneme}</strong></div>
@@ -46,6 +45,8 @@ const PhonemeDetails = ({ phonemeDetails }) => {
 };
 
 const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
+  const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
+
   const [recording, setRecording] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
   const [status, setStatus] = useState("Ready to record");
@@ -111,7 +112,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
       const blob = recorderRef.current.getBlob();
       const base64Audio = await blobToBase64(blob);
 
-      const res = await fetch("http://localhost:5000/api/score-audio", {
+      const res = await fetch(`${API_URL}/api/score-audio`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ audio: base64Audio, referenceText }),
@@ -141,7 +142,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
       {/* Reference text */}
       <div
         className="mb-6 p-4 bg-blue-50 rounded text-center text-lg font-semibold text-blue-700 select-text"
-        style={{ minHeight: 70,  textAlign: "center", lineHeight: "1.5",  whiteSpace: "normal" }}
+        style={{ minHeight: 70, textAlign: "center", lineHeight: "1.5", whiteSpace: "normal" }}
       >
         {scoreData?.wordsAssessment?.length > 0 ? (
           <HighlightTextWithTooltip
@@ -225,12 +226,12 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
             <strong>Band IELTS:</strong>{" "}
             <span className="text-red-600">{scoreData.score ?? "N/A"}</span>
           </p>
-<p
-  className="text-center italic text-gray-700 mb-4"
-  style={{ whiteSpace: "pre-wrap",  textAlign: "left"  }}
->
-  {scoreData.feedback ?? "No feedback provided."}
-</p>
+          <p
+            className="text-center italic text-gray-700 mb-4"
+            style={{ whiteSpace: "pre-wrap", textAlign: "left" }}
+          >
+            {scoreData.feedback ?? "No feedback provided."}
+          </p>
 
           <div className="grid grid-cols-2 gap-4 text-gray-800 font-semibold">
             <div>Accuracy: {scoreData.accuracyScore ?? "N/A"}</div>

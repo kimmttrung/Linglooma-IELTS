@@ -31,7 +31,7 @@ const PageRegister = () => {
         try {
             const res = await axios.post(`${API_URL}/api/register`, { email, password });
             if (res.data.success) {
-                toast.success("Register success");
+                toast.success("Create new user success");
                 navigate("/login");
             } else {
                 toast.error(res.data.msg || "Register failed");
@@ -88,7 +88,7 @@ const PageRegister = () => {
 
                     <div className="w-full flex items-center gap-2 p-2 bg-white rounded-xl relative">
                         <input
-                            type={showConfirmPassword ? "password" : "text"}
+                            type={showConfirmPassword ? "text" : "password"}
                             placeholder="Confirm Password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
