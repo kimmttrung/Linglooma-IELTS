@@ -39,7 +39,6 @@ const PageLogin = () => {
         }
         try {
             const res = await axios.post(`${API_URL}/api/login`, { email, password });
-            console.log(">>> Data", res.data);
             if (res.data.success === true) {
                 toast.success(
                     "Login success! Welcome to Linglooma", {

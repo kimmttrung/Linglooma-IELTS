@@ -12,7 +12,7 @@ exports.register = async (req, res) => {
     // Kiểm tra trùng email
     const existingUser = await User.findUser(email);
     if (existingUser.rows.length > 0) {
-      return res.status(400).json({ msg: 'User already exists' });
+      return res.status(400).json({ msg: 'Email already exists' });
     }
 
     // Mã hoá mật khẩu

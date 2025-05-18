@@ -9,7 +9,6 @@ import Admin from './pages/Admin/Admin';
 import LessonSpeaking from './pages/Features/LessonSpeaking';
 import SettingsPage from './pages/Settings';
 import ViewResultsPage from './pages/ViewResults/ViewResults';
-import Recording from './pages/Features/Recording'
 import Skill4 from './pages/Features/Skill4';
 import IeltsSpeakingPractice from './pages/Features/Practice';
 import PageRegister from './pages/Auth/Register';
@@ -31,7 +30,6 @@ const AppRoutes = () => {
           <Route path="view-results" element={<ViewResultsPage />} />
           <Route path="settings" element={<SettingsPage />} />
           <Route path="features/practice/:lessonId" element={<IeltsSpeakingPractice />} />
-          <Route path="features/recording" element={<Recording />} />
           <Route path="features/feedback/:lessonId" element={<PronunciationFeedback />} />
         </Route>
 
