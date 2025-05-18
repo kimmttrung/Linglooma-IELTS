@@ -15,21 +15,21 @@ describe('Kiểm thử giao diện trang đăng nhập', () => {
     cy.get('img[alt="google-icon"]').should('exist'); // Icon Facebook
   });
 
-it('Chuyển đổi hiển thị mật khẩu khi nhấn vào biểu tượng con mắt', () => {
-  cy.get('input[placeholder="Password"]').type('test123456');
+  it('Chuyển đổi hiển thị mật khẩu khi nhấn vào biểu tượng con mắt', () => {
+    cy.get('input[placeholder="Password"]').type('test123456');
 
-  // Trước khi click, mật khẩu đang ẩn
-  cy.get('input[placeholder="Password"]').should('have.attr', 'type', 'password');
+    // Trước khi click, mật khẩu đang ẩn
+    cy.get('input[placeholder="Password"]').should('have.attr', 'type', 'password');
 
-  // Tìm icon con mắt kế bên input (có class .cursor-pointer và là phần tử cuối trong input wrapper)
-  cy.get('input[placeholder="Password"]')
-    .parent()
-    .find('.cursor-pointer')
-    .click();
+    // Tìm icon con mắt kế bên input (có class .cursor-pointer và là phần tử cuối trong input wrapper)
+    cy.get('input[placeholder="Password"]')
+      .parent()
+      .find('.cursor-pointer')
+      .click();
 
-  // Sau khi click, mật khẩu hiển thị
-  cy.get('input[placeholder="Password"]').should('have.attr', 'type', 'text');
-});
+    // Sau khi click, mật khẩu hiển thị
+    cy.get('input[placeholder="Password"]').should('have.attr', 'type', 'text');
+  });
 
 
   it('Thông báo lỗi khi email không hợp lệ', () => {
@@ -109,14 +109,15 @@ it('Chuyển đổi hiển thị mật khẩu khi nhấn vào biểu tượng co
   });
 
   it('Cho phép nhấn Enter để gửi form', () => {
-    cy.get('input[placeholder="Email address"]').type('test@example.com');
-    cy.get('input[placeholder="Password"]').type('123456{enter}');
-
+    // intercept phải đặt trước khi hành động gửi request xảy ra
     cy.intercept('POST', '**/api/login', {
       statusCode: 200,
       body: { success: true },
     }).as('enterLogin');
 
-    cy.wait('@enterLogin');
+    cy.get('input[placeholder="Email address"]').type('test@example.com');
+    cy.get('input[placeholder="Password"]').type('123456{enter}');
+
+    cy.wait('@enterLogin'); // chờ request bị intercept
   });
 });

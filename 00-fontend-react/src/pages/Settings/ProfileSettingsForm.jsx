@@ -58,6 +58,7 @@ function ProfileSettingsForm() {
                                 id="language"
                                 className="p-3 w-full bg-white rounded-lg border border-solid appearance-none"
                                 value={nationality}
+                                disabled
                             >
                             </input>
                             <i className="ti ti-chevron-down absolute right-3 top-2/4 -translate-y-2/4" />
