@@ -1,6 +1,6 @@
 // cypress/e2e/register.cy.js
 
-describe('Trang Đăng Ký - Kiểm thử các trường hợp khác nhau', () => {
+describe('Giao diện trang Đăng Ký', () => {
   beforeEach(() => {
     cy.visit('http://localhost:4028/register');
   });
