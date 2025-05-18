@@ -77,9 +77,14 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
                         />
                     ))}
                 </div>
-                <Button variant="primary" className="mt-5" onClick={() => navigate("/admin/features/lesson")}>
-                    Exit
-                </Button>
+                <div className="flex  gap-10">
+                    <Button variant="primary" className="mt-5" onClick={() => navigate(`/admin/features/feedback/${lessonId}`)}>
+                        Feedback
+                    </Button>
+                    <Button variant="primary" className="mt-5" onClick={() => navigate("/admin/features/lesson")}>
+                        Exit
+                    </Button>
+                </div>
             </div>
         </section>
     );
