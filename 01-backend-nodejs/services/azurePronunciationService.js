@@ -69,8 +69,8 @@ async function assessPronunciation(audioFilePath, referenceText, language = "en-
         ),
       ]);
     });
-    console.log("Raw words from Azure:");
-    console.log(rawTable.toString());
+    // console.log("Raw words from Azure:");
+    // console.log(rawTable.toString());
 
     const wordsAssessment = words.map((w) => {
       const pronunciation = w.PronunciationAssessment || {};
@@ -111,8 +111,8 @@ async function assessPronunciation(audioFilePath, referenceText, language = "en-
         ),
       ]);
     });
-    console.log("Processed wordsAssessment:");
-    console.log(processedTable.toString());
+    // console.log("Processed wordsAssessment:");
+    // console.log(processedTable.toString());
 
     // Thêm bảng 3 hàng cho tất cả các từ
     if (wordsAssessment.length > 0) {
@@ -142,16 +142,16 @@ async function assessPronunciation(audioFilePath, referenceText, language = "en-
         phonemes.forEach((p) => row3.push(p.accuracyScore));
         customTable.push(row3);
 
-        console.log(`Custom Pronunciation Table for word[${index}]:`);
-        console.log(customTable.toString());
+        // console.log(`Custom Pronunciation Table for word[${index}]:`);
+        // console.log(customTable.toString());
       });
     } else {
       console.log("No words available to display in custom table.");
     }
 
     const phonemeDetails = analyzePhonemes({ wordsAssessment });
-    const standardIPA = generateStandardIPA({ wordsAssessment}) || "No standard IPA available";
-    const incorrectPhonemes = findIncorrectPhonemes({ wordsAssessment});
+    const standardIPA = generateStandardIPA({ wordsAssessment }) || "No standard IPA available";
+    const incorrectPhonemes = findIncorrectPhonemes({ wordsAssessment });
 
     return {
       assessment,
