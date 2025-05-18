@@ -11,15 +11,15 @@ exports.register = async (req, res) => {
   try {
     // Kiểm tra trùng email
     const existingUser = await User.findUser(email);
-    if (!existingUser[0]) {
-      return res.status(400).json({ msg: 'User have already existed' });
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ msg: 'User already exists' });
     }
 
     // Mã hoá mật khẩu
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Tạo người dùng mới
-    User.insertUser(email, hashedPassword)
+    await User.insertUser(email, hashedPassword);
 
     res.json({ msg: 'Register successfully', success: true });
   } catch (err) {
@@ -47,8 +47,12 @@ exports.login = async (req, res) => {
     // So sánh password gốc với hash đã lưu
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
-      // Ở đây bạn có thể tạo JWT hoặc session nếu muốn
-      res.json({ redirect: '/dashboard.html' });
+      // Có thể tạo JWT ở đây nếu cần
+      res.status(200).json({
+        msg: 'Login successful',
+        success: true,
+        user: { email: user.email } // hoặc thêm userId, token nếu có
+      });
     } else {
       res.status(401).json({ msg: 'Retriving user failed' });
     }

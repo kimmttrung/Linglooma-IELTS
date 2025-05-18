@@ -1,12 +1,44 @@
+
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from 'react-toastify';
+import axios from "axios";
 
 const PageLogin = () => {
+    const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
+
     const [showPassword, setShowPassword] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
     const togglePasswordView = () => setShowPassword(!showPassword);
     const navigate = useNavigate();
+
+    const handleSubmitLogin = async () => {
+        if (!email) {
+            toast.error('Invlid email');
+            return;
+        }
+        if (!password) {
+            toast.error('Invalid password')
+            return;
+        }
+        try {
+            const res = await axios.post(`${API_URL}/api/login`, { email, password });
+            console.log(">>> Data", res.data);
+            if (res.data.success === true) {
+                toast.success("Login Success");
+                navigate("/admin");
+            }
+        } catch (err) {
+            if (err.response && err.response.data && err.response.data.msg) {
+                toast.error(err.response.data.msg);
+            } else {
+                toast.error("Login failed");
+            }
+        }
+    }
 
     return (
         <div className="w-full h-screen flex items-center justify-center" style={{ background: "#FFFBEF" }}>
@@ -21,14 +53,18 @@ const PageLogin = () => {
                         <input
                             type="email"
                             placeholder="Email address"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             className="bg-transparent border-0 w-full outline-none text-base md:text-lg"
                         />
                     </div>
 
                     <div className="w-full flex items-center gap-2  p-2 bg-white rounded-xl relative">
                         <input
-                            type={showPassword ? "password" : "text"}
+                            type={showPassword ? "text" : "password"}
                             placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             className="bg-transparent border-0 w-full outline-none text-base md:text-lg"
                         />
                         {showPassword ? (
@@ -47,7 +83,7 @@ const PageLogin = () => {
 
                 <button
                     className="w-full p-3 bg-[#71da90] rounded-xl mt-2 hover:bg-[#0FC446] text-base md:text-sm text-white font-bold"
-                    onClick={() => navigate("/admin")}
+                    onClick={handleSubmitLogin}
 
                 >
                     Login
@@ -77,7 +113,10 @@ const PageLogin = () => {
                 </div>
                 <div className="relative w-full flex items-center justify-center py-3">
 
-                    <h3 className="font-lora text-sm md:text-base px-4 text-gray-600">
+                    <h3
+                        className="font-lora text-sm md:text-base px-4 text-gray-600 cursor-pointer"
+                        onClick={() => navigate("/register")}
+                    >
                         Do you have an account ?
                     </h3>
                     <h3 className="font-lora text-sm md:text-base px-4 text-gray-600">

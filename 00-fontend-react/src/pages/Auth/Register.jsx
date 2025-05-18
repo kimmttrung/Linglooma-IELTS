@@ -1,33 +1,49 @@
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import axios from "axios";
 
 const PageRegister = () => {
+    const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [error, setError] = useState("");
+
     const navigate = useNavigate();
 
     const togglePasswordView = () => setShowPassword(!showPassword);
     const toggleConfirmPasswordView = () => setShowConfirmPassword(!showConfirmPassword);
 
-    const handleRegister = () => {
+    const handleRegister = async () => {
         if (!email || !password || !confirmPassword) {
-            setError("Please fill in all fields");
+            toast.error("Please fill in all fields");
             return;
         }
-
         if (password !== confirmPassword) {
-            setError("Passwords do not match");
+            toast.error("Passwords do not match");
             return;
         }
 
-        setError("");
-        // Giả lập đăng ký thành công
-        navigate("/admin");
+        try {
+            const res = await axios.post(`${API_URL}/api/register`, { email, password });
+            if (res.data.success) {
+                toast.success("Register success");
+                navigate("/login");
+            } else {
+                toast.error(res.data.msg || "Register failed");
+            }
+        } catch (err) {
+            // xử lý lỗi trả về từ backend
+            if (err.response && err.response.data && err.response.data.msg) {
+                toast.error(err.response.data.msg);
+            } else {
+                toast.error("Register failed");
+            }
+        }
     };
 
     return (
@@ -51,7 +67,7 @@ const PageRegister = () => {
 
                     <div className="w-full flex items-center gap-2 p-2 bg-white rounded-xl relative">
                         <input
-                            type={showPassword ? "password" : "text"}
+                            type={showPassword ? "text" : "password"}
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -91,7 +107,7 @@ const PageRegister = () => {
                         )}
                     </div>
 
-                    {error && <p className="text-red-500 text-sm">{error}</p>}
+                    {/* {error && <p className="text-red-500 text-sm">{error}</p>} */}
                 </div>
 
                 <button
