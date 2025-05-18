@@ -15,14 +15,27 @@ const PageLogin = () => {
     const togglePasswordView = () => setShowPassword(!showPassword);
     const navigate = useNavigate();
 
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
+
     const handleSubmitLogin = async () => {
-        if (!email) {
-            toast.error('Invlid email');
+        // validate
+        const isvaliEmail = validateEmail(email);
+        if (!isvaliEmail) {
+            toast.error('Invalid email address');
             return;
         }
         if (!password) {
             toast.error('Invalid password')
             return;
+        }
+        if (!isvaliEmail && !password) {
+            toast.error("Invalid email and password");
         }
         try {
             const res = await axios.post(`${API_URL}/api/login`, { email, password });

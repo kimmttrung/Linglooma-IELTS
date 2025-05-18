@@ -18,11 +18,28 @@ const PageRegister = () => {
     const togglePasswordView = () => setShowPassword(!showPassword);
     const toggleConfirmPasswordView = () => setShowConfirmPassword(!showConfirmPassword);
 
+    // validate
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
+
     const handleRegister = async () => {
         if (!email || !password || !confirmPassword) {
             toast.error("Please fill in all fields");
             return;
         }
+
+        // validate
+        const isvaliEmail = validateEmail(email);
+        if (!isvaliEmail) {
+            toast.error('Invlid email address');
+            return;
+        }
+
         if (password !== confirmPassword) {
             toast.error("Passwords do not match");
             return;

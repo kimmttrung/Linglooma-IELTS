@@ -1,8 +1,12 @@
 import React from "react";
 import ProfileSettingsForm from "./ProfileSettingsForm";
 import PasswordSettingsForm from "./PasswordSettingsForm";
+import Button from "@/components/ui/Button";
+import { useNavigate } from "react-router-dom";
 
 const SettingsPage = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <link
@@ -18,9 +22,12 @@ const SettingsPage = () => {
                 <p className="text-gray-600">Sat, 17 May 2025</p>
               </div>
               <div className="flex gap-4 items-center">
-                <button className="px-4 py-2 rounded-lg bg-[pink-100]">
+                <Button
+                  className="px-4 py-2 rounded-lg bg-[pink-100]"
+                  onClick={() => navigate("/")}
+                >
                   Đăng xuất
-                </button>
+                </Button>
                 <div className="overflow-hidden w-10 h-10 rounded-full">
                   <img
                     src="/images/Profile1.png"
