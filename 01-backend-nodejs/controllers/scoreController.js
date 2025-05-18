@@ -4,7 +4,7 @@ const { saveBase64AudioToFile } = require("../utils/fileUtils");
 const { assessPronunciation } = require("../services/azurePronunciationService");
 const { calculateIELTSBand } = require("../services/ieltsScoringService");
 const { findMismatchedWords } = require("../services/miscueService");
-const { analyzePhonemes } = require("../utils/analyzePhonemes");
+const { analyzePhonemes, generateStandardIPA, findIncorrectPhonemes } = require("../utils/analyzePhonemes");
 const { vietnameseWordsAssessment } = require("../utils/wordsAssessmentHelper");
 
 exports.scoreAudio = async (req, res) => {
@@ -32,6 +32,13 @@ exports.scoreAudio = async (req, res) => {
     const ieltsResult = calculateIELTSBand(assessment);
     const phonemeDetails = analyzePhonemes(assessment);
     const wordsAssessmentVn = vietnameseWordsAssessment(wordsAssessment);
+    const standardIPA = generateStandardIPA(assessment);
+    const incorrectPhonemes = findIncorrectPhonemes(assessment);
+
+    //test 
+  
+    // console.log("standardIPA:", standardIPA);
+    // console.log("incorrectPhonemes:", incorrectPhonemes);
 
     res.json({
       score: ieltsResult.band,
@@ -45,6 +52,10 @@ exports.scoreAudio = async (req, res) => {
       miscueWords: miscueWordsFromTranscript,
       phonemeDetails,
       wordsAssessment: wordsAssessmentVn,
+      //hung them
+      standardIPA,
+      incorrectPhonemes,
+      //hung them
       details: assessment,
     });
   } catch (error) {

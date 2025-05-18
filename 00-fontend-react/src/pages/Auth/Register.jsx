@@ -31,7 +31,7 @@ const PageRegister = () => {
         try {
             const res = await axios.post(`${API_URL}/api/register`, { email, password });
             if (res.data.success) {
-                toast.success("Register success");
+                toast.success("Create new user success");
                 navigate("/login");
             } else {
                 toast.error(res.data.msg || "Register failed");

@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import SpeakingGrid from "./SpeakingGrid";
-// import SpeechPrompt from "./SpeechPrompt";
 import RecordingPractice from "./RecordingPractice";
-// import PageSubmitRecording from "./PageSubmitRecording";
 
 const IeltsSpeakingPractice = () => {
-    // const [onSubmit, setOnSubmit] = useState(false);
     const [currentQuestion, setCurrentQuestion] = useState(null);
 
     return (
@@ -32,7 +29,6 @@ const IeltsSpeakingPractice = () => {
 
                     {/* Right Side */}
                     <div className="w-full md:w-1/3 h-full">
-                        {/* {onSubmit === true ? <PageSubmitRecording /> : <SpeakingGrid />} */}
                         <SpeakingGrid
                             setCurrentQuestion={setCurrentQuestion}
                         />

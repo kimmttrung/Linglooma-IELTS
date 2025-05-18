@@ -28,7 +28,13 @@ const PageLogin = () => {
             const res = await axios.post(`${API_URL}/api/login`, { email, password });
             console.log(">>> Data", res.data);
             if (res.data.success === true) {
-                toast.success("Login Success");
+                toast.success(
+                    "Login success! Welcome to Linglooma", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    theme: "light"
+                }
+                );
                 navigate("/admin");
             }
         } catch (err) {

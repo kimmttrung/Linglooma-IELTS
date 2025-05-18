@@ -16,6 +16,8 @@ const GridButton = ({ number, active, onClick }) => {
 };
 
 const SpeakingGrid = ({ setCurrentQuestion }) => {
+    const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
+
     const navigate = useNavigate();
     const { lessonId } = useParams();
 
@@ -34,9 +36,8 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/${lessonId}`);
+                const res = await fetch(`${API_URL}/api/${lessonId}`);
                 const data = await res.json();
-                console.log(">>> data", data);
 
                 if (data.questions && Array.isArray(data.questions)) {
                     setQuestions(data.questions);
@@ -67,18 +68,23 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
                     Bài {lessonId} {lessonTitle}
                 </h3>
                 <div className="grid grid-cols-3 gap-5 w-full max-w-[400px]">
-                    {questions.map((q, idx) => (
+                    {questions.map((q, index) => (
                         <GridButton
-                            key={q.id}
-                            number={idx + 1}
-                            active={activeNumber === (idx + 1)}
-                            onClick={() => handleClick(idx)}
+                            key={index}
+                            number={index + 1}
+                            active={activeNumber === (index + 1)}
+                            onClick={() => handleClick(index)}
                         />
                     ))}
                 </div>
-                <Button variant="primary" className="mt-5" onClick={() => navigate("/admin/features/lesson")}>
-                    Exit
-                </Button>
+                <div className="flex  gap-10">
+                    <Button variant="primary" className="mt-5" onClick={() => navigate(`/admin/features/feedback/${lessonId}`)}>
+                        Feedback
+                    </Button>
+                    <Button variant="primary" className="mt-5" onClick={() => navigate("/admin/features/lesson")}>
+                        Exit
+                    </Button>
+                </div>
             </div>
         </section>
     );
