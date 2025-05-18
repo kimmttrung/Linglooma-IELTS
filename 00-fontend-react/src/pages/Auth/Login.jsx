@@ -47,7 +47,7 @@ const PageLogin = () => {
                     theme: "light"
                 }
                 );
-                navigate("/admin");
+                navigate("/admin/dashboard");
             }
         } catch (err) {
             if (err.response && err.response.data && err.response.data.msg) {
