@@ -88,7 +88,7 @@ const PageRegister = () => {
 
                     <div className="w-full flex items-center gap-2 p-2 bg-white rounded-xl relative">
                         <input
-                            type={showConfirmPassword ? "password" : "text"}
+                            type={showConfirmPassword ? "text" : "password"}
                             placeholder="Confirm Password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
