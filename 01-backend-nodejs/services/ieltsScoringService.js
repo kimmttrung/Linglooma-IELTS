@@ -53,22 +53,22 @@ else
   feedbackParts.push("Lưu loát và mạch lạc: Thường xuyên ngắt quãng và lặp lại, câu nói thiếu mạch lạc.");
 
 if (completeness >= 8)
-  feedbackParts.push("Từ vựng: Sử dụng vốn từ phong phú, tự nhiên và chính xác.");
+  feedbackParts.push("Độ hoàn chỉnh: Đọc câu đầy đủ, rõ ràng, không bỏ sót phần nào.");
 else if (completeness >= 6.5)
-  feedbackParts.push("Từ vựng: Vốn từ đủ dùng, có sự linh hoạt nhất định.");
+  feedbackParts.push("Độ hoàn chỉnh: Đọc câu khá đầy đủ, chỉ thi thoảng bỏ sót hoặc đọc thiếu một vài từ.");
 else if (completeness >= 5)
-  feedbackParts.push("Từ vựng: Vốn từ hạn chế, hay dùng từ đơn giản hoặc lặp lại.");
+  feedbackParts.push("Độ hoàn chỉnh: Đọc còn thiếu một số phần, câu chưa được hoàn chỉnh.");
 else
-  feedbackParts.push("Từ vựng: Vốn từ rất hạn chế, thường xuyên sai sót trong lựa chọn từ.");
+  feedbackParts.push("Độ hoàn chỉnh: Đọc không rõ nhiều phần, câu không đầy đủ gây khó hiểu.");
 
 if (accuracy >= 8)
-  feedbackParts.push("Ngữ pháp: Sử dụng đa dạng cấu trúc với rất ít lỗi.");
+  feedbackParts.push("Độ chính xác: Phát âm chuẩn xác, ít sai sót, rất dễ hiểu.");
 else if (accuracy >= 6.5)
-  feedbackParts.push("Ngữ pháp: Kiểm soát tốt, lỗi sai không thường xuyên.");
+  feedbackParts.push("Độ chính xác: Phát âm tương đối đúng, chỉ mắc vài lỗi nhỏ.");
 else if (accuracy >= 5)
-  feedbackParts.push("Ngữ pháp: Kiểm soát hạn chế, lỗi sai thường xuyên nhưng vẫn hiểu được ý.");
+  feedbackParts.push("Độ chính xác: Phát âm còn sai sót, nhưng người nghe vẫn hiểu được.");
 else
-  feedbackParts.push("Ngữ pháp: Lỗi sai nhiều và thường gây khó hiểu.");
+  feedbackParts.push("Độ chính xác: Nhiều lỗi phát âm, gây khó khăn khi nghe hiểu.");
 
 if (pronunciation >= 8)
   feedbackParts.push("Phát âm: Sử dụng nhiều đặc điểm phát âm chuẩn xác và rõ ràng.");
@@ -79,17 +79,19 @@ else if (pronunciation >= 5)
 else
   feedbackParts.push("Phát âm: Lỗi phát âm thường xuyên, gây khó hiểu.");
 
-let overallFeedback = "";
-if (band >= 8)
-  overallFeedback = "Tổng thể: Người nói rất thành thạo, kiểm soát ngôn ngữ xuất sắc.";
-else if (band >= 6.5)
-  overallFeedback = "Tổng thể: Người nói có khả năng sử dụng tiếng Anh hiệu quả dù còn một số lỗi.";
-else if (band >= 5)
-  overallFeedback = "Tổng thể: Người nói có khả năng giao tiếp cơ bản, nhưng còn nhiều hạn chế.";
-else
-  overallFeedback = "Tổng thể: Người nói còn hạn chế, giao tiếp còn nhiều khó khăn.";
+let advice = "";
 
-const feedback = feedbackParts.join("\n") + "\n" + overallFeedback;
+if (band >= 8) {
+  advice = "Lời khuyên: Bạn đã rất xuất sắc rồi, chỉ cần duy trì và luyện tập thêm để giữ phong độ. Hãy tiếp tục mở rộng vốn từ, luyện nghe nói đa dạng chủ đề và luyện phát âm tinh tế hơn để hoàn thiện hơn nữa.";
+} else if (band >= 6.5) {
+  advice = "Lời khuyên: Bạn đã khá tốt nhưng vẫn còn vài lỗi nhỏ. Hãy chú ý luyện nói trôi chảy hơn bằng cách thực hành nói thường xuyên, ghi âm để tự nghe và sửa lỗi. Tăng cường học từ vựng và cấu trúc ngữ pháp để nâng cao độ chính xác.";
+} else if (band >= 5) {
+  advice = "Lời khuyên: Bạn cần tập trung cải thiện kỹ năng phát âm và mạch lạc. Hãy luyện nghe phát âm chuẩn qua các nguồn uy tín, tập nói theo mẫu và làm bài tập phát âm từng âm. Thực hành nói đều đặn, có thể tìm đối tác luyện tập hoặc thầy cô để được phản hồi kịp thời.";
+} else {
+  advice = "Lời khuyên: Bạn nên bắt đầu luyện tập từ những bước cơ bản như luyện phát âm chuẩn, học lại các cấu trúc ngữ pháp đơn giản và tập nói từng câu ngắn. Đừng ngại sai, hãy luyện tập thật nhiều qua nghe – nói – đọc – viết. Nên tham gia các lớp học hoặc nhóm luyện nói để được hỗ trợ.";
+}
+
+const feedback = feedbackParts.join("\n") + "\n" + advice;
 
   return {
     band,
