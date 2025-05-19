@@ -54,7 +54,16 @@ describe('Kiểm thử giao diện trang đăng nhập', () => {
   it('Giả lập đăng nhập thành công và điều hướng sang trang admin', () => {
     cy.intercept('POST', '**/api/login', {
       statusCode: 200,
-      body: { success: true },
+      body: {
+        success: true,
+        user: {
+          email: 'test@example.com',
+          name: 'Test User',
+          phone: '123456789',
+          gender: 'male',
+          nationality: 'Vietnamese',
+        },
+      },
     }).as('loginSuccess');
 
     cy.get('input[placeholder="Email address"]').type('test@example.com');
@@ -64,6 +73,7 @@ describe('Kiểm thử giao diện trang đăng nhập', () => {
     cy.wait('@loginSuccess');
     cy.location('pathname').should('eq', '/admin');
   });
+
 
   it('Giả lập đăng nhập thất bại và vẫn ở lại trang login', () => {
     cy.intercept('POST', '**/api/login', {
@@ -95,24 +105,60 @@ describe('Kiểm thử giao diện trang đăng nhập', () => {
   });
 
   it('Cho phép nhập lại nếu nhập sai email', () => {
+    cy.intercept('POST', '**/api/login', (req) => {
+      const { email } = req.body;
+
+      if (email === 'saiemail') {
+        req.reply({
+          statusCode: 400,
+          body: { success: false, msg: 'Invalid email' },
+        });
+      } else if (email === 'dung@example.com') {
+        req.reply({
+          statusCode: 200,
+          body: {
+            success: true,
+            user: {
+              email: 'dung@example.com',
+              name: 'Dung',
+              phone: '0123456789',
+              gender: 'male',
+              nationality: 'Vietnamese'
+            }
+          }
+        });
+      }
+    }).as('login');
+
+    // Nhập sai email lần đầu
     cy.get('input[placeholder="Email address"]').type('saiemail');
-    cy.contains('Login').click();
-    cy.get('input[placeholder="Email address"]').clear().type('dung@example.com');
     cy.get('input[placeholder="Password"]').type('123456');
-    cy.intercept('POST', '**/api/login', {
-      statusCode: 200,
-      body: { success: true },
-    }).as('loginAgain');
     cy.contains('Login').click();
-    cy.wait('@loginAgain');
+    //cy.wait('@login'); // chờ request đầu
+
+    // Nhập lại email đúng
+    cy.get('input[placeholder="Email address"]').clear().type('dung@example.com');
+    cy.contains('Login').click();
+    cy.wait('@login'); // chờ request thứ hai
+
+    // Kiểm tra chuyển trang thành công
     cy.location('pathname').should('eq', '/admin');
   });
+
 
   it('Cho phép nhấn Enter để gửi form', () => {
     // intercept phải đặt trước khi hành động gửi request xảy ra
     cy.intercept('POST', '**/api/login', {
       statusCode: 200,
-      body: { success: true },
+      body: { success: true,
+              user: {
+                    email: 'dung@example.com',
+                    name: 'Dung',
+                    phone: '0123456789',
+                    gender: 'male',
+                    nationality: 'Vietnamese'
+              }
+      },
     }).as('enterLogin');
 
     cy.get('input[placeholder="Email address"]').type('test@example.com');
