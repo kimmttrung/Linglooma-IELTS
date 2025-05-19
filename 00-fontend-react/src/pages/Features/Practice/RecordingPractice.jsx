@@ -2,20 +2,17 @@ import React, { useState, useRef } from "react";
 import RecordRTC from "recordrtc";
 import { FaMicrophone } from "react-icons/fa6";
 import Button from "@/components/ui/Button";
-import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import HighlightTextWithTooltip from "./HighlightText";
+import TextToSpeechButton from "./TextToSpeechButton";
 
 const IncorrectPhonemesTable = ({ data }) => {
   if (!data || data.length === 0) return null;
 
-  // Tìm số phoneme tối đa để tạo header
   const maxPhonemes = data.reduce(
     (max, item) => Math.max(max, item.phonemes.length),
     0
   );
-
-  // Tạo mảng header cho phoneme: Phoneme 1, Phoneme 2, ...
   const phonemeHeaders = Array.from({ length: maxPhonemes }, (_, i) => `Phoneme ${i + 1}`);
 
   return (
@@ -43,7 +40,6 @@ const IncorrectPhonemesTable = ({ data }) => {
               <td className="border border-gray-300 px-3 py-1 text-center">{accuracyScore}</td>
               <td className="border border-gray-300 px-3 py-1 text-center">{errorType}</td>
 
-              {/* Hiển thị từng phoneme trong cột riêng */}
               {Array.from({ length: maxPhonemes }).map((_, i) => {
                 const p = phonemes[i];
                 if (!p) return <td key={i} className="border border-gray-300 px-3 py-1"></td>;
@@ -58,7 +54,6 @@ const IncorrectPhonemesTable = ({ data }) => {
                 }
 
                 if (isLowScore) {
-                  // Override highlight điểm thấp
                   className += " bg-yellow-300 text-yellow-900 font-bold";
                 }
 
@@ -75,8 +70,6 @@ const IncorrectPhonemesTable = ({ data }) => {
     </div>
   );
 };
-
-
 
 const PhonemeDetails = ({ phonemeDetails }) => {
   if (!phonemeDetails || phonemeDetails.length === 0) return null;
@@ -210,19 +203,18 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
         Speaking Practice
       </h2>
 
-      {/* Reference text */}
-      <div
-        className="mb-6 p-4 bg-blue-50 rounded text-center text-lg font-semibold text-blue-700 select-text"
-        style={{ minHeight: 70, textAlign: "center", lineHeight: "1.5", whiteSpace: "normal" }}
-      >
-        {scoreData?.wordsAssessment?.length > 0 ? (
+      {/* Reference text + nút nghe */}
+      <div className="mb-6 p-4 bg-blue-50 rounded text-center text-lg font-semibold text-blue-700 select-text flex items-center justify-center gap-2"
+          style={{ minHeight: 70, lineHeight: "1.5", whiteSpace: "normal" }}>
+       {scoreData?.wordsAssessment?.length > 0 ? (
           <HighlightTextWithTooltip
             text={referenceText}
-            wordsAssessment={scoreData.wordsAssessment}
+           wordsAssessment={scoreData.wordsAssessment}
           />
-        ) : (
-          <span>{referenceText}</span>
-        )}
+       ) : (
+         <span>{referenceText}</span>
+       )}
+        <TextToSpeechButton text={referenceText} />
       </div>
 
       {/* Controls */}
@@ -315,7 +307,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
           <PhonemeDetails phonemeDetails={scoreData.phonemeDetails} />
         </div>
 
-        {/* Bảng lỗi phát âm tách riêng ở dưới */}
+        {/* Bảng lỗi phát âm*/}
         {scoreData.incorrectPhonemes && scoreData.incorrectPhonemes.length > 0 && (
           <div className="mt-6 max-w-xl mx-auto">
             <IncorrectPhonemesTable data={scoreData.incorrectPhonemes} />
