@@ -1,4 +1,4 @@
-const { updateUser, findUserByemail } = require('../models/userModel');
+const { updateUser, findUserByEmail, findUserByName, findUserByEmail} = require('../models/userModel');
 const bcrypt = require('bcrypt');
 
 const updateUserController = async (req, res) => {   
@@ -16,7 +16,7 @@ const updateUserController = async (req, res) => {
 
     try {
         // Tìm user hiện tại theo email
-        const userResult = await findUserByemail(email);
+        const userResult = await findUserByEmail(email);
         if (userResult.rows.length === 0) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -44,10 +44,10 @@ const updateUserController = async (req, res) => {
         const updatedUsername = username?.trim() || currentUser.username;
         const updatedGender = gender?.trim() || currentUser.gender;
         const updatedNationality = nationality?.trim() || currentUser.nationality;
-        const updatedPhone = phonenumber?.trim() || currentUser.phonenumber;
+        const updatedPhone = phoneNumber?.trim() || currentUser.phonenumber;
 
         // Gọi update trong DB
-        const result = await updateUser(
+        await updateUser(
             email,
             updatedUsername,
             updatedPassword,

@@ -12,7 +12,7 @@ exports.register = async (req, res) => {
 
   try {
     // Kiểm tra trùng email
-    const existingUser = await User.findUser(email);
+    const existingUser = await User.findUserByEmail(email);
     if (existingUser.rows.length > 0) {
       return res.status(400).json({ msg: 'Email already exists' });
     }
@@ -38,7 +38,7 @@ exports.login = async (req, res) => {
   }
 
   try {
-    const userResult = await User.findUserByemail(email);
+    const userResult = await User.findUserByEmail(email);
 
     if (userResult.rows.length === 0) {
       return res.status(401).json({ msg: 'Email or password is wrong' });
