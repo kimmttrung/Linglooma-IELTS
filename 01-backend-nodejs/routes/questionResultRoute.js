@@ -6,6 +6,6 @@ const questionResultController = require('../controllers/questionResultControlle
 router.post('/', questionResultController.insertQuestionResultController);
 
 // GET: Lấy kết quả tất cả câu hỏi của một lần làm bài học
-router.get('/:studentId/:lessonResultIdId', questionResultController.getQuestionResultOfLessonController);
+router.get('/:studentId/:lessonResultId', questionResultController.getQuestionResultOfLessonController);
 
 module.exports = router;

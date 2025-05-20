@@ -1,6 +1,6 @@
 const client = require('../db');
 
-const findUser = async (email) => {
+const findUserByemail = async (email) => {
     const result = await client.query(
         'SELECT * FROM users WHERE email = $1',
         [email]
@@ -16,7 +16,7 @@ const insertUser = async (email, hashedPassword) => {
     );
 }
 
-const updateUser = async (email, username, password, gender, nationality, phoneNumber) => {
+const updateUser = async (email, username, password, gender, nationality, phonenumber) => {
     await client.query(
         `
         UPDATE users
@@ -24,10 +24,10 @@ const updateUser = async (email, username, password, gender, nationality, phoneN
             password = $2,
             gender = $3,
             nationality = $4,
-            phoneNumber = $5
+            phonenumber = $5
         WHERE email = $6;
         `,
-        [username, password, gender, nationality, phoneNumber, email]
+        [username, password, gender, nationality, phonenumber, email]
     );
 };
 
@@ -44,8 +44,8 @@ const findUserByName = async (username) => {
 };
 
 module.exports = {
-    findUser,
-    insertUser, 
+    findUserByemail,
+    insertUser,
     updateUser,
     findUserByName
 };

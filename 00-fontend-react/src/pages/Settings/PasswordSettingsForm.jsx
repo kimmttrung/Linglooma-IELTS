@@ -1,60 +1,175 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { toast } from 'react-toastify';
+import axios from "axios";
+import { AuthContext } from '@/components/context/auth.context';
 
-function PasswordSettingsForm() {
+
+const PasswordSettingsForm = () => {
+    const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
+
+    const { auth, setAuth } = useContext(AuthContext);
+
+    const [formData, setFormData] = useState({
+        username: '',
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+        gender: '',
+        nationality: '',
+        phonenumber: ''
+    });
+
+    useEffect(() => {
+        if (auth?.user) {
+            setFormData(prev => ({
+                ...prev,
+                ...auth.user
+            }));
+        }
+    }, [auth]);
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value
+        });
+    };
+
+    const handleSave = async (e) => {
+        e.preventDefault();
+
+        if (formData.newPassword && formData.newPassword !== formData.confirmPassword) {
+            toast.error('New password and confirm password do not match');
+            return;
+        }
+
+        const payload = {
+            email: auth?.user?.email, // lấy email từ context
+            username: formData.username,
+            password: formData.newPassword || '',
+            currentPassword: formData.currentPassword || '',
+            gender: formData.gender,
+            nationality: formData.nationality,
+            phonenumber: formData.phonenumber
+        };
+        console.log("Payload gửi đi:", payload);
+
+        try {
+            const res = await axios.put(`${API_URL}/api/users/update`, payload);
+
+            if (res.status === 200) {
+                toast.success('Cập nhật thành công');
+
+                const updatedUser = {
+                    email: auth.user.email, // giữ lại email
+                    username: formData.username,
+                    gender: formData.gender,
+                    nationality: formData.nationality,
+                    phonenumber: formData.phonenumber
+                };
+
+                // ✅ Update localStorage
+                localStorage.setItem("user", JSON.stringify(updatedUser));
+
+                // ✅ Update Context
+                setAuth(prev => ({
+                    ...prev,
+                    user: updatedUser
+                }));
+
+                // ✅ Reset password fields
+                setFormData({
+                    ...formData,
+                    currentPassword: '',
+                    newPassword: '',
+                    confirmPassword: ''
+                });
+            } else {
+                toast.error(res.data.message || 'Cập nhật thất bại');
+            }
+        } catch (err) {
+            if (err.response) {
+                toast.error('Lỗi: ' + (err.response.data.message || 'Unknown error'));
+            } else if (err.request) {
+                toast.error('Không nhận được phản hồi từ server');
+            } else {
+                toast.error('Lỗi kết nối server: ' + (err.message || 'Unknown error'));
+            }
+        }
+    };
+
     return (
         <section className="flex-1">
-            <button className="py-3 mb-6 w-full font-medium text-indigo-600 bg-violet-100 rounded-lg">
-                Change Password
-            </button>
             <article className="p-6 bg-white rounded-lg">
-                <form className="gap-y-6">
+                <form className="gap-y-6" onSubmit={handleSave}>
                     <div className="mb-6">
                         <label htmlFor="username" className="block mb-2">User Name</label>
                         <input
                             type="text"
                             id="username"
-                            className="p-3 w-full rounded-lg border border-solid"
+                            value={formData.username}
+                            onChange={handleChange}
+                            className="p-3 w-full rounded-lg border"
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="password" className="block mb-2">Current Password</label>
+                        <label htmlFor="currentPassword" className="block mb-2">Current Password</label>
                         <input
                             type="password"
-                            id="password"
-                            className="p-3 w-full rounded-lg border border-solid"
+                            id="currentPassword"
+                            value={formData.currentPassword}
+                            onChange={handleChange}
+                            className="p-3 w-full rounded-lg border"
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="password" className="block mb-2">New Password</label>
+                        <label htmlFor="newPassword" className="block mb-2">New Password</label>
                         <input
                             type="password"
-                            id="password"
-                            className="p-3 w-full rounded-lg border border-solid"
+                            id="newPassword"
+                            value={formData.newPassword}
+                            onChange={handleChange}
+                            className="p-3 w-full rounded-lg border"
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="confirmPassword" className="block mb-2">Confirm password</label>
+                        <label htmlFor="confirmPassword" className="block mb-2">Confirm Password</label>
                         <input
                             type="password"
                             id="confirmPassword"
-                            className="p-3 w-full rounded-lg border border-solid"
+                            value={formData.confirmPassword}
+                            onChange={handleChange}
+                            className="p-3 w-full rounded-lg border"
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="genderInput" className="block mb-2">Gender</label>
+                        <label htmlFor="gender" className="block mb-2">Gender</label>
                         <input
                             type="text"
-                            id="genderInput"
-                            className="p-3 w-full rounded-lg border border-solid"
-                            section=""
+                            id="gender"
+                            value={formData.gender}
+                            onChange={handleChange}
+                            className="p-3 w-full rounded-lg border"
                         />
                     </div>
                     <div className="mb-6">
-                        <label htmlFor="languageInput" className="block mb-2">Nationality</label>
+                        <label htmlFor="nationality" className="block mb-2">Nationality</label>
                         <input
                             type="text"
-                            id="languageInput"
-                            className="p-3 w-full rounded-lg border border-solid"
+                            id="nationality"
+                            value={formData.nationality}
+                            onChange={handleChange}
+                            className="p-3 w-full rounded-lg border"
+                        />
+                    </div>
+                    <div className="mb-6">
+                        <label htmlFor="phonenumber" className="block mb-2">Phone number</label>
+                        <input
+                            type="text"
+                            id="phonenumber"
+                            value={formData.phonenumber}
+                            onChange={handleChange}
+                            className="p-3 w-full rounded-lg border"
                         />
                     </div>
                     <button type="submit" className="py-3 w-full text-white bg-blue-500 rounded-lg">
@@ -64,6 +179,6 @@ function PasswordSettingsForm() {
             </article>
         </section>
     );
-}
+};
 
 export default PasswordSettingsForm;
