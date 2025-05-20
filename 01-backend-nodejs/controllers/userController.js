@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 
 const updateUserController = async (req, res) => {
     const { email, username, password, gender, nationality, currentPassword, phonenumber } = req.body;
-    console.log("req.body =", req.body);
 
     if (!email) {
         return res.status(400).json({ message: "Missing email" });
