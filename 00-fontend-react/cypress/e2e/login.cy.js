@@ -111,7 +111,8 @@ describe('Kiểm thử giao diện trang đăng nhập', () => {
       if (email === 'saiemail') {
         req.reply({
           statusCode: 400,
-          body: { success: false, msg: 'Invalid email' },
+          body: { success: false, 
+                  msg: 'Invalid email' },
         });
       } else if (email === 'dung@example.com') {
         req.reply({
@@ -119,11 +120,7 @@ describe('Kiểm thử giao diện trang đăng nhập', () => {
           body: {
             success: true,
             user: {
-              email: 'dung@example.com',
-              name: 'Dung',
-              phone: '0123456789',
-              gender: 'male',
-              nationality: 'Vietnamese'
+
             }
           }
         });
