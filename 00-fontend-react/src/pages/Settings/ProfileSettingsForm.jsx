@@ -1,13 +1,16 @@
-import React from 'react';
+import { AuthContext } from '@/components/context/auth.context';
+import React, { useContext } from 'react';
 import { FcPlus } from "react-icons/fc";
 
-function ProfileSettingsForm() {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const name = user?.name || "User";   // fallback nếu không có name
-    const email = user?.email || "";
-    const gender = user?.gender || "Female";
-    const nationality = user?.nationality || "English";
-    const phone = user?.phone || "+84345678";
+
+const ProfileSettingsForm = () => {
+    const { auth } = useContext(AuthContext);
+
+    const username = auth?.user?.username;
+    const email = auth?.user?.email;
+    const gender = auth?.user?.gender;
+    const phone = auth?.user?.phonenumber;
+    const nationality = auth?.user?.nationality;
 
     return (
         <section className="flex-1">
@@ -21,7 +24,7 @@ function ProfileSettingsForm() {
                         />
                     </div>
                     <div>
-                        <h2 className="font-semibold">{name}</h2>
+                        <h2 className="font-semibold">{username}</h2>
                         <p className="text-gray-600">{email}</p>
                     </div>
                 </div>
@@ -31,23 +34,20 @@ function ProfileSettingsForm() {
                         <input
                             type="text"
                             id="fullName"
-                            value={name}
+                            value={username}
                             disabled // khong render name
                             className="p-3 w-full rounded-lg border border-solid"
-                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
                     <div className="mb-6">
                         <label htmlFor="gender" className="block mb-2">Gender</label>
                         <div className="relative">
                             <input
-                                id="gender"
+                                id="gender-profile"
                                 className="p-3 w-full bg-white rounded-lg border border-solid appearance-none"
                                 disabled
                                 value={gender}
-                            // onChange={(e) => setEmail(e.target.value)}
-                            >
-                            </input>
+                            />
                             <i className="ti ti-chevron-down absolute right-3 top-2/4 -translate-y-2/4" />
                         </div>
                     </div>
@@ -59,8 +59,8 @@ function ProfileSettingsForm() {
                                 className="p-3 w-full bg-white rounded-lg border border-solid appearance-none"
                                 value={nationality}
                                 disabled
-                            >
-                            </input>
+                            />
+
                             <i className="ti ti-chevron-down absolute right-3 top-2/4 -translate-y-2/4" />
                         </div>
                     </div>
@@ -68,12 +68,11 @@ function ProfileSettingsForm() {
                         <label htmlFor="language" className="block mb-2">Phone number</label>
                         <div className="relative">
                             <input
-                                id="phonenumber"
+                                id="phonenumber-profile"
                                 className="p-3 w-full bg-white rounded-lg border border-solid appearance-none"
                                 disabled
                                 value={phone}
-                            >
-                            </input>
+                            />
                             <i className="ti ti-chevron-down absolute right-3 top-2/4 -translate-y-2/4" />
                         </div>
                     </div>

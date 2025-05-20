@@ -25,7 +25,7 @@ const DaySelector = () => {
             {days.map((day) => (
                 <button
                     key={day.number}
-                    onClick={() => setSelectedDay(day.number)}
+                    // onClick={() => setSelectedDay(day.number)}
                     className={cn(
                         "flex flex-col items-center justify-center min-w-[60px] h-[80px] rounded-lg p-2 transition-colors",
                         today === day.number ? "bg-indigo-950 text-white" : "bg-white text-gray-700 hover:bg-gray-100",

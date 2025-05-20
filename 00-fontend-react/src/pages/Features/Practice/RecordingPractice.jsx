@@ -2,20 +2,17 @@ import React, { useState, useRef } from "react";
 import RecordRTC from "recordrtc";
 import { FaMicrophone } from "react-icons/fa6";
 import Button from "@/components/ui/Button";
-import { Tooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import HighlightTextWithTooltip from "./HighlightText";
+import TextToSpeechButton from "./TextToSpeechButton";
 
 const IncorrectPhonemesTable = ({ data }) => {
   if (!data || data.length === 0) return null;
 
-  // Tìm số phoneme tối đa để tạo header
   const maxPhonemes = data.reduce(
     (max, item) => Math.max(max, item.phonemes.length),
     0
   );
-
-  // Tạo mảng header cho phoneme: Phoneme 1, Phoneme 2, ...
   const phonemeHeaders = Array.from({ length: maxPhonemes }, (_, i) => `Phoneme ${i + 1}`);
 
   return (
@@ -43,7 +40,6 @@ const IncorrectPhonemesTable = ({ data }) => {
               <td className="border border-gray-300 px-3 py-1 text-center">{accuracyScore}</td>
               <td className="border border-gray-300 px-3 py-1 text-center">{errorType}</td>
 
-              {/* Hiển thị từng phoneme trong cột riêng */}
               {Array.from({ length: maxPhonemes }).map((_, i) => {
                 const p = phonemes[i];
                 if (!p) return <td key={i} className="border border-gray-300 px-3 py-1"></td>;
@@ -58,7 +54,6 @@ const IncorrectPhonemesTable = ({ data }) => {
                 }
 
                 if (isLowScore) {
-                  // Override highlight điểm thấp
                   className += " bg-yellow-300 text-yellow-900 font-bold";
                 }
 
@@ -75,8 +70,6 @@ const IncorrectPhonemesTable = ({ data }) => {
     </div>
   );
 };
-
-
 
 const PhonemeDetails = ({ phonemeDetails }) => {
   if (!phonemeDetails || phonemeDetails.length === 0) return null;
@@ -210,11 +203,9 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
         Speaking Practice
       </h2>
 
-      {/* Reference text */}
-      <div
-        className="mb-6 p-4 bg-blue-50 rounded text-center text-lg font-semibold text-blue-700 select-text"
-        style={{ minHeight: 70, textAlign: "center", lineHeight: "1.5", whiteSpace: "normal" }}
-      >
+      {/* Reference text + nút nghe */}
+      <div className="mb-6 p-4 bg-blue-50 rounded text-center text-lg font-semibold text-blue-700 select-text flex items-center justify-center gap-2"
+        style={{ minHeight: 70, lineHeight: "1.5", whiteSpace: "normal" }}>
         {scoreData?.wordsAssessment?.length > 0 ? (
           <HighlightTextWithTooltip
             text={referenceText}
@@ -223,6 +214,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
         ) : (
           <span>{referenceText}</span>
         )}
+        <TextToSpeechButton text={referenceText} />
       </div>
 
       {/* Controls */}
@@ -287,44 +279,63 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
         )}
       </div>
 
-{/* Results */}
-    {scoreData && (
-      <>
-        <div className="mt-8 bg-gray-50 rounded p-4 shadow-inner">
-          <h3 className="text-center text-xl font-bold mb-4 text-blue-700">
-            Test Results
-          </h3>
-          <p className="text-center text-lg mb-2">
-            <strong>Band IELTS:</strong>{" "}
-            <span className="text-red-600">{scoreData.score ?? "N/A"}</span>
-          </p>
-          <p
-            className="text-center italic text-gray-700 mb-4"
-            style={{ whiteSpace: "pre-wrap", textAlign: "left" }}
-          >
-            {scoreData.feedback ?? "No feedback provided."}
-          </p>
+      {/* Results */}
+      {scoreData && (
+        <>
+          <section className="mt-10 bg-white rounded-lg p-6 shadow-lg max-w-3xl mx-auto">
+            <h3 className="text-center text-2xl font-semibold text-blue-800 mb-6 border-b border-blue-300 pb-2 uppercase tracking-wide">
+              Test Results
+            </h3>
 
-          <div className="grid grid-cols-2 gap-4 text-gray-800 font-semibold">
-            <div>Accuracy: {scoreData.accuracyScore ?? "N/A"}</div>
-            <div>Fluency: {scoreData.fluencyScore ?? "N/A"}</div>
-            <div>Completeness: {scoreData.completenessScore ?? "N/A"}</div>
-            <div>Pronunciation: {scoreData.pronScore ?? "N/A"}</div>
-          </div>
+            <div className="text-center mb-6">
+              <span className="text-lg font-medium mr-2">Band IELTS:</span>
+              <span className="text-3xl font-extrabold text-red-600">
+                {scoreData.score ?? "N/A"}
+              </span>
+            </div>
 
-          <PhonemeDetails phonemeDetails={scoreData.phonemeDetails} />
-        </div>
+            <div className="grid grid-cols-4 gap-6 text-center text-gray-800 font-semibold text-lg">
+              <div>
+                <div className="text-sm text-gray-500 mb-1">Accuracy</div>
+                <div>{scoreData.accuracyScore ?? "N/A"}</div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-500 mb-1">Fluency</div>
+                <div>{scoreData.fluencyScore ?? "N/A"}</div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-500 mb-1">Completeness</div>
+                <div>{scoreData.completenessScore ?? "N/A"}</div>
+              </div>
+              <div>
+                <div className="text-sm text-gray-500 mb-1">Pronunciation</div>
+                <div>{scoreData.pronScore ?? "N/A"}</div>
+              </div>
+            </div>
 
-        {/* Bảng lỗi phát âm tách riêng ở dưới */}
-        {scoreData.incorrectPhonemes && scoreData.incorrectPhonemes.length > 0 && (
-          <div className="mt-6 max-w-xl mx-auto">
-            <IncorrectPhonemesTable data={scoreData.incorrectPhonemes} />
-          </div>
-        )}
-      </>
-    )}
-  </section>
-);
+            <div
+              className="mb-8 p-4 bg-gray-50 rounded border border-gray-200 text-gray-700 italic whitespace-pre-wrap text-left leading-relaxed"
+              style={{ minHeight: 100 }}
+            >
+              {scoreData.feedback ?? "No feedback provided."}
+            </div>
+
+            <div className="mt-8">
+              <PhonemeDetails phonemeDetails={scoreData.phonemeDetails} />
+            </div>
+          </section>
+
+          {/* Incorrect phonemes table */}
+          {scoreData.incorrectPhonemes && scoreData.incorrectPhonemes.length > 0 && (
+            <section className="mt-10 max-w-3xl mx-auto">
+              <IncorrectPhonemesTable data={scoreData.incorrectPhonemes} />
+            </section>
+          )}
+        </>
+      )}
+
+    </section>
+  );
 };
 
 export default RecordingPractice;

@@ -38,7 +38,7 @@ exports.login = async (req, res) => {
   }
 
   try {
-    const userResult = await User.findUser(email);
+    const userResult = await User.findUserByemail(email);
 
     if (userResult.rows.length === 0) {
       return res.status(401).json({ msg: 'Email or password is wrong' });

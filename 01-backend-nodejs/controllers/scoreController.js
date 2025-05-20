@@ -36,7 +36,7 @@ exports.scoreAudio = async (req, res) => {
 
     //test 
   
-    console.log(JSON.stringify(wordsAssessment, null, 2));
+    //console.log(JSON.stringify(wordsAssessment, null, 2));
    // console.log("incorrectPhonemes:", wordsAssessment);
 
     res.json({
