@@ -78,16 +78,16 @@ const ProfileSettingsForm = () => {
                     </div>
 
                     <div className="flex space-x-4">
-                        <a href="#" className="social-link">
+                        <a href="https://www.facebook.com/?locale=vi_VN" className="social-link">
                             <img src="/images/img_facebook_36x36.png" alt="Facebook" className="w-9 h-9" />
                         </a>
-                        <a href="#" className="social-link">
+                        <a href="https://www.instagram.com/" className="social-link">
                             <img src="/images/img_instagram.png" alt="Instagram" className="w-9 h-9" />
                         </a>
-                        <a href="#" className="social-link">
+                        <a href="https://www.linkedin.com/" className="social-link">
                             <img src="/images/img_linkedin.png" alt="LinkedIn" className="w-9 h-9" />
                         </a>
-                        <a href="#" className="social-link">
+                        <a href="https://x.com/?lang=vi" className="social-link">
                             <img src="/images/img_twitter.png" alt="Twitter" className="w-9 h-9" />
                         </a>
                     </div>
