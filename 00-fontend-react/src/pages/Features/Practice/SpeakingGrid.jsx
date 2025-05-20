@@ -70,7 +70,7 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
                 <h3 className="mb-5 text-lg font-extrabold text-sky-800">
                     Bài {lessonId} {lessonTitle}
                 </h3>
-                <div className="grid grid-cols-3 gap-5 w-full max-w-[400px]">
+                <div className="grid grid-cols-3 gap-5 w-full max-w-[350px]">
                     {questions.map((q, index) => (
                         <GridButton
                             key={index}

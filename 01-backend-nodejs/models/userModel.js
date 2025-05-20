@@ -1,6 +1,6 @@
 const client = require('../db');
 
-const findUserByemail = async (email) => {
+const findUserByEmail = async (email) => {
     const result = await client.query(
         'SELECT * FROM users WHERE email = $1',
         [email]
@@ -44,7 +44,7 @@ const findUserByName = async (username) => {
 };
 
 module.exports = {
-    findUserByemail,
+    findUserByEmail,
     insertUser,
     updateUser,
     findUserByName
