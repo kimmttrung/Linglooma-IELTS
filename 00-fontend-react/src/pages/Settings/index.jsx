@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import ProfileSettingsForm from "./ProfileSettingsForm";
 import PasswordSettingsForm from "./PasswordSettingsForm";
 import Button from "@/components/ui/Button";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "@/components/context/auth.context";
 
 const SettingsPage = () => {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
-  const name = user?.name || "User";   // fallback nếu không có name
-  const email = user?.email || "";
+  const { auth } = useContext(AuthContext);
+  const username = auth?.user?.username;
 
   return (
     <>
@@ -21,7 +21,7 @@ const SettingsPage = () => {
           <div className="flex-1 p-8">
             <header className="flex justify-between items-center mb-4">
               <div>
-                <h1 className="text-xl font-semibold leading-7">Welcome, {name}</h1>
+                <h1 className="text-xl font-semibold leading-7">Welcome, {username}</h1>
                 <p className="text-gray-600">{new Date().toLocaleDateString("en-US", {
                   weekday: "short",
                   day: "numeric",
@@ -52,6 +52,7 @@ const SettingsPage = () => {
           </div>
         </div>
       </main>
+
     </>
   );
 };

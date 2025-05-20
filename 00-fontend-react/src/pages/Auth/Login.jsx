@@ -1,12 +1,14 @@
 
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import axios from "axios";
+import { AuthContext } from "@/components/context/auth.context";
 
 const PageLogin = () => {
     const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
+    const { setAuth } = useContext(AuthContext);
 
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('');
@@ -39,6 +41,7 @@ const PageLogin = () => {
         }
         try {
             const res = await axios.post(`${API_URL}/api/login`, { email, password });
+            console.log("res", res);
 
             if (res.data.success === true) {
                 toast.success(
@@ -48,9 +51,17 @@ const PageLogin = () => {
                     theme: "light"
                 }
                 );
-                const { email, name, phone, gender, nationality } = res.data.user;
-                localStorage.setItem("user", JSON.stringify({ email, name, phone, gender, nationality }));
-                console.log("User info saved:", { email, name, phone, gender, nationality });
+                setAuth({
+                    isAuthenticated: true,
+                    user: {
+                        email: res?.data?.user?.email ?? "",
+                        username: res?.data?.user?.name ?? "",
+                        phonenumber: res?.data?.user?.phone ?? "",
+                        gender: res?.data?.user?.gender ?? "",
+                        nationality: res?.data?.user?.nationality ?? ""
+                    }
+                })
+
                 navigate("/admin/dashboard");
             }
         } catch (err) {

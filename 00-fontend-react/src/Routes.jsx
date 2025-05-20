@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import HomePage from './pages/Home';
 import PageLogin from './pages/Auth/Login';
-import Dashboard from './pages/Dashboard/Dashboard';
+import Dashboard from './pages/Dashboard';
 import Admin from './pages/Admin/Admin';
 
 import LessonSpeaking from './pages/Features/LessonSpeaking';
@@ -48,6 +48,7 @@ const AppRoutes = () => {
       />
 
     </Router>
+
   );
 };
 

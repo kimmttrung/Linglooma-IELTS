@@ -1,5 +1,16 @@
 const express = require("express");
 const cors = require("cors");
+const app = express();
+app.use(express.json({ limit: "50mb" })); // tăng giới hạn size vì audio base64 có thể lớn
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+const corsOptions = {
+  origin: 'http://localhost:4028',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 
 const scoreRoutes = require("./routes/scoreRoutes");
 // route dữ liệu 
@@ -10,13 +21,12 @@ const questionRoutes = require('./routes/questionRoute');
 const questionResultRoutes = require('./routes/questionResultRoute')
 const userRoutes = require('./routes/userRoute');
 
-const app = express();
 
-app.use(cors());
-app.use(express.json({ limit: "50mb" })); // tăng giới hạn size vì audio base64 có thể lớn
+
+// app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use("/api", scoreRoutes);
-app.use("/api", questionRoutes)
+// app.use("/api", questionRoutes)
 
 // truy xuất dữ liệu 
 app.use("/api", authRoutes);

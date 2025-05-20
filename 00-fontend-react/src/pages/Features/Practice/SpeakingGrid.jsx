@@ -36,7 +36,10 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const res = await fetch(`${API_URL}/api/${lessonId}`);
+                const res = await fetch(`${API_URL}/api/questions/${lessonId}`);
+                if (!res.ok) {
+                    throw new Error(`Lỗi API status ${res.status}`);
+                }
                 const data = await res.json();
 
                 if (data.questions && Array.isArray(data.questions)) {

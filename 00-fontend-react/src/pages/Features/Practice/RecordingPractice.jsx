@@ -187,6 +187,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ audio: base64Audio, referenceText }),
+        credentials: 'include'  // rất quan trọng nếu bạn bật credentials phía BE
       });
 
       const data = await res.json();
@@ -287,44 +288,44 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
         )}
       </div>
 
-{/* Results */}
-    {scoreData && (
-      <>
-        <div className="mt-8 bg-gray-50 rounded p-4 shadow-inner">
-          <h3 className="text-center text-xl font-bold mb-4 text-blue-700">
-            Test Results
-          </h3>
-          <p className="text-center text-lg mb-2">
-            <strong>Band IELTS:</strong>{" "}
-            <span className="text-red-600">{scoreData.score ?? "N/A"}</span>
-          </p>
-          <p
-            className="text-center italic text-gray-700 mb-4"
-            style={{ whiteSpace: "pre-wrap", textAlign: "left" }}
-          >
-            {scoreData.feedback ?? "No feedback provided."}
-          </p>
+      {/* Results */}
+      {scoreData && (
+        <>
+          <div className="mt-8 bg-gray-50 rounded p-4 shadow-inner">
+            <h3 className="text-center text-xl font-bold mb-4 text-blue-700">
+              Test Results
+            </h3>
+            <p className="text-center text-lg mb-2">
+              <strong>Band IELTS:</strong>{" "}
+              <span className="text-red-600">{scoreData.score ?? "N/A"}</span>
+            </p>
+            <p
+              className="text-center italic text-gray-700 mb-4"
+              style={{ whiteSpace: "pre-wrap", textAlign: "left" }}
+            >
+              {scoreData.feedback ?? "No feedback provided."}
+            </p>
 
-          <div className="grid grid-cols-2 gap-4 text-gray-800 font-semibold">
-            <div>Accuracy: {scoreData.accuracyScore ?? "N/A"}</div>
-            <div>Fluency: {scoreData.fluencyScore ?? "N/A"}</div>
-            <div>Completeness: {scoreData.completenessScore ?? "N/A"}</div>
-            <div>Pronunciation: {scoreData.pronScore ?? "N/A"}</div>
+            <div className="grid grid-cols-2 gap-4 text-gray-800 font-semibold">
+              <div>Accuracy: {scoreData.accuracyScore ?? "N/A"}</div>
+              <div>Fluency: {scoreData.fluencyScore ?? "N/A"}</div>
+              <div>Completeness: {scoreData.completenessScore ?? "N/A"}</div>
+              <div>Pronunciation: {scoreData.pronScore ?? "N/A"}</div>
+            </div>
+
+            <PhonemeDetails phonemeDetails={scoreData.phonemeDetails} />
           </div>
 
-          <PhonemeDetails phonemeDetails={scoreData.phonemeDetails} />
-        </div>
-
-        {/* Bảng lỗi phát âm tách riêng ở dưới */}
-        {scoreData.incorrectPhonemes && scoreData.incorrectPhonemes.length > 0 && (
-          <div className="mt-6 max-w-xl mx-auto">
-            <IncorrectPhonemesTable data={scoreData.incorrectPhonemes} />
-          </div>
-        )}
-      </>
-    )}
-  </section>
-);
+          {/* Bảng lỗi phát âm tách riêng ở dưới */}
+          {scoreData.incorrectPhonemes && scoreData.incorrectPhonemes.length > 0 && (
+            <div className="mt-6 max-w-xl mx-auto">
+              <IncorrectPhonemesTable data={scoreData.incorrectPhonemes} />
+            </div>
+          )}
+        </>
+      )}
+    </section>
+  );
 };
 
 export default RecordingPractice;
