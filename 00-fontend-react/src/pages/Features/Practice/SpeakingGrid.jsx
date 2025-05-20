@@ -15,7 +15,7 @@ const GridButton = ({ number, active, onClick }) => {
     );
 };
 
-const SpeakingGrid = ({ setCurrentQuestion }) => {
+const SpeakingGrid = ({ setCurrentQuestion, setCurrentIndex }) => {
     const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
 
     const navigate = useNavigate();
@@ -30,6 +30,7 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
         const question = questions[index];
         if (question) {
             setCurrentQuestion(question);
+            setCurrentIndex(index); 
         }
     };
 
@@ -46,6 +47,7 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
                     setQuestions(data.questions);
                     if (data.questions.length > 0) {
                         setCurrentQuestion(data.questions[0]);
+                        setCurrentIndex(0);
                         setLessonTitle(data.questions[0].name); // ✅ Set title
                     }
                 } else {

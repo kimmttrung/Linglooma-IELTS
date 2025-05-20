@@ -108,9 +108,8 @@ const PhonemeDetails = ({ phonemeDetails }) => {
   );
 };
 
-const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
+const RecordingPractice = ({ currentQuestion, currentIndex, referenceText, setOnSubmit }) => {
   const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
-
   const [recording, setRecording] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
   const [status, setStatus] = useState("Ready to record");
@@ -166,6 +165,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
       reader.readAsDataURL(blob);
     });
 
+
   const sendAudioToBackend = async () => {
     if (!recorderRef.current) {
       setStatus("No recording found");
@@ -179,7 +179,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, setOnSubmit }) => {
       const res = await fetch(`${API_URL}/api/score-audio`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ audio: base64Audio, referenceText }),
+        body: JSON.stringify({ audio: base64Audio, referenceText, questionId: currentQuestion?.id, index: currentIndex}),
       });
 
       const data = await res.json();
