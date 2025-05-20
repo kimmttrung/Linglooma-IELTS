@@ -79,7 +79,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
       const res = await fetch(`${API_URL}/api/score-audio`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ audio: base64Audio, referenceText, questionId: currentQuestion?.id, index: currentIndex }),
+        body: JSON.stringify({ audio: base64Audio, referenceText, questionId: currentQuestion?.id, index: currentIndex + 1}),
       });
 
       const data = await res.json();

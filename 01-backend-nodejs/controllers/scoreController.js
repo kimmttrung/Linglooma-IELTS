@@ -4,8 +4,9 @@ const { saveBase64AudioToFile } = require("../utils/fileUtils");
 const { assessPronunciation } = require("../services/azurePronunciationService");
 const { calculateIELTSBand } = require("../services/ieltsScoringService");
 const { findMismatchedWords } = require("../services/miscueService");
-const { analyzePhonemes, generateStandardIPA, findIncorrectPhonemes } = require("../utils/analyzePhonemes");
+const { analyzePhonemes } = require("../utils/analyzePhonemes");
 const { vietnameseWordsAssessment } = require("../utils/wordsAssessmentHelper");
+const { countPhonemeErrors } = require('../utils/phonemeErrorCounter');
 
 exports.scoreAudio = async (req, res) => {
   try {
@@ -34,12 +35,11 @@ exports.scoreAudio = async (req, res) => {
     const ieltsResult = calculateIELTSBand(assessment);
     const phonemeDetails = analyzePhonemes(assessment);
     const wordsAssessmentVn = vietnameseWordsAssessment(wordsAssessment);
-    const standardIPA = generateStandardIPA(assessment);
-
-    //test 
   
+    const errorMap = countPhonemeErrors(wordsAssessment);
+    //console.log(errorMap);
+    
     //console.log(JSON.stringify(wordsAssessment, null, 2));
-   // console.log("incorrectPhonemes:", wordsAssessment);
 
     res.json({
       score: ieltsResult.band,
@@ -53,11 +53,7 @@ exports.scoreAudio = async (req, res) => {
       miscueWords: miscueWordsFromTranscript,
       phonemeDetails,
       wordsAssessment: wordsAssessmentVn,
-      //hung them
-      standardIPA,
-      incorrectPhonemes: wordsAssessment,
-      //hung them
-      details: assessment,
+      incorrectPhonemes: wordsAssessment
     });
   } catch (error) {
     console.error("Lỗi khi chấm điểm:", error);
