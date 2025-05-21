@@ -10,52 +10,52 @@ const PronunciationFeedback = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+//   useEffect(() => {
+//     if (!lessonId) return;
+
+//     setLoading(true);
+//     fetch('http://localhost:5000/api/incorrectphonemes/feedback-summary')
+//       // axios.get(`/api/incorrectphonemes/feedback-summary`)
+//       .then((res) => {
+//         if (!res.ok) throw new Error("Failed to fetch feedback data");
+//         // return res.json();
+//       })
+//       .then((res) => {
+//         // Nếu cần, có thể lọc data theo lessonId ở đây nếu backend trả dữ liệu đa bài
+//         setQuestions(res);
+//         setError(null);
+//       })
+//       .catch((err) => {
+//         console.error(err);
+//         setError(err.message || "Unknown error");
+//         setQuestions([]);
+//       })
+//       .finally(() => {
+//         setLoading(false);
+//       });
+//   }, [lessonId]);
+
   useEffect(() => {
     if (!lessonId) return;
 
-    setLoading(true);
-    fetch('http://localhost:5000/api/incorrectphonemes/feedback-summary')
-      // axios.get(`/api/incorrectphonemes/feedback-summary`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch feedback data");
-        // return res.json();
-      })
-      .then((res) => {
-        // Nếu cần, có thể lọc data theo lessonId ở đây nếu backend trả dữ liệu đa bài
-        setQuestions(res);
+    const fetchFeedback = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(`/api/incorrectphonemes/feedback-summary`);
+        console.log("check res", res);
+        setQuestions(Array.isArray(res) ? res : []);
         setError(null);
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error(err);
-        setError(err.message || "Unknown error");
+        setError(err?.error || err.message || "Unknown error");
         setQuestions([]);
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchFeedback();
   }, [lessonId]);
-
-  // useEffect(() => {
-  //   if (!lessonId) return;
-
-  //   const fetchFeedback = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const res = await axios.get(`/api/incorrectphonemes/feedback-summary`);
-  //       console.log("check res", res);
-  //       setQuestions(Array.isArray(res) ? res : []);
-  //       setError(null);
-  //     } catch (err) {
-  //       console.error(err);
-  //       setError(err?.error || err.message || "Unknown error");
-  //       setQuestions([]);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchFeedback();
-  // }, [lessonId]);
 
   if (loading) {
     return (
