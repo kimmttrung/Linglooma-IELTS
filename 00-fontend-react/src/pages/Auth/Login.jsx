@@ -7,7 +7,6 @@ import axios from "axios";
 import { AuthContext } from "@/components/context/auth.context";
 
 const PageLogin = () => {
-    const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
     const { setAuth } = useContext(AuthContext);
 
     const [showPassword, setShowPassword] = useState(false);
@@ -40,7 +39,7 @@ const PageLogin = () => {
             toast.error("Invalid email and password");
         }
         try {
-            const res = await axios.post(`${API_URL}/api/login`, { email, password });
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/login`, { email, password });
             console.log("res", res);
 
             if (res.data.success === true) {

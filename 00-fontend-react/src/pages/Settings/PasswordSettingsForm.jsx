@@ -5,8 +5,6 @@ import { AuthContext } from '@/components/context/auth.context';
 
 
 const PasswordSettingsForm = () => {
-    const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
-
     const { auth, setAuth } = useContext(AuthContext);
 
     const [formData, setFormData] = useState({
@@ -55,7 +53,7 @@ const PasswordSettingsForm = () => {
         console.log("Payload gửi đi:", payload);
 
         try {
-            const res = await axios.put(`${API_URL}/api/users/update`, payload);
+            const res = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/users/update`, payload);
 
             if (res.status === 200) {
                 toast.success('Cập nhật thành công');
