@@ -11,13 +11,13 @@ const { countPhonemeErrors } = require('../utils/phonemeErrorCounter');;
 
 exports.scoreAudio = async (req, res) => {
   try {
-    const { audio, referenceText, questionId, index} = req.body;
+    const { audio, referenceText, questionId, index } = req.body;
 
     if (!audio) return res.status(400).json({ error: "Thiếu dữ liệu audio" });
     if (!referenceText || referenceText.trim() === "")
       return res.status(400).json({ error: "Thiếu câu mẫu (referenceText)" });
     if (!questionId) return res.status(400).json({ error: "Thiếu questionId" });
-    if (!index) return res.status(400).json({ error: "Thiếu curentIndex" });
+    if (index === null) return res.status(400).json({ error: "Thiếu curentIndex" });
 
     const filename = `audio_${Date.now()}.wav`;
     const filepath = path.join(__dirname, "..", "temp", filename);
@@ -36,7 +36,7 @@ exports.scoreAudio = async (req, res) => {
     const ieltsResult = calculateIELTSBand(assessment);
     const phonemeDetails = analyzePhonemes(assessment);
     const wordsAssessmentVn = vietnameseWordsAssessment(wordsAssessment);
-  
+
     const errorMap = countPhonemeErrors(wordsAssessment);
     //console.log(errorMap);
     //console.log(JSON.stringify(wordsAssessment, null, 2));
@@ -53,7 +53,7 @@ exports.scoreAudio = async (req, res) => {
       miscueWords: miscueWordsFromTranscript,
       phonemeDetails,
       wordsAssessment: wordsAssessmentVn,
-      incorrectPhonemes: wordsAssessment, 
+      incorrectPhonemes: wordsAssessment,
       err: errorMap,
     });
   } catch (error) {

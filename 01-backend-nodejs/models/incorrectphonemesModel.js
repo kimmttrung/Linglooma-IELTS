@@ -42,7 +42,14 @@ const upsertIncorrectPhoneme = async (phoneme, count, questionResultId, lessonRe
 // Hàm xử lý map phoneme => count, gọi upsert cho từng phoneme
 const insertOrUpdateIncorrectPhonemes = async (errorMap, questionResultId, lessonResultId, questionId, studentId) => {
   for (const [phoneme, count] of Object.entries(errorMap)) {
-    await upsertIncorrectPhoneme(phoneme, count, questionResultId, lessonResultId, questionId, studentId);
+    try {
+      console.log(`Upserting phoneme: "${phoneme}" with count: ${count}`);
+      await upsertIncorrectPhoneme(phoneme, count, questionResultId, lessonResultId, questionId, studentId);
+      console.log(`Upsert success for phoneme: "${phoneme}"`);
+    } catch (error) {
+      console.error(`Error upserting phoneme "${phoneme}":`, error);
+      throw error; // có thể throw để controller nhận lỗi
+    }
   }
 };
 
@@ -65,41 +72,42 @@ const getIncorrectPhonemesOfLesson = async (studentId, lessonResultId) => {
 };
 
 const getTopIncorrectPhonemesWithAvgScore = async () => {
-  const result = await client.query(`
-  WITH PhonemeCounts AS (
-    SELECT
-      questionId,
-      phoneme,
-      SUM(incorrect_count) AS total_incorrect
-    FROM incorrectphonemes
-    GROUP BY questionId, phoneme
-  ),
-  TopPhonemes AS (
-    SELECT
-      questionId,
-      phoneme,
-      total_incorrect,
-      RANK() OVER (PARTITION BY questionId ORDER BY total_incorrect DESC) as rank
-    FROM PhonemeCounts
-  ),
-  AvgScores AS (
-    SELECT
-      questionId,
-      AVG(ieltsBand) AS avg_ieltsband,
-      AVG(accuracy) AS avg_accuracy,
-      AVG(fluency) AS avg_fluency,
-      AVG(completeness) AS avg_completeness,
-      AVG(pronunciation) AS avg_pronunciation
-    FROM questionResult
-    GROUP BY questionId
-  ),
-  LatestFeedback AS (
-    SELECT DISTINCT ON (questionId)
-      questionId,
-      feedback
-    FROM questionResult
-    ORDER BY questionId, id DESC
-  )
+  try {
+    const result = await client.query(`
+    WITH PhonemeCounts AS (
+  SELECT
+    questionId,
+    phoneme,  
+    SUM(incorrect_count) AS total_incorrect
+  FROM incorrectphonemes
+  GROUP BY questionId, phoneme
+),
+TopPhonemes AS (
+  SELECT
+    questionId,
+    phoneme,
+    total_incorrect,
+    RANK() OVER (PARTITION BY questionId ORDER BY total_incorrect DESC) as rank
+  FROM PhonemeCounts
+),
+AvgScores AS (
+  SELECT
+    questionId,
+    AVG(ieltsBand) AS avg_ieltsband,
+    AVG(accuracy) AS avg_accuracy,
+    AVG(fluency) AS avg_fluency,
+    AVG(completeness) AS avg_completeness,
+    AVG(pronunciation) AS avg_pronunciation
+  FROM questionResult
+  GROUP BY questionId
+),
+LatestFeedback AS (
+  SELECT DISTINCT ON (questionId)
+    questionId,
+    feedback
+  FROM questionResult
+  ORDER BY questionId, id DESC
+)
 
   SELECT
     tp.questionId,
@@ -117,8 +125,12 @@ const getTopIncorrectPhonemesWithAvgScore = async () => {
   WHERE tp.rank <= 3
   ORDER BY tp.questionId, tp.rank;
   `);
+    return result.rows;
+  } catch (error) {
+    console.error("Error in getTopIncorrectPhonemesWithAvgScore:", error);
+    throw error;
+  }
 
-  return result.rows;
 };
 
 module.exports = {

@@ -5,6 +5,9 @@ import Button from "@/components/ui/Button";
 import "react-tooltip/dist/react-tooltip.css";
 import HighlightTextWithTooltip from "./HighlightText";
 import TextToSpeechButton from "./TextToSpeechButton";
+// import axios from "axios";
+import axios from "@/utils/axios.customize";
+import { toast } from "react-toastify";
 
 
 
@@ -76,69 +79,26 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
       const blob = recorderRef.current.getBlob();
       const base64Audio = await blobToBase64(blob);
 
-      const res = await fetch(`${API_URL}/api/score-audio`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ audio: base64Audio, referenceText, questionId: currentQuestion?.id, index: currentIndex + 1}),
+      const data = await axios.post("/api/score-audio", {
+        audio: base64Audio,
+        referenceText,
+        questionId: currentQuestion?.id,
+        index: currentIndex,
       });
-      const data = await res.json();
-if (res.ok) {
-  setScoreData(data);
-  setStatus("Results received");
+      console.log(">>> check data", data);
 
-  await fetch(`${API_URL}/api/lessons/results`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      studentId: 1,
-      lessonId: currentQuestion?.id,
-      finishedTime: new Date().toISOString(),
-      averageScore: data.score,    // <-- dùng data.score ở đây
-      feedback: data.feedback,
-    }),
-  });
-
-  await fetch(`${API_URL}/api/questions/results`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      studentId: 1,
-      lessonResultId: currentQuestion?.id,
-      questionId: currentIndex + 1,
-      ieltsBand: data.score,
-      accuracy: data.accuracyScore,
-      fluency: data.fluencyScore,
-      completeness: data.completenessScore,
-      pronunciation: data.pronScore,
-      feedback: data.feedback,
-    }),
-  });
-
-  await fetch(`${API_URL}/api/incorrectphonemes/add`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      phoneme: data.err, 
-      questionResultId: 1,
-      lessonResultId: currentQuestion?.id,
-      questionId: currentIndex + 1,
-      studentId: 1,
-    }),
-  });
-
-  if (onScore) onScore(data);
+      if (data?.wordsAssessment) {
+        setScoreData(data);
+        setStatus("Results received");
+        if (onScore) onScore(data);
       } else {
-        setStatus("Lỗi xảy ra: " + (data.error || "Unknown error"));
+        setStatus("Lỗi: dữ liệu phản hồi không hợp lệ");
+        toast.error("Dữ liệu phản hồi không hợp lệ");
         setScoreData(null);
       }
     } catch (err) {
       setStatus("Connection error: " + err.message);
+      toast.error(err.message);
       setScoreData(null);
     }
   };

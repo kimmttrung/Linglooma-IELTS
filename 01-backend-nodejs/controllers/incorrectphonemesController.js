@@ -6,13 +6,16 @@ const {
 
 const insertIncorrectPhonemeController = async (req, res) => {
   const { phoneme: errorMap, questionResultId, lessonResultId, questionId, studentId } = req.body;
+  console.log("Received insert request body:", req.body);
 
   if (!errorMap || !questionResultId || !lessonResultId || !questionId || !studentId) {
+    console.warn("Missing required fields in insert request");
     return res.status(400).json({ message: "All fields are required" });
   }
 
   try {
     await insertOrUpdateIncorrectPhonemes(errorMap, questionResultId, lessonResultId, questionId, studentId);
+    console.log("Insert/Update phonemes success");
     res.status(200).json({ message: "Insert/Update incorrect phonemes successfully" });
   } catch (err) {
     console.error("Insert/Update incorrect phonemes failed:", err);
@@ -39,6 +42,7 @@ const getIncorrectPhonemesOfLessonController = async (req, res) => {
 const getFeedbackSummaryController = async (req, res) => {
   try {
     const rows = await getTopIncorrectPhonemesWithAvgScore();
+    // console.log("check rows", rows);
 
     const feedbackSummary = {};
     rows.forEach(

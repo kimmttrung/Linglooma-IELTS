@@ -3,11 +3,10 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
-import axios from "axios";
 import { AuthContext } from "@/components/context/auth.context";
+import axios from "@/utils/axios.customize";
 
 const PageLogin = () => {
-    const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
     const { setAuth } = useContext(AuthContext);
 
     const [showPassword, setShowPassword] = useState(false);
@@ -40,10 +39,20 @@ const PageLogin = () => {
             toast.error("Invalid email and password");
         }
         try {
-            const res = await axios.post(`${API_URL}/api/login`, { email, password });
+            const res = await axios.post(`/api/login`, { email, password });
             console.log("res", res);
 
-            if (res.data.success === true) {
+            if (res.success === true) {
+                // lưu vào localStorage
+                if (res?.access_token) {
+                    // Lưu access_token
+                    localStorage.setItem("access_token", res.access_token);
+
+                    // (1) Nếu server trả luôn user info trong res:
+                    if (res.user) {
+                        localStorage.setItem("user", JSON.stringify(res.user));
+                    }
+                }
                 toast.success(
                     "Login success! Welcome to Linglooma", {
                     position: "top-right",
@@ -51,22 +60,24 @@ const PageLogin = () => {
                     theme: "light"
                 }
                 );
+
                 setAuth({
                     isAuthenticated: true,
                     user: {
-                        email: res?.data?.user?.email ?? "",
-                        username: res?.data?.user?.name ?? "",
-                        phonenumber: res?.data?.user?.phone ?? "",
-                        gender: res?.data?.user?.gender ?? "",
-                        nationality: res?.data?.user?.nationality ?? ""
+                        email: res?.user?.email ?? "",
+                        username: res?.user?.name ?? "",
+                        phonenumber: res?.user?.phone ?? "",
+                        gender: res?.user?.gender ?? "",
+                        nationality: res?.user?.nationality ?? ""
                     }
                 })
 
                 navigate("/admin/dashboard");
+                return;
             }
         } catch (err) {
-            if (err.response && err.response.data && err.response.data.msg) {
-                toast.error(err.response.data.msg);
+            if (err?.msg) {
+                toast.error(err.msg);
             } else {
                 toast.error("Login failed");
             }
