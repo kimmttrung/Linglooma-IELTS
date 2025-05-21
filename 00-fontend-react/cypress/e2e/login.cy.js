@@ -71,7 +71,7 @@ describe('Kiểm thử giao diện trang đăng nhập', () => {
     cy.contains('Login').click();
 
     cy.wait('@loginSuccess');
-    cy.location('pathname').should('eq', '/admin');
+    cy.location('pathname').should('eq', '/admin/dashboard');
   });
 
 
@@ -142,7 +142,7 @@ describe('Kiểm thử giao diện trang đăng nhập', () => {
     cy.wait('@login'); // chờ request thứ hai
 
     // Kiểm tra chuyển trang thành công
-    cy.location('pathname').should('eq', '/admin');
+    cy.location('pathname').should('eq', '/admin/dashboard');
   });
 
 
