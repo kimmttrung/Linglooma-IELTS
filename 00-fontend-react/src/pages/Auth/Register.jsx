@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import axios from "axios";
 
 const PageRegister = () => {
-    const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -46,7 +45,7 @@ const PageRegister = () => {
         }
 
         try {
-            const res = await axios.post(`${API_URL}/api/register`, { email, password });
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/register`, { email, password });
             if (res.data.success) {
                 toast.success("Create new user success");
                 navigate("/login");

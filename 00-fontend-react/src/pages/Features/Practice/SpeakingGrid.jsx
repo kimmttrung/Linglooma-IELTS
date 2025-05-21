@@ -15,8 +15,7 @@ const GridButton = ({ number, active, onClick }) => {
     );
 };
 
-const SpeakingGrid = ({ setCurrentQuestion }) => {
-    const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
+const SpeakingGrid = ({ setCurrentQuestion, setCurrentIndex }) => {
 
     const navigate = useNavigate();
     const { lessonId } = useParams();
@@ -30,13 +29,14 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
         const question = questions[index];
         if (question) {
             setCurrentQuestion(question);
+            setCurrentIndex(index);
         }
     };
 
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const res = await fetch(`${API_URL}/api/questions/${lessonId}`);
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/questions/${lessonId}`);
                 if (!res.ok) {
                     throw new Error(`Lỗi API status ${res.status}`);
                 }
@@ -46,6 +46,7 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
                     setQuestions(data.questions);
                     if (data.questions.length > 0) {
                         setCurrentQuestion(data.questions[0]);
+                        setCurrentIndex(0);
                         setLessonTitle(data.questions[0].name); // ✅ Set title
                     }
                 } else {
@@ -70,7 +71,7 @@ const SpeakingGrid = ({ setCurrentQuestion }) => {
                 <h3 className="mb-5 text-lg font-extrabold text-sky-800">
                     Bài {lessonId} {lessonTitle}
                 </h3>
-                <div className="grid grid-cols-3 gap-5 w-full max-w-[400px]">
+                <div className="grid grid-cols-3 gap-5 w-full max-w-[350px]">
                     {questions.map((q, index) => (
                         <GridButton
                             key={index}

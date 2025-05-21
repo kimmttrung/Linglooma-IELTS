@@ -1,4 +1,4 @@
-const { updateUser, findUserBymail, findUserByName, findUserByEmail} = require('../models/userModel');
+const { updateUser, findUserByEmail, findUserByName } = require('../models/userModel');
 const bcrypt = require('bcrypt');
 
 const updateUserController = async (req, res) => {   
@@ -55,6 +55,7 @@ const updateUserController = async (req, res) => {
             updatedNationality,
             updatedPhone
         );
+
 
         return res.status(200).json({ message: "Cập nhật thành công" });
     } catch (err) {
