@@ -6,7 +6,8 @@ const { calculateIELTSBand } = require("../services/ieltsScoringService");
 const { findMismatchedWords } = require("../services/miscueService");
 const { analyzePhonemes } = require("../utils/analyzePhonemes");
 const { vietnameseWordsAssessment } = require("../utils/wordsAssessmentHelper");
-const { countPhonemeErrors } = require('../utils/phonemeErrorCounter');
+const { countPhonemeErrors } = require('../utils/phonemeErrorCounter');;
+
 
 exports.scoreAudio = async (req, res) => {
   try {
@@ -38,7 +39,6 @@ exports.scoreAudio = async (req, res) => {
   
     const errorMap = countPhonemeErrors(wordsAssessment);
     //console.log(errorMap);
-    
     //console.log(JSON.stringify(wordsAssessment, null, 2));
 
     res.json({

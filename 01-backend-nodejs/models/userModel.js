@@ -1,12 +1,8 @@
 const client = require('../db');
 
 const findUserByEmail = async (email) => {
-    const result = await client.query(
-        'SELECT * FROM users WHERE email = $1',
-        [email]
-    )
-
-    return result;
+    const result = await client.query('SELECT id, email, username, password, gender, nationality, phonenumber FROM users WHERE email = $1', [email]);
+  return result;
 }
 
 const insertUser = async (email, hashedPassword) => {

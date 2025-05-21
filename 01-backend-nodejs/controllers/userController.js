@@ -17,6 +17,7 @@ const updateUserController = async (req, res) => {
 
         const currentUser = userResult.rows[0];
 
+
         // Nếu có yêu cầu đổi password, phải kiểm tra currentPassword
         let updatedPassword = currentUser.password;
         if (password?.trim()) {

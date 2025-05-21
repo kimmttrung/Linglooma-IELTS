@@ -81,13 +81,26 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ audio: base64Audio, referenceText, questionId: currentQuestion?.id, index: currentIndex + 1}),
       });
-
       const data = await res.json();
-      if (res.ok) {
-        setScoreData(data);
-        setStatus("Results received");
-        if (onScore) onScore(data); // callback
-        // if (setOnSubmit) setOnSubmit(true);
+if (res.ok) {
+  setScoreData(data);
+  setStatus("Results received");
+
+  await fetch(`${API_URL}/api/lessons/results`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      studentId: 1,
+      lessonId: currentQuestion?.id,
+      finishedTime: new Date().toISOString(),
+      averageScore: data.score,    // <-- dùng data.score ở đây
+      feedback: data.feedback,
+    }),
+  });
+
+  if (onScore) onScore(data);
       } else {
         setStatus("Lỗi xảy ra: " + (data.error || "Unknown error"));
         setScoreData(null);

@@ -2,27 +2,28 @@ const client = require('../db');
 
 const lastestScore = 7;
 
-const insertLessonResult = async (studentId, lessonId, finishedTime, averageScore, feedback) => {
+async function insertLessonResult({ studentId, lessonId, finishedTime, averageScore, feedback }) {
+  const query = `
+    INSERT INTO lessonResult (studentId, lessonId, finishedTime, averageScore, feedback)
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING *;
+  `;
+  const values = [studentId, lessonId, finishedTime, averageScore, feedback];
+
+  const res = await client.query(query, values);
+  return res.rows[0];
+}
+
+
+const getLessonResult = async (studentId, lessonId) => {
     await client.query(
-        `
-        INSERT INTO lessonResult (studentId, lessonId, finishedTime, averageScore, feedback) 
-        VALUES ($1, $2, $3, $4, $5)
-         `,
-        [studentId, lessonId, finishedTime, averageScore, feedback]
+        'SELECT * FROM lessonResult WHERE studentId=$1 AND lessonId=$2',
+        [studentId, lessonId]
     );
 }
 
-const getLessonResult = async (studentId, lessonId) => {
-    const result = await client.query(
-        'SELECT * FROM lessonResult WHERE studentId=$1 AND lessonId=$2',
-        [studentId, lessonId]
-    )
-
-    return result; 
-}
-
 const getRecentlyLessonResult = async (studentId) => {
-    const result = client.query(
+    client.query(
         `
         SELECT * 
         FROM lessonresult
@@ -31,9 +32,7 @@ const getRecentlyLessonResult = async (studentId) => {
         LIMIT $2;
         `,
         [studentId, lastestScore]
-    )
-
-    return result;
+    );
 }
 
 
