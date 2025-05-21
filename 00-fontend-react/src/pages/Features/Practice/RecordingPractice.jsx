@@ -100,6 +100,38 @@ if (res.ok) {
     }),
   });
 
+  await fetch(`${API_URL}/api/questions/results`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      studentId: 1,
+      lessonResultId: currentQuestion?.id,
+      questionId: currentIndex + 1,
+      ieltsBand: data.score,
+      accuracy: data.accuracyScore,
+      fluency: data.fluencyScore,
+      completeness: data.completenessScore,
+      pronunciation: data.pronScore,
+      feedback: data.feedback,
+    }),
+  });
+
+  await fetch(`${API_URL}/api/incorrectphonemes/add`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      phoneme: data.err, 
+      questionResultId: 1,
+      lessonResultId: currentQuestion?.id,
+      questionId: currentIndex + 1,
+      studentId: 1,
+    }),
+  });
+
   if (onScore) onScore(data);
       } else {
         setStatus("Lỗi xảy ra: " + (data.error || "Unknown error"));

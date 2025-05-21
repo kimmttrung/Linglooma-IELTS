@@ -20,11 +20,11 @@ const lessonResultRoutes = require('./routes/lessonResultRoute');
 const questionRoutes = require('./routes/questionRoute');
 const questionResultRoutes = require('./routes/questionResultRoute')
 const userRoutes = require('./routes/userRoute');
+const incorrectphonemesRoutes = require('./routes/incorrectphonemesRoutes');
 
 
 
 // app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
 app.use("/api", scoreRoutes);
 // app.use("/api", questionRoutes)
 
@@ -35,6 +35,7 @@ app.use("/api/lessons/results", lessonResultRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/questions/results", questionResultRoutes);
 app.use("/api/users", userRoutes);
+app.use('/api/incorrectphonemes', incorrectphonemesRoutes);
 
 // 404 handler đặt cuối cùng
 app.use((req, res) => {

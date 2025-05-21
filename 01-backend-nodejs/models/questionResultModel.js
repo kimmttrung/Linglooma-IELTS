@@ -1,14 +1,27 @@
 const client = require('../db');
 
-const insertQuestionResult = async (lessonResultId, questionId, score, errorPronouce, studentId) => {
-    await client.query(
-        `
-        INSERT INTO questionResult (lessonResultId, questionId, score, errorPronouce, studentId)
-        VALUES ($1, $2, $3, $4, $5)
-        `,
-        [lessonResultId, questionId, score, errorPronouce, studentId]
-    )
+const insertQuestionResult = async (
+  studentId,
+  lessonResultId,
+  questionId,
+  ieltsBand,
+  accuracy,
+  fluency,
+  completeness,
+  pronunciation,
+  feedback
+) => {
+  await client.query(
+    `
+    INSERT INTO questionResult
+      (studentId, lessonResultId, questionId, ieltsBand, accuracy, fluency, completeness, pronunciation, feedback)
+    VALUES
+      ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    `,
+    [studentId, lessonResultId, questionId, ieltsBand, accuracy, fluency, completeness, pronunciation, feedback]
+  );
 };
+
 
 const getQuestionResultOfLesson = async (studentId, lessonResultId) => {
     const result = await client.query(

@@ -53,7 +53,8 @@ exports.scoreAudio = async (req, res) => {
       miscueWords: miscueWordsFromTranscript,
       phonemeDetails,
       wordsAssessment: wordsAssessmentVn,
-      incorrectPhonemes: wordsAssessment
+      incorrectPhonemes: wordsAssessment, 
+      err: errorMap,
     });
   } catch (error) {
     console.error("Lỗi khi chấm điểm:", error);

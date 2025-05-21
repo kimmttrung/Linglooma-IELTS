@@ -2,14 +2,34 @@ const { insertQuestionResult, getQuestionResultOfLesson } = require('../models/q
 
 // Thêm kết quả một câu hỏi sau khi làm bài
 const insertQuestionResultController = async (req, res) => {
-    const { lessonResultId, questionId, score, errorPronouce, studentId } = req.body;
+    const {
+        studentId,
+        lessonResultId,
+        questionId,
+        ieltsBand,
+        accuracy,
+        fluency,
+        completeness,
+        pronunciation,
+        feedback
+    } = req.body;
 
-    if (!lessonResultId || !questionId || score == null || !studentId) {
+    if (!lessonResultId || !questionId || !studentId) {
         return res.status(400).json({ message: "All fields are required" });
     }
 
     try {
-        await insertQuestionResult(lessonResultId, questionId, score, errorPronouce, studentId);
+        await insertQuestionResult(
+            studentId,
+            lessonResultId,
+            questionId,
+            ieltsBand || null,
+            accuracy || null,
+            fluency || null,
+            completeness || null,
+            pronunciation || null,
+            feedback || null
+        );
         res.status(200).json({ message: "Insert question results successfully" });
     } catch (err) {
         console.error("Insert question results failed: ", err);
@@ -17,12 +37,12 @@ const insertQuestionResultController = async (req, res) => {
     }
 };
 
-// Lấy kết quả tất cả câu hỏi của một lần làm bài học
 const getQuestionResultOfLessonController = async (req, res) => {
     const { studentId, lessonResultId } = req.params;
 
+    // Kiểm tra thông tin đầu vào
     if (!studentId || !lessonResultId) {
-        return res.status(400).json({ message: "Mising parameters studentId or lessonResultId" });
+        return res.status(400).json({ message: "Missing parameters studentId or lessonResultId" });
     }
 
     try {
