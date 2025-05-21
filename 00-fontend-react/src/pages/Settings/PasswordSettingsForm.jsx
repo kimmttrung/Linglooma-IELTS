@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { toast } from 'react-toastify';
-import axios from "axios";
+import axios from "@/utils/axios.customize";
 import { AuthContext } from '@/components/context/auth.context';
 
 
@@ -55,9 +55,9 @@ const PasswordSettingsForm = () => {
         console.log("Payload gửi đi:", payload);
 
         try {
-            const res = await axios.put(`${API_URL}/api/users/update`, payload);
+            const data = await axios.put(`/api/users/update`, payload);
 
-            if (res.status === 200) {
+            if (data.success === true) {
                 toast.success('Cập nhật thành công');
 
                 const updatedUser = {
@@ -85,7 +85,7 @@ const PasswordSettingsForm = () => {
                     confirmPassword: ''
                 });
             } else {
-                toast.error(res.data.message || 'Cập nhật thất bại');
+                toast.error(data.message || 'Cập nhật thất bại');
             }
         } catch (err) {
             if (err.response) {

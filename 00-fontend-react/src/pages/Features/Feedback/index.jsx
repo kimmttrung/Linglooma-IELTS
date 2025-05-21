@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import QuestionItem from "./QuestionItem";
+import axios from "@/utils/axios.customize";
 
 const PronunciationFeedback = () => {
   const navigate = useNavigate();
@@ -14,13 +15,14 @@ const PronunciationFeedback = () => {
 
     setLoading(true);
     fetch('http://localhost:5000/api/incorrectphonemes/feedback-summary')
+      // axios.get(`/api/incorrectphonemes/feedback-summary`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch feedback data");
-        return res.json();
+        // return res.json();
       })
-      .then((data) => {
+      .then((res) => {
         // Nếu cần, có thể lọc data theo lessonId ở đây nếu backend trả dữ liệu đa bài
-        setQuestions(data);
+        setQuestions(res);
         setError(null);
       })
       .catch((err) => {
@@ -32,6 +34,28 @@ const PronunciationFeedback = () => {
         setLoading(false);
       });
   }, [lessonId]);
+
+  // useEffect(() => {
+  //   if (!lessonId) return;
+
+  //   const fetchFeedback = async () => {
+  //     setLoading(true);
+  //     try {
+  //       const res = await axios.get(`/api/incorrectphonemes/feedback-summary`);
+  //       console.log("check res", res);
+  //       setQuestions(Array.isArray(res) ? res : []);
+  //       setError(null);
+  //     } catch (err) {
+  //       console.error(err);
+  //       setError(err?.error || err.message || "Unknown error");
+  //       setQuestions([]);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchFeedback();
+  // }, [lessonId]);
 
   if (loading) {
     return (

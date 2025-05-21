@@ -41,8 +41,23 @@ const upsertIncorrectPhoneme = async (phoneme, count, questionResultId, lessonRe
 
 // Hàm xử lý map phoneme => count, gọi upsert cho từng phoneme
 const insertOrUpdateIncorrectPhonemes = async (errorMap, questionResultId, lessonResultId, questionId, studentId) => {
+  console.log("insertOrUpdateIncorrectPhonemes called with:", {
+    errorMap,
+    questionResultId,
+    lessonResultId,
+    questionId,
+    studentId,
+  });
+
   for (const [phoneme, count] of Object.entries(errorMap)) {
-    await upsertIncorrectPhoneme(phoneme, count, questionResultId, lessonResultId, questionId, studentId);
+    try {
+      console.log(`Upserting phoneme: "${phoneme}" with count: ${count}`);
+      await upsertIncorrectPhoneme(phoneme, count, questionResultId, lessonResultId, questionId, studentId);
+      console.log(`Upsert success for phoneme: "${phoneme}"`);
+    } catch (error) {
+      console.error(`Error upserting phoneme "${phoneme}":`, error);
+      throw error; // có thể throw để controller nhận lỗi
+    }
   }
 };
 
@@ -65,11 +80,12 @@ const getIncorrectPhonemesOfLesson = async (studentId, lessonResultId) => {
 };
 
 const getTopIncorrectPhonemesWithAvgScore = async () => {
-  const result = await client.query(`
+  try {
+    const result = await client.query(`
     WITH PhonemeCounts AS (
   SELECT
     questionId,
-    phoneme,
+    phoneme,  
     SUM(incorrect_count) AS total_incorrect
   FROM incorrectphonemes
   GROUP BY questionId, phoneme
@@ -117,8 +133,13 @@ LEFT JOIN LatestFeedback lf ON tp.questionId = lf.questionId
 WHERE tp.rank <= 3
 ORDER BY tp.questionId, tp.rank;
   `);
+    console.log("Query success, rows:", result.rows);
+    return result.rows;
+  } catch (error) {
+    console.error("Error in getTopIncorrectPhonemesWithAvgScore:", error);
+    throw error;
+  }
 
-  return result.rows;
 };
 
 module.exports = {

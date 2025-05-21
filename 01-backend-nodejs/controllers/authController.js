@@ -1,5 +1,9 @@
+require('dotenv').config()
 const bcrypt = require('bcrypt');
 const User = require('../models/userModel');
+const jwt = require("jsonwebtoken");
+// const { name } = require('ejs');
+
 
 exports.register = async (req, res) => {
   const { email, password } = req.body;
@@ -48,7 +52,21 @@ exports.login = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) {
       // Có thể tạo JWT ở đây nếu cần
+      const payload = {
+        email: user.email,
+        name: user.username
+      }
+
+      const access_token = jwt.sign(
+        payload,
+        process.env.JWT_SECRET,
+        {
+          expiresIn: process.env.JWT_EXPIRE
+        }
+      )
+
       res.status(200).json({
+        access_token,
         msg: 'Login successful',
         success: true,
         user: {

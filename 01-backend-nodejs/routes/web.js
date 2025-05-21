@@ -12,8 +12,6 @@ const initWebRoutes = (app) => {
     })
 
     return app.use("/", router);
-    //app.use("/", router);
-    //app.use("/api/score", scoreRoutes);
 }
 
 export default initWebRoutes;

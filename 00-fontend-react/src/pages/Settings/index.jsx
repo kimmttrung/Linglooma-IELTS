@@ -32,7 +32,10 @@ const SettingsPage = () => {
               <div className="flex gap-4 items-center">
                 <Button
                   className="px-4 py-2 rounded-lg bg-[pink-100]"
-                  onClick={() => navigate("/")}
+                  onClick={() => {
+                    localStorage.clear();
+                    navigate('/')
+                  }}
                 >
                   Đăng xuất
                 </Button>
