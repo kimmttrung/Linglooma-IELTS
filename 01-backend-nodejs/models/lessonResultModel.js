@@ -12,6 +12,16 @@ const insertLessonResult = async (studentId, lessonId, finishedTime, averageScor
     );
 }
 
+const insertLessonResultById = async (studentId, lessonId) => {
+    await client.query(
+        `
+        INSERT INTO lessonResult (studentId, lessonId)
+        VALUES ($1, $2)
+         `,
+        [studentId, lessonId]
+    );
+}
+
 const getLessonResult = async (studentId, lessonId) => {
     const result = await client.query(
         'SELECT * FROM lessonResult WHERE studentId=$1 AND lessonId=$2',
@@ -40,5 +50,6 @@ const getRecentlyLessonResult = async (studentId) => {
 module.exports = {
     insertLessonResult,
     getLessonResult,
-    getRecentlyLessonResult
+    getRecentlyLessonResult,
+    insertLessonResultById  
 };

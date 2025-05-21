@@ -1,4 +1,4 @@
-const { updateUser, findUserByEmail, findUserByName, findUserByEmail} = require('../models/userModel');
+const { updateUser, findUserBymail, findUserByName, findUserByEmail} = require('../models/userModel');
 const bcrypt = require('bcrypt');
 
 const updateUserController = async (req, res) => {   

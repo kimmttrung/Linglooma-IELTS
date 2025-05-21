@@ -55,6 +55,7 @@ const getRecentlyLessonResultController = async (req, res) => {
     }
 };
 
+
 module.exports = {
     insertLessonResultController,
     getLessonResultController,

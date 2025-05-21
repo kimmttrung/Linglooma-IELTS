@@ -20,6 +20,7 @@ const lessonResultRoutes = require('./routes/lessonResultRoute');
 const questionRoutes = require('./routes/questionRoute');
 const questionResultRoutes = require('./routes/questionResultRoute')
 const userRoutes = require('./routes/userRoute');
+const incorrectPhonemesRoutes = require('./routes/incorrectPhonemesRoute');
 
 
 
@@ -35,6 +36,7 @@ app.use("/api/lessons/results", lessonResultRoutes);
 app.use("/api/questions", questionRoutes);
 app.use("/api/questions/results", questionResultRoutes);
 app.use("/api/users", userRoutes);
+app.use("api/wrong-phonemes", incorrectPhonemesRoutes);
 
 // 404 handler đặt cuối cùng
 app.use((req, res) => {

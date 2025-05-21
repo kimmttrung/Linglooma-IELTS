@@ -1,19 +1,45 @@
-const { insertQuestionResult, getQuestionResultOfLesson } = require('../models/questionResultModel');
+const { insertQuestionResult, getQuestionResultOfLesson, getLastestQuestionResult} = require('../models/questionResultModel');
 
 // Thêm kết quả một câu hỏi sau khi làm bài
 const insertQuestionResultController = async (req, res) => {
-    const { lessonResultId, questionId, score, errorPronouce, studentId } = req.body;
+    const {
+        lessonResultId,
+        questionId,
+        ieltsBand,
+        studentId,
+        accuracy,
+        fluency,
+        completeness,
+        pronunciation,
+        feedback
+    } = req.body;
 
-    if (!lessonResultId || !questionId || score == null || !studentId) {
+    // Kiểm tra các trường bắt buộc
+    if (
+        !lessonResultId || !questionId || ieltsBand == null || !studentId ||
+        accuracy == null || fluency == null || completeness == null ||
+        pronunciation == null || feedback == null
+    ) {
         return res.status(400).json({ message: "All fields are required" });
     }
 
     try {
-        await insertQuestionResult(lessonResultId, questionId, score, errorPronouce, studentId);
-        res.status(200).json({ message: "Insert question results successfully" });
+        await insertQuestionResult(
+            lessonResultId,
+            questionId,
+            ieltsBand,
+            studentId,
+            accuracy,
+            fluency,
+            completeness,
+            pronunciation,
+            feedback
+        );
+
+        res.status(200).json({ message: "Insert question result successfully" });
     } catch (err) {
-        console.error("Insert question results failed: ", err);
-        res.status(500).json({ message: "Insert question results failed" });
+        console.error("Insert question result failed: ", err);
+        res.status(500).json({ message: "Insert question result failed" });
     }
 };
 
@@ -34,7 +60,25 @@ const getQuestionResultOfLessonController = async (req, res) => {
     }
 };
 
+// Lấy kết quả câu hỏi gần nhất của một học sinh
+const getLastestQuestionResultController = async (req, res) => {
+    const { studentId, questionId, lessonId} = req.params;
+
+    if (!studentId) {
+        return res.status(400).json({ message: "Mising parameters studentId" });
+    }
+
+    try {
+        const result = await getLastestQuestionResult(studentId, questionId, lessonId);
+        res.status(200).json(result.rows);
+    } catch (err) {
+        console.error("Get question results failed: ", err);
+        res.status(500).json({ message: "Get question results failed" });
+    }
+};
+
 module.exports = {
     insertQuestionResultController,
-    getQuestionResultOfLessonController
+    getQuestionResultOfLessonController,
+    getLastestQuestionResultController
 };
