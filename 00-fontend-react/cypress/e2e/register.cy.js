@@ -81,15 +81,15 @@ describe('Giao diện trang Đăng Ký', () => {
   });
 
   it('Cho phép nhấn Enter để gửi form', () => {
-    cy.get('input[placeholder="Email address"]').type('test@example.com');
-    cy.get('input[placeholder="Password"]').type('123456{enter}');
-    cy.get('input[placeholder="Confirm Password"]').type('123456{enter}');
-
     cy.intercept('POST', '**/api/register', {
       statusCode: 200,
       body: { success: true },
     }).as('enterRegister');
 
+    cy.get('input[placeholder="Email address"]').type('test@example.com');
+    cy.get('input[placeholder="Password"]').type('123456{enter}');
+    cy.get('input[placeholder="Confirm Password"]').type('123456{enter}');
     cy.wait('@enterRegister');
+    cy.url().should('eq', 'http://localhost:4028/login');
   });
 });
