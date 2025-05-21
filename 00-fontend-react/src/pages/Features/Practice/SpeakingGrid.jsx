@@ -16,7 +16,6 @@ const GridButton = ({ number, active, onClick }) => {
 };
 
 const SpeakingGrid = ({ setCurrentQuestion, setCurrentIndex }) => {
-    const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
 
     const navigate = useNavigate();
     const { lessonId } = useParams();
@@ -30,14 +29,14 @@ const SpeakingGrid = ({ setCurrentQuestion, setCurrentIndex }) => {
         const question = questions[index];
         if (question) {
             setCurrentQuestion(question);
-            setCurrentIndex(index); 
+            setCurrentIndex(index);
         }
     };
 
     useEffect(() => {
         const fetchQuestions = async () => {
             try {
-                const res = await fetch(`${API_URL}/api/questions/${lessonId}`);
+                const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/questions/${lessonId}`);
                 if (!res.ok) {
                     throw new Error(`Lỗi API status ${res.status}`);
                 }

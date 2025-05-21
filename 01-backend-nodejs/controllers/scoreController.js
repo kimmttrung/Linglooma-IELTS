@@ -9,13 +9,13 @@ const { vietnameseWordsAssessment } = require("../utils/wordsAssessmentHelper");
 
 exports.scoreAudio = async (req, res) => {
   try {
-    const { audio, referenceText, questionId, index} = req.body;
+    const { audio, referenceText, questionId, index } = req.body;
 
     if (!audio) return res.status(400).json({ error: "Thiếu dữ liệu audio" });
     if (!referenceText || referenceText.trim() === "")
       return res.status(400).json({ error: "Thiếu câu mẫu (referenceText)" });
     if (!questionId) return res.status(400).json({ error: "Thiếu questionId" });
-    if (!index) return res.status(400).json({ error: "Thiếu curentIndex" });
+    if (index === null) return res.status(400).json({ error: "Thiếu currentIndex" });
 
     const filename = `audio_${Date.now()}.wav`;
     const filepath = path.join(__dirname, "..", "temp", filename);
@@ -37,9 +37,9 @@ exports.scoreAudio = async (req, res) => {
     const standardIPA = generateStandardIPA(assessment);
 
     //test 
-  
+
     //console.log(JSON.stringify(wordsAssessment, null, 2));
-   // console.log("incorrectPhonemes:", wordsAssessment);
+    // console.log("incorrectPhonemes:", wordsAssessment);
 
     res.json({
       score: ieltsResult.band,

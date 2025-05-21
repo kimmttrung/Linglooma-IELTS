@@ -9,7 +9,6 @@ import TextToSpeechButton from "./TextToSpeechButton";
 
 
 const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentIndex }) => {
-  const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
   const [recording, setRecording] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
   const [status, setStatus] = useState("Ready to record");
@@ -76,7 +75,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
       const blob = recorderRef.current.getBlob();
       const base64Audio = await blobToBase64(blob);
 
-      const res = await fetch(`${API_URL}/api/score-audio`, {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/score-audio`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ audio: base64Audio, referenceText, questionId: currentQuestion?.id, index: currentIndex }),
