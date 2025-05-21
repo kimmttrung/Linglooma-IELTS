@@ -1,7 +1,12 @@
-const { insertOrUpdateIncorrectPhonemes , getIncorrectPhonemesOfLesson } = require('../models/incorrectphonemesModel');
+const {
+  insertOrUpdateIncorrectPhonemes,
+  getIncorrectPhonemesOfLesson,
+  getTopIncorrectPhonemesWithAvgScore,
+} = require("../models/incorrectphonemesModel");
 
 const insertIncorrectPhonemeController = async (req, res) => {
   const { phoneme: errorMap, questionResultId, lessonResultId, questionId, studentId } = req.body;
+
   if (!errorMap || !questionResultId || !lessonResultId || !questionId || !studentId) {
     return res.status(400).json({ message: "All fields are required" });
   }
@@ -15,7 +20,6 @@ const insertIncorrectPhonemeController = async (req, res) => {
   }
 };
 
-// Lấy phonemes sai
 const getIncorrectPhonemesOfLessonController = async (req, res) => {
   const { studentId, lessonResultId } = req.params;
 
@@ -32,7 +36,53 @@ const getIncorrectPhonemesOfLessonController = async (req, res) => {
   }
 };
 
+const getFeedbackSummaryController = async (req, res) => {
+  try {
+    const rows = await getTopIncorrectPhonemesWithAvgScore();
+
+    const feedbackSummary = {};
+    rows.forEach(
+      ({
+        questionid,
+        phoneme,
+        total_incorrect,
+        avg_ieltsband,
+        avg_accuracy,
+        avg_fluency,
+        avg_completeness,
+        avg_pronunciation,
+        avg_feedback,
+      }) => {
+        if (!feedbackSummary[questionid]) {
+          feedbackSummary[questionid] = {
+            questionId: questionid,
+            averageScores: {
+              ieltsBand: avg_ieltsband || null,
+              accuracy: avg_accuracy || null,
+              fluency: avg_fluency || null,
+              completeness: avg_completeness || null,
+              pronunciation: avg_pronunciation || null,
+            },
+            feedback: avg_feedback || "",
+            topIncorrectPhonemes: [],
+          };
+        }
+        feedbackSummary[questionid].topIncorrectPhonemes.push({
+          phoneme,
+          count: total_incorrect,
+        });
+      }
+    );
+
+    res.json(Object.values(feedbackSummary));
+  } catch (err) {
+    console.error("Failed to get feedback summary:", err);
+    res.status(500).json({ message: "Failed to get feedback summary" });
+  }
+};
+
 module.exports = {
   insertIncorrectPhonemeController,
   getIncorrectPhonemesOfLessonController,
+  getFeedbackSummaryController,
 };

@@ -1,6 +1,6 @@
 const client = require('../db');
 
-// Hàm thêm hoặc cập nhật số lần sai cho 1 phoneme
+// thêm hoặc cập nhật số lần sai cho phoneme
 const upsertIncorrectPhoneme = async (phoneme, count, questionResultId, lessonResultId, questionId, studentId) => {
   // Kiểm tra xem phoneme đã tồn tại chưa
   const checkExistResult = await client.query(
@@ -64,8 +64,66 @@ const getIncorrectPhonemesOfLesson = async (studentId, lessonResultId) => {
   return result.rows;
 };
 
+const getTopIncorrectPhonemesWithAvgScore = async () => {
+  const result = await client.query(`
+    WITH PhonemeCounts AS (
+  SELECT
+    questionId,
+    phoneme,
+    SUM(incorrect_count) AS total_incorrect
+  FROM incorrectphonemes
+  GROUP BY questionId, phoneme
+),
+TopPhonemes AS (
+  SELECT
+    questionId,
+    phoneme,
+    total_incorrect,
+    RANK() OVER (PARTITION BY questionId ORDER BY total_incorrect DESC) as rank
+  FROM PhonemeCounts
+),
+AvgScores AS (
+  SELECT
+    questionId,
+    AVG(ieltsBand) AS avg_ieltsband,
+    AVG(accuracy) AS avg_accuracy,
+    AVG(fluency) AS avg_fluency,
+    AVG(completeness) AS avg_completeness,
+    AVG(pronunciation) AS avg_pronunciation
+  FROM questionResult
+  GROUP BY questionId
+),
+LatestFeedback AS (
+  SELECT DISTINCT ON (questionId)
+    questionId,
+    feedback
+  FROM questionResult
+  ORDER BY questionId, id DESC
+)
+
+SELECT
+  tp.questionId,
+  tp.phoneme,
+  tp.total_incorrect,
+  a.avg_ieltsband,
+  a.avg_accuracy,
+  a.avg_fluency,
+  a.avg_completeness,
+  a.avg_pronunciation,
+  lf.feedback AS avg_feedback
+FROM TopPhonemes tp
+LEFT JOIN AvgScores a ON tp.questionId = a.questionId
+LEFT JOIN LatestFeedback lf ON tp.questionId = lf.questionId
+WHERE tp.rank <= 3
+ORDER BY tp.questionId, tp.rank;
+  `);
+
+  return result.rows;
+};
+
 module.exports = {
   upsertIncorrectPhoneme,
   insertOrUpdateIncorrectPhonemes,
   getIncorrectPhonemesOfLesson,
+  getTopIncorrectPhonemesWithAvgScore,
 };

@@ -1,11 +1,13 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { insertIncorrectPhonemeController, getIncorrectPhonemesOfLessonController } = require('../controllers/incorrectphonemesController');
+const {
+  insertIncorrectPhonemeController,
+  getIncorrectPhonemesOfLessonController,
+  getFeedbackSummaryController,
+} = require("../controllers/incorrectphonemesController");
 
-// Route để thêm phoneme sai
-router.post('/add', insertIncorrectPhonemeController);
-
-// Route để lấy phonemes sai của một học viên cho một bài học
-router.get('/:studentId/:lessonResultId', getIncorrectPhonemesOfLessonController);
+router.post("/add", insertIncorrectPhonemeController);
+router.get("/:studentId/:lessonResultId", getIncorrectPhonemesOfLessonController);
+router.get('/feedback-summary', getFeedbackSummaryController);
 
 module.exports = router;
