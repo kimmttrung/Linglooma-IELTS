@@ -12,23 +12,22 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-const scoreRoutes = require("./routes/scoreRoutes");
+
 // route dữ liệu 
+const scoreRoutes = require("./routes/scoreRoutes");
 const authRoutes = require("./routes/authRoutes");
 const lessonRoutes = require("./routes/lessonRoute");
 const lessonResultRoutes = require('./routes/lessonResultRoute');
 const questionRoutes = require('./routes/questionRoute');
 const questionResultRoutes = require('./routes/questionResultRoute')
 const userRoutes = require('./routes/userRoute');
+const jwtauth = require("./middleware/jwtauth");
 
-
-
-// app.use(express.urlencoded({ limit: '50mb', extended: true }));
-
-app.use("/api", scoreRoutes);
-// app.use("/api", questionRoutes)
+// middleware
+app.use(jwtauth);
 
 // truy xuất dữ liệu 
+app.use("/api", scoreRoutes);
 app.use("/api", authRoutes);
 app.use("/api/lessons", lessonRoutes);
 app.use("/api/lessons/results", lessonResultRoutes);

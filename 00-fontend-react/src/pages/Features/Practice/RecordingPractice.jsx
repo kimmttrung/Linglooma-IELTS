@@ -5,6 +5,9 @@ import Button from "@/components/ui/Button";
 import "react-tooltip/dist/react-tooltip.css";
 import HighlightTextWithTooltip from "./HighlightText";
 import TextToSpeechButton from "./TextToSpeechButton";
+// import axios from "axios";
+import axios from "@/utils/axios.customize";
+import { toast } from "react-toastify";
 
 
 
@@ -75,24 +78,26 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
       const blob = recorderRef.current.getBlob();
       const base64Audio = await blobToBase64(blob);
 
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/score-audio`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ audio: base64Audio, referenceText, questionId: currentQuestion?.id, index: currentIndex }),
+      const data = await axios.post("/api/score-audio", {
+        audio: base64Audio,
+        referenceText,
+        questionId: currentQuestion?.id,
+        index: currentIndex,
       });
+      console.log(">>> check data", data);
 
-      const data = await res.json();
-      if (res.ok) {
+      if (data?.wordsAssessment) {
         setScoreData(data);
         setStatus("Results received");
-        if (onScore) onScore(data); // callback
-        // if (setOnSubmit) setOnSubmit(true);
+        if (onScore) onScore(data);
       } else {
-        setStatus("Lỗi xảy ra: " + (data.error || "Unknown error"));
+        setStatus("Lỗi: dữ liệu phản hồi không hợp lệ");
+        toast.error("Dữ liệu phản hồi không hợp lệ");
         setScoreData(null);
       }
     } catch (err) {
       setStatus("Connection error: " + err.message);
+      toast.error(err.message);
       setScoreData(null);
     }
   };

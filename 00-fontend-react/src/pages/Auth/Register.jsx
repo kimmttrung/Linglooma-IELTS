@@ -2,6 +2,7 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
+// import axios from "@/utils/axios.customize";
 import axios from "axios";
 
 const PageRegister = () => {
