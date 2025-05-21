@@ -42,7 +42,6 @@ const PronunciationFeedback = () => {
       setLoading(true);
       try {
         const res = await axios.get(`/api/incorrectphonemes/feedback-summary`);
-        console.log("check res", res);
         setQuestions(Array.isArray(res) ? res : []);
         setError(null);
       } catch (err) {

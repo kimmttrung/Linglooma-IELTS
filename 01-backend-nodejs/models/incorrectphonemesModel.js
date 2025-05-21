@@ -41,14 +41,6 @@ const upsertIncorrectPhoneme = async (phoneme, count, questionResultId, lessonRe
 
 // Hàm xử lý map phoneme => count, gọi upsert cho từng phoneme
 const insertOrUpdateIncorrectPhonemes = async (errorMap, questionResultId, lessonResultId, questionId, studentId) => {
-  console.log("insertOrUpdateIncorrectPhonemes called with:", {
-    errorMap,
-    questionResultId,
-    lessonResultId,
-    questionId,
-    studentId,
-  });
-
   for (const [phoneme, count] of Object.entries(errorMap)) {
     try {
       console.log(`Upserting phoneme: "${phoneme}" with count: ${count}`);
@@ -133,7 +125,6 @@ LEFT JOIN LatestFeedback lf ON tp.questionId = lf.questionId
 WHERE tp.rank <= 3
 ORDER BY tp.questionId, tp.rank;
   `);
-    console.log("Query success, rows:", result.rows);
     return result.rows;
   } catch (error) {
     console.error("Error in getTopIncorrectPhonemesWithAvgScore:", error);

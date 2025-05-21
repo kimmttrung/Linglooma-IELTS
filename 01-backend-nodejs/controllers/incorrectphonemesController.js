@@ -42,7 +42,7 @@ const getIncorrectPhonemesOfLessonController = async (req, res) => {
 const getFeedbackSummaryController = async (req, res) => {
   try {
     const rows = await getTopIncorrectPhonemesWithAvgScore();
-    console.log("check rows", rows);
+    // console.log("check rows", rows);
 
     const feedbackSummary = {};
     rows.forEach(
