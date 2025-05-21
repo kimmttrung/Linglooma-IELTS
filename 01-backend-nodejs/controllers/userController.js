@@ -1,8 +1,14 @@
-const { updateUser, findUserByemail } = require('../models/userModel');
+const { updateUser, findUserByEmail, findUserByName } = require('../models/userModel');
 const bcrypt = require('bcrypt');
 
-const updateUserController = async (req, res) => {
-    const { email, username, password, gender, nationality, currentPassword, phonenumber } = req.body;
+const updateUserController = async (req, res) => {   
+    const {email, username, password, gender, nationality, phoneNumber, currentPassword } = req.body;
+
+    const user = await findUserByName(username);
+
+    if (user.rows.length > 0) {
+        return res.status(400).json({message: "Username already existed"})
+    }
 
     if (!email) {
         return res.status(400).json({ message: "Missing email" });
@@ -10,13 +16,12 @@ const updateUserController = async (req, res) => {
 
     try {
         // Tìm user hiện tại theo email
-        const userResult = await findUserByemail(email);
+        const userResult = await findUserByEmail(email);
         if (userResult.rows.length === 0) {
             return res.status(404).json({ message: "User not found" });
         }
 
         const currentUser = userResult.rows[0];
-
 
         // Nếu có yêu cầu đổi password, phải kiểm tra currentPassword
         let updatedPassword = currentUser.password;
@@ -39,10 +44,10 @@ const updateUserController = async (req, res) => {
         const updatedUsername = username?.trim() || currentUser.username;
         const updatedGender = gender?.trim() || currentUser.gender;
         const updatedNationality = nationality?.trim() || currentUser.nationality;
-        const updatedPhone = phonenumber?.trim() || currentUser.phonenumber;
+        const updatedPhone = phoneNumber?.trim() || currentUser.phonenumber;
 
         // Gọi update trong DB
-        const result = await updateUser(
+        await updateUser(
             email,
             updatedUsername,
             updatedPassword,
@@ -51,9 +56,11 @@ const updateUserController = async (req, res) => {
             updatedPhone
         );
 
+
         return res.status(200).json({ message: "Cập nhật thành công" });
     } catch (err) {
-        return res.status(500).json({ message: "Lỗi khi cập nhật dữ liệu" });
+        console.error(err);
+        res.status(500).json({message: "Error updating data"});
     }
 
 };
