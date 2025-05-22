@@ -6,7 +6,6 @@ const {
 
 const insertIncorrectPhonemeController = async (req, res) => {
   const { phoneme: errorMap, questionResultId, lessonResultId, questionId, studentId } = req.body;
-  console.log("Received insert request body:", req.body);
 
   if (!errorMap || !questionResultId || !lessonResultId || !questionId || !studentId) {
     console.warn("Missing required fields in insert request");
@@ -15,7 +14,6 @@ const insertIncorrectPhonemeController = async (req, res) => {
 
   try {
     await insertOrUpdateIncorrectPhonemes(errorMap, questionResultId, lessonResultId, questionId, studentId);
-    console.log("Insert/Update phonemes success");
     res.status(200).json({ message: "Insert/Update incorrect phonemes successfully" });
   } catch (err) {
     console.error("Insert/Update incorrect phonemes failed:", err);
@@ -25,7 +23,6 @@ const insertIncorrectPhonemeController = async (req, res) => {
 
 const getIncorrectPhonemesOfLessonController = async (req, res) => {
   const { studentId, lessonResultId } = req.params;
-
   if (!studentId || !lessonResultId) {
     return res.status(400).json({ message: "Missing parameters studentId or lessonResultId" });
   }
@@ -40,8 +37,9 @@ const getIncorrectPhonemesOfLessonController = async (req, res) => {
 };
 
 const getFeedbackSummaryController = async (req, res) => {
+  const { lessonResultId } = req.query;
   try {
-    const rows = await getTopIncorrectPhonemesWithAvgScore();
+    const rows = await getTopIncorrectPhonemesWithAvgScore(lessonResultId);
     // console.log("check rows", rows);
 
     const feedbackSummary = {};

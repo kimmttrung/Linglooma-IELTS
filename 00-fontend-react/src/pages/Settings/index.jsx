@@ -7,7 +7,7 @@ import { AuthContext } from "@/components/context/auth.context";
 
 const SettingsPage = () => {
   const navigate = useNavigate();
-  const { auth } = useContext(AuthContext);
+  const { auth, setAuth } = useContext(AuthContext);
   const username = auth?.user?.username;
 
   return (
@@ -33,6 +33,16 @@ const SettingsPage = () => {
                 <Button
                   className="px-4 py-2 rounded-lg bg-[pink-100]"
                   onClick={() => {
+                    setAuth({
+                      isAuthenticated: false,
+                      user: {
+                        email: "",
+                        username: "",
+                        phonenumber: "",
+                        gender: "",
+                        nationality: ""
+                      }
+                    })
                     localStorage.clear();
                     navigate('/')
                   }}

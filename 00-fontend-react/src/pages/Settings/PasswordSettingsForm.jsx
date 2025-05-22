@@ -5,7 +5,6 @@ import { AuthContext } from '@/components/context/auth.context';
 
 
 const PasswordSettingsForm = () => {
-    const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
 
     const { auth, setAuth } = useContext(AuthContext);
 
@@ -68,8 +67,8 @@ const PasswordSettingsForm = () => {
                     phonenumber: formData.phonenumber
                 };
 
-                // ✅ Update localStorage
-                localStorage.setItem("user", JSON.stringify(updatedUser));
+                // // ✅ Update localStorage
+                // localStorage.setItem("user", JSON.stringify(updatedUser));
 
                 // ✅ Update Context
                 setAuth(prev => ({

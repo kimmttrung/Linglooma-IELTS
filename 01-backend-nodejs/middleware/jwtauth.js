@@ -9,14 +9,18 @@ const jwtauth = (req, res, next) => {
     } else {
         if (req?.headers?.authorization?.split(' ')?.[1]) {
             const token = req.headers.authorization.split(' ')[1];
-            next();
+
             // // verify token
             try {
                 const decoded = jwt.verify(token, process.env.JWT_SECRET)
                 req.user = {
                     email: decoded.email,
                     name: decoded.name,
-                }
+                    phone: decoded.phone,
+                    gender: decoded.gender,
+                    nationality: decoded.nationality,
+                };
+                next();
             } catch (error) {
                 return res.status(401).json({
                     message: "Token bị hết hạn hoặc không hợp lệ"
