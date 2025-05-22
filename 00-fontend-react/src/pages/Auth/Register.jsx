@@ -2,12 +2,9 @@ import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
-// import axios from "@/utils/axios.customize";
-import axios from "axios";
+import axios from "@/utils/axios.customize";
 
 const PageRegister = () => {
-    const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
-
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [email, setEmail] = useState("");
@@ -47,8 +44,8 @@ const PageRegister = () => {
         }
 
         try {
-            const res = await axios.post(`${API_URL}/api/register`, { email, password });
-            if (res.data.success) {
+            const res = await axios.post(`/api/register`, { email, password });
+            if (res.success) {
                 toast.success("Create new user success");
                 navigate("/login");
             } else {
