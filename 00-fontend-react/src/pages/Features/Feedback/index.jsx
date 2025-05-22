@@ -95,7 +95,7 @@ const PronunciationFeedback = () => {
             number={questionId}
             falseWords={topIncorrectPhonemes.map(({ phoneme }) => phoneme).join("; ")}
             level={getLevelFromScore(averageScores.ieltsBand)}
-            score={averageScores.ieltsBand ? averageScores.ieltsBand.toFixed(1) : 0}
+            score={averageScores.ieltsBand ? roundToHalf(averageScores.ieltsBand).toFixed(1) : "0.0"}
             feedback={feedback || "Chưa có phản hồi"}
           />
         ))}
@@ -113,4 +113,7 @@ function getLevelFromScore(score) {
   return "Beginner";
 }
 
+function roundToHalf(num) {
+  return Math.round(num * 2) / 2;
+}
 export default PronunciationFeedback;

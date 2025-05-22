@@ -70,38 +70,72 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
 
 
   const sendAudioToBackend = async () => {
-    if (!recorderRef.current) {
-      setStatus("No recording found");
-      return;
-    }
-    setStatus("Sending audio to server...");
-    try {
-      const blob = recorderRef.current.getBlob();
-      const base64Audio = await blobToBase64(blob);
+  if (!recorderRef.current) {
+    setStatus("No recording found");
+    return;
+  }
 
-      const data = await axios.post("/api/score-audio", {
-        audio: base64Audio,
-        referenceText,
-        questionId: currentQuestion?.id,
-        index: currentIndex,
+  setStatus("Sending audio to server...");
+
+  try {
+    const blob = recorderRef.current.getBlob();
+    const base64Audio = await blobToBase64(blob);
+
+    const data = await axios.post("/api/score-audio", {
+      audio: base64Audio,
+      referenceText,
+      questionId: currentQuestion?.id,
+      index: currentIndex,
+    });
+
+    console.log(">>> check data", data);
+
+    if (data?.wordsAssessment) {
+      setScoreData(data);
+      setStatus("Results received");
+      if (onScore) onScore(data);
+
+      await axios.post(`/api/lessons/results`, {
+        studentId: 1,
+        lessonId: currentQuestion?.id,
+        finishedTime: new Date().toISOString(),
+        averageScore: data.score,
+        feedback: data.feedback,
       });
-      console.log(">>> check data", data);
 
-      if (data?.wordsAssessment) {
-        setScoreData(data);
-        setStatus("Results received");
-        if (onScore) onScore(data);
-      } else {
-        setStatus("Lỗi: dữ liệu phản hồi không hợp lệ");
-        toast.error("Dữ liệu phản hồi không hợp lệ");
-        setScoreData(null);
-      }
-    } catch (err) {
-      setStatus("Connection error: " + err.message);
-      toast.error(err.message);
+      await axios.post(`api/questions/results`, {
+        studentId: 1,
+        lessonResultId: currentQuestion?.id,
+        questionId: currentIndex + 1,
+        ieltsBand: data.score,
+        accuracy: data.accuracyScore,
+        fluency: data.fluencyScore,
+        completeness: data.completenessScore,
+        pronunciation: data.pronScore,
+        feedback: data.feedback,
+      });
+
+      await axios.post(`/api/incorrectphonemes/add`, {
+        phoneme: data.err,
+        questionResultId: 1,
+        lessonResultId: currentQuestion?.id,
+        questionId: currentIndex + 1,
+        studentId: 1,
+      });
+      
+    } else {
+      setStatus("Lỗi: dữ liệu phản hồi không hợp lệ");
+      toast.error("Dữ liệu phản hồi không hợp lệ");
       setScoreData(null);
     }
-  };
+
+  } catch (err) {
+    setStatus("Connection error: " + err.message);
+    toast.error(err.message);
+    setScoreData(null);
+  }
+};
+
 
   return (
     <section className="p-5 bg-white rounded-lg shadow-sm max-h-full mx-auto">
