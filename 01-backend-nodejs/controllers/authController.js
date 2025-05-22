@@ -54,7 +54,10 @@ exports.login = async (req, res) => {
       // Có thể tạo JWT ở đây nếu cần
       const payload = {
         email: user.email,
-        name: user.username
+        name: user.username,
+        phone: user.phonenumber,
+        gender: user.gender,
+        nationality: user.nationality
       }
 
       const access_token = jwt.sign(
@@ -69,13 +72,13 @@ exports.login = async (req, res) => {
         access_token,
         msg: 'Login successful',
         success: true,
-        user: {
-          email: user.email,
-          name: user.username, // ← Gửi name đúng tên key mong muốn ở FE
-          phone: user.phonenumber,
-          gender: user.gender,
-          nationality: user.nationality
-        } // hoặc thêm userId, token nếu có
+        // user: {
+        //   email: user.email,
+        //   name: user.username, // ← Gửi name đúng tên key mong muốn ở FE
+        //   phone: user.phonenumber,
+        //   gender: user.gender,
+        //   nationality: user.nationality
+        // } // hoặc thêm userId, token nếu có
       });
     } else {
       res.status(401).json({ msg: 'Retriving user failed' });

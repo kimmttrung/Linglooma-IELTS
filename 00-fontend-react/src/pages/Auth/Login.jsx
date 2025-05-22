@@ -47,11 +47,6 @@ const PageLogin = () => {
                 if (res?.access_token) {
                     // Lưu access_token
                     localStorage.setItem("access_token", res.access_token);
-
-                    // (1) Nếu server trả luôn user info trong res:
-                    if (res.user) {
-                        localStorage.setItem("user", JSON.stringify(res.user));
-                    }
                 }
                 toast.success(
                     "Login success! Welcome to Linglooma", {

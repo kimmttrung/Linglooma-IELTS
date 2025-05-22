@@ -12,7 +12,6 @@ import { useParams } from "react-router-dom";
 
 
 const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentIndex }) => {
-  const API_URL = `${import.meta.env.VITE_API_HOST}:${import.meta.env.VITE_API_PORT}`;
   const [recording, setRecording] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
   const [status, setStatus] = useState("Ready to record");
@@ -71,71 +70,73 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
 
 
   const sendAudioToBackend = async () => {
-  if (!recorderRef.current) {
-    setStatus("No recording found");
-    return;
-  }
 
-  setStatus("Sending audio to server...");
 
-  try {
-    const blob = recorderRef.current.getBlob();
-    const base64Audio = await blobToBase64(blob);
-
-    const data = await axios.post("/api/score-audio", {
-      audio: base64Audio,
-      referenceText,
-      questionId: currentQuestion?.id,
-      index: currentIndex,
-    });
-
-    console.log(">>> check data", data);
-
-    if (data?.wordsAssessment) {
-      setScoreData(data);
-      setStatus("Results received");
-      if (onScore) onScore(data);
-
-      await axios.post(`/api/lessons/results`, {
-        studentId: 1,
-        lessonId: lessonId,
-        finishedTime: new Date().toISOString(),
-        averageScore: data.score,
-        feedback: data.feedback,
-      });
-
-      await axios.post(`api/questions/results`, {
-        studentId: 1,
-        lessonResultId: lessonId,
-        questionId: currentIndex + 1,
-        ieltsBand: data.score,
-        accuracy: data.accuracyScore,
-        fluency: data.fluencyScore,
-        completeness: data.completenessScore,
-        pronunciation: data.pronScore,
-        feedback: data.feedback,
-      });
-
-      await axios.post(`/api/incorrectphonemes/add`, {
-        phoneme: data.err,
-        questionResultId: 1,
-        lessonResultId: lessonId,
-        questionId: currentIndex + 1,
-        studentId: 1,
-      });
-      
-    } else {
-      setStatus("Lỗi: dữ liệu phản hồi không hợp lệ");
-      toast.error("Dữ liệu phản hồi không hợp lệ");
-      setScoreData(null);
+    if (!recorderRef.current) {
+      setStatus("No recording found");
+      return;
     }
 
-  } catch (err) {
-    setStatus("Connection error: " + err.message);
-    toast.error(err.message);
-    setScoreData(null);
-  }
-};
+    setStatus("Sending audio to server...");
+
+    try {
+      const blob = recorderRef.current.getBlob();
+      const base64Audio = await blobToBase64(blob);
+
+      const data = await axios.post("/api/score-audio", {
+        audio: base64Audio,
+        referenceText,
+        questionId: currentQuestion?.id,
+        index: currentIndex,
+      });
+
+      console.log(">>> check data", data);
+
+      if (data?.wordsAssessment) {
+        setScoreData(data);
+        setStatus("Results received");
+        if (onScore) onScore(data);
+
+        await axios.post(`/api/lessons/results`, {
+          studentId: 1,
+          lessonId: lessonId,
+          finishedTime: new Date().toISOString(),
+          averageScore: data.score,
+          feedback: data.feedback,
+        });
+
+        await axios.post(`api/questions/results`, {
+          studentId: 1,
+          lessonResultId: lessonId,
+          questionId: currentIndex + 1,
+          ieltsBand: data.score,
+          accuracy: data.accuracyScore,
+          fluency: data.fluencyScore,
+          completeness: data.completenessScore,
+          pronunciation: data.pronScore,
+          feedback: data.feedback,
+        });
+
+        await axios.post(`/api/incorrectphonemes/add`, {
+          phoneme: data.err,
+          questionResultId: 1,
+          lessonResultId: lessonId,
+          questionId: currentIndex + 1,
+          studentId: 1,
+        });
+
+      } else {
+        setStatus("Lỗi: dữ liệu phản hồi không hợp lệ");
+        toast.error("Dữ liệu phản hồi không hợp lệ");
+        setScoreData(null);
+      }
+
+    } catch (err) {
+      setStatus("Connection error: " + err.message);
+      toast.error(err.message);
+      setScoreData(null);
+    }
+  };
 
 
   return (
