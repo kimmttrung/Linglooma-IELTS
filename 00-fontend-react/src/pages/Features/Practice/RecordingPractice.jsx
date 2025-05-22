@@ -5,9 +5,9 @@ import Button from "@/components/ui/Button";
 import "react-tooltip/dist/react-tooltip.css";
 import HighlightTextWithTooltip from "./HighlightText";
 import TextToSpeechButton from "./TextToSpeechButton";
-// import axios from "axios";
 import axios from "@/utils/axios.customize";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
 
 
@@ -19,6 +19,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
   const [scoreData, setScoreData] = useState(null);
   const recorderRef = useRef(null);
   const audioRef = useRef(null);
+  const { lessonId } = useParams();
 
   const startRecording = async () => {
     try {
@@ -97,7 +98,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
 
       await axios.post(`/api/lessons/results`, {
         studentId: 1,
-        lessonId: currentQuestion?.id,
+        lessonId: lessonId,
         finishedTime: new Date().toISOString(),
         averageScore: data.score,
         feedback: data.feedback,
@@ -105,7 +106,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
 
       await axios.post(`api/questions/results`, {
         studentId: 1,
-        lessonResultId: currentQuestion?.id,
+        lessonResultId: lessonId,
         questionId: currentIndex + 1,
         ieltsBand: data.score,
         accuracy: data.accuracyScore,
@@ -118,7 +119,7 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
       await axios.post(`/api/incorrectphonemes/add`, {
         phoneme: data.err,
         questionResultId: 1,
-        lessonResultId: currentQuestion?.id,
+        lessonResultId: lessonId,
         questionId: currentIndex + 1,
         studentId: 1,
       });
