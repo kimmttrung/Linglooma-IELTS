@@ -51,7 +51,6 @@ const SpeakingGrid = ({ setCurrentQuestion, setCurrentIndex }) => {
         const fetchQuestions = async () => {
             try {
                 const data = await axios.get(`/api/questions/${lessonId}`);
-                console.log("API response data:", data);
 
                 // Nếu data có message và không có questions thì báo lỗi rồi return luôn
                 if (data.message && (!data.questions || !Array.isArray(data.questions))) {

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import RecordRTC from "recordrtc";
 import { FaMicrophone } from "react-icons/fa6";
 import Button from "@/components/ui/Button";
@@ -12,6 +12,7 @@ import { useParams } from "react-router-dom";
 
 
 const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentIndex }) => {
+  const [lessonImage, setLessonImage] = useState(null);
   const [recording, setRecording] = useState(false);
   const [audioURL, setAudioURL] = useState(null);
   const [status, setStatus] = useState("Ready to record");
@@ -19,6 +20,28 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
   const recorderRef = useRef(null);
   const audioRef = useRef(null);
   const { lessonId } = useParams();
+
+  useEffect(() => {
+    const fetchLessonImage = async () => {
+      try {
+        const res = await axios.get("/api/lessons/all");
+
+        const matchedLesson = res.find(
+          (lesson) => lesson.id === parseInt(lessonId)
+        );
+
+        if (matchedLesson) {
+          setLessonImage(matchedLesson.image);
+        } else {
+          toast.warn("Lesson ID not found in data.");
+        }
+      } catch (err) {
+        toast.error("Failed to load lesson data", err);
+      }
+    };
+
+    fetchLessonImage();
+  }, [lessonId]);
 
   const startRecording = async () => {
     try {
@@ -89,8 +112,6 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
         questionId: currentQuestion?.id,
         index: currentIndex,
       });
-
-      console.log(">>> check data", data);
 
       if (data?.wordsAssessment) {
         setScoreData(data);
@@ -221,9 +242,11 @@ const RecordingPractice = ({ currentQuestion, referenceText, onScore, currentInd
           />
         )}
       </div>
-      <div className="w-full mt-5">
-        <img src="/images/family.jpg" alt="" width={"500px"} height={"300px"} />
-      </div>
+      {lessonImage && (
+        <div className="w-full mt-5 flex justify-center">
+          <img src={lessonImage} alt="Lesson illustration" width="400" height="250" className="rounded shadow" />
+        </div>
+      )}
     </section>
   );
 };
