@@ -1,6 +1,10 @@
-import React from 'react';
+import { AuthContext } from '@/components/context/auth.context';
+import React, { useContext } from 'react';
 
 const ViewResultsPage = () => {
+  const { auth } = useContext(AuthContext);
+  const name = auth?.user?.username;
+
   const results = [
     { id: 1, name: 'Bài 1 - Technology', date: 'dd/mm/yyyy', score: '70%' },
     { id: 2, name: 'Bài 2 - Environment', date: 'dd/mm/yyyy', score: '100%' },
@@ -19,7 +23,7 @@ const ViewResultsPage = () => {
         <h1 className="text-2xl font-bold text-slate-800">Result</h1>
         <div className="flex items-center space-x-2">
           <img src="/images/img_animenamngau001fotor20250511114918_1.png" alt="" height={"40"} width={"40"} />
-          <span className="text-sm font-medium text-gray-700">Detina</span>
+          <span className="text-sm font-medium text-gray-700">{name}</span>
         </div>
       </div>
 

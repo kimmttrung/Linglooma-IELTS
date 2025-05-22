@@ -68,7 +68,8 @@ const PageLogin = () => {
                 })
 
                 navigate("/admin/dashboard");
-                return;
+            } else {
+                toast.error(res.msg);
             }
         } catch (err) {
             if (err?.msg) {

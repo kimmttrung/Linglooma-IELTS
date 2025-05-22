@@ -33,7 +33,7 @@ const StudyPlanner = () => {
             title: "Lesson 1",
             subtitle: "Topic - Technology (Part 1 & 2 Practice)",
             time: "08:00 PM",
-            color: "bg-pink-100 text-pink-800",
+            color: "bg-purple-100 text-purple-800",
             important: true,
         },
         {
@@ -42,7 +42,7 @@ const StudyPlanner = () => {
             title: "Opinion Essay",
             subtitle: "Topic: Education systems in modern society",
             time: "09:30 PM",
-            color: "bg-blue-100 text-blue-800",
+            color: "bg-green-100 text-green-800",
         },
         {
             id: 6,
@@ -50,7 +50,7 @@ const StudyPlanner = () => {
             title: "Academic Words",
             subtitle: "List 1: Science & Technology",
             time: "07:00 AM",
-            color: "bg-yellow-100 text-yellow-800",
+            color: "bg-red-100 text-red-800",
         },
         {
             id: 7,
@@ -58,7 +58,7 @@ const StudyPlanner = () => {
             title: "Tenses Practice",
             subtitle: "Present Perfect vs Past Simple",
             time: "12:00 PM",
-            color: "bg-purple-100 text-purple-800",
+            color: "bg-orange-100 text-orange-800",
         },
         {
             id: 8,
@@ -82,7 +82,7 @@ const StudyPlanner = () => {
             title: "Mock Interview",
             subtitle: "Topic - Environment & Global Warming",
             time: "06:00 PM",
-            color: "bg-pink-100 text-pink-800",
+            color: "bg-purple-100 text-purple-800",
             important: true,
         },
         {
@@ -99,8 +99,8 @@ const StudyPlanner = () => {
             title: "Problem-Solution Essay",
             subtitle: "Topic: Traffic Congestion",
             time: "01:30 PM",
-            color: "bg-blue-100 text-blue-800",
-        },
+            color: "bg-green-100 text-green-800",
+        }
     ]
 
     return (
