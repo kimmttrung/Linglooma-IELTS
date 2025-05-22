@@ -1,13 +1,13 @@
 const { updateUser, findUserByEmail, findUserByName } = require('../models/userModel');
 const bcrypt = require('bcrypt');
 
-const updateUserController = async (req, res) => {   
-    const {email, username, password, gender, nationality, phoneNumber, currentPassword } = req.body;
+const updateUserController = async (req, res) => {
+    const { email, username, password, gender, nationality, phoneNumber, currentPassword } = req.body;
 
     const user = await findUserByName(username);
 
     if (user.rows.length > 0) {
-        return res.status(400).json({message: "Username already existed"})
+        return res.status(400).json({ message: "Username already existed" })
     }
 
     if (!email) {
@@ -64,11 +64,16 @@ const updateUserController = async (req, res) => {
             });
     } catch (err) {
         console.error(err);
-        res.status(500).json({message: "Error updating data"});
+        res.status(500).json({ message: "Error updating data" });
     }
 
 };
 
+const getAccountController = async (req, res) => {
+    return res.status(200).json(req.user);
+
+}
+
 module.exports = {
-    updateUserController
+    updateUserController, getAccountController
 };
