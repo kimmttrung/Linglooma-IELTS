@@ -2,6 +2,7 @@ const {
   insertOrUpdateIncorrectPhonemes,
   getIncorrectPhonemesOfLesson,
   getTopIncorrectPhonemesWithAvgScore,
+  getResultViews,
 } = require("../models/incorrectphonemesModel");
 
 const insertIncorrectPhonemeController = async (req, res) => {
@@ -83,8 +84,28 @@ const getFeedbackSummaryController = async (req, res) => {
   }
 };
 
+const getLessonsSummaryController = async (req, res) => {
+  try {
+    const data = await getResultViews();
+
+    // Format latestFinishedTime thành ISO string nếu có
+    const formattedData = data.map(item => ({
+      lessonId: item.lessonId,
+      lessonName: item.lessonName,
+      latestFinishedTime: item.latestFinishedTime ? item.latestFinishedTime.toISOString() : null,
+      averageScore: item.averageScore,
+    }));
+
+    res.json(formattedData);
+  } catch (error) {
+    console.error('Error fetching lessons summary:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   insertIncorrectPhonemeController,
   getIncorrectPhonemesOfLessonController,
   getFeedbackSummaryController,
+  getLessonsSummaryController,
 };

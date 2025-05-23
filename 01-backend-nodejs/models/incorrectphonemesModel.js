@@ -171,9 +171,32 @@ const getTopIncorrectPhonemesWithAvgScore = async (lessonResultId) => {
   }
 };
 
+const getResultViews = async () => {
+  const query = `
+SELECT
+  l.id AS "lessonId",
+  l.name AS "lessonName",
+  MAX(lr."finishedtime") AS "latestFinishedTime",
+  AVG(lr."averagescore") AS "averageScore"
+FROM lesson l
+INNER JOIN lessonResult lr ON l.id = lr.lessonid
+GROUP BY l.id, l.name
+ORDER BY l.id;
+  `;
+
+  const { rows } = await client.query(query);
+  return rows.map(row => ({
+    lessonId: row.lessonId,
+    lessonName: row.lessonName,
+    latestFinishedTime: row.latestFinishedTime,
+    averageScore: row.averageScore !== null ? parseFloat(row.averageScore) : null,
+  }));
+};
+
 module.exports = {
   upsertIncorrectPhoneme,
   insertOrUpdateIncorrectPhonemes,
   getIncorrectPhonemesOfLesson,
   getTopIncorrectPhonemesWithAvgScore,
+  getResultViews,
 };
