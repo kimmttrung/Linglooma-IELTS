@@ -1,4 +1,4 @@
-describe('🔐 Form đổi mật khẩu - PasswordSettingsForm', () => {
+describe('Form đổi mật khẩu - PasswordSettingsForm', () => {
   beforeEach(() => {
     // Mock API lấy thông tin user nếu có
     cy.intercept('GET', '/api/users/account', {
@@ -18,7 +18,7 @@ describe('🔐 Form đổi mật khẩu - PasswordSettingsForm', () => {
     cy.visit('admin/settings');
   });
 
-  it('🧩 Hiển thị đầy đủ các trường và nút', () => {
+  it('Hiển thị đầy đủ các trường và nút', () => {
     cy.get('form').eq(1).within(() => {
       cy.get('label').contains('User Name').should('exist');
       cy.get('input#username').should('exist');
@@ -38,7 +38,7 @@ describe('🔐 Form đổi mật khẩu - PasswordSettingsForm', () => {
     });
   });
 
-  it('❌ Báo lỗi khi mật khẩu mới và xác nhận không khớp', () => {
+  it('Báo lỗi khi mật khẩu mới và xác nhận không khớp', () => {
     // Mock lại API trước khi reload để tránh lỗi Network Error
     cy.intercept('GET', '/api/users/account', {
       statusCode: 200,
@@ -61,7 +61,7 @@ describe('🔐 Form đổi mật khẩu - PasswordSettingsForm', () => {
     cy.contains('New password and confirm password do not match').should('be.visible');
   });
 
-  it('✅ Gửi đúng payload khi đổi mật khẩu thành công', () => {
+  it('Gửi đúng payload khi đổi mật khẩu thành công', () => {
     cy.intercept('PUT', '/api/users/update', {
       statusCode: 200,
       body: { success: true }
@@ -87,7 +87,7 @@ describe('🔐 Form đổi mật khẩu - PasswordSettingsForm', () => {
     cy.contains('Cập nhật thành công').should('be.visible');
   });
 
-  it('💥 Hiển thị lỗi khi API trả về lỗi', () => {
+  it('Hiển thị lỗi khi API trả về lỗi', () => {
     cy.intercept('PUT', '/api/users/update', {
       statusCode: 400,
       body: { message: 'Lỗi: Sai mật khẩu hiện tại' }
@@ -102,7 +102,7 @@ describe('🔐 Form đổi mật khẩu - PasswordSettingsForm', () => {
     cy.contains('Lỗi: Sai mật khẩu hiện tại').should('be.visible');
   });
 
-  it('🌀 Hiển thị loading khi đang gửi dữ liệu (giả lập delay)', () => {
+  it('Hiển thị loading khi đang gửi dữ liệu (giả lập delay)', () => {
     cy.intercept('PUT', '/api/users/update', (req) => {
       req.reply((res) => {
         res.delay = 1500;
@@ -122,7 +122,7 @@ describe('🔐 Form đổi mật khẩu - PasswordSettingsForm', () => {
     cy.contains('Cập nhật thành công').should('be.visible');
   });
 
-  it('🔄 Reset các trường mật khẩu sau khi đổi thành công', () => {
+  it('Reset các trường mật khẩu sau khi đổi thành công', () => {
     cy.intercept('PUT', '/api/users/update', {
       statusCode: 200,
       body: { success: true }
