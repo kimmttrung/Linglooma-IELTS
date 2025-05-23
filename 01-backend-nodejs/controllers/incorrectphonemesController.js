@@ -2,6 +2,7 @@ const {
   insertOrUpdateIncorrectPhonemes,
   getIncorrectPhonemesOfLesson,
   getTopIncorrectPhonemesWithAvgScore,
+  getResultViews,
 } = require("../models/incorrectphonemesModel");
 
 const insertIncorrectPhonemeController = async (req, res) => {
@@ -48,22 +49,22 @@ const getFeedbackSummaryController = async (req, res) => {
         questionid,
         phoneme,
         total_incorrect,
-        avg_ieltsband,
-        avg_accuracy,
-        avg_fluency,
-        avg_completeness,
-        avg_pronunciation,
+        ieltsband,
+        accuracy,
+        fluency,
+        completeness,
+        pronunciation,
         avg_feedback,
       }) => {
         if (!feedbackSummary[questionid]) {
           feedbackSummary[questionid] = {
             questionId: questionid,
             averageScores: {
-              ieltsBand: avg_ieltsband || null,
-              accuracy: avg_accuracy || null,
-              fluency: avg_fluency || null,
-              completeness: avg_completeness || null,
-              pronunciation: avg_pronunciation || null,
+              ieltsBand: ieltsband || null,
+              accuracy: accuracy || null,
+              fluency: fluency || null,
+              completeness: completeness || null,
+              pronunciation: pronunciation || null,
             },
             feedback: avg_feedback || "",
             topIncorrectPhonemes: [],
@@ -83,8 +84,28 @@ const getFeedbackSummaryController = async (req, res) => {
   }
 };
 
+const getLessonsSummaryController = async (req, res) => {
+  try {
+    const data = await getResultViews();
+
+    // Format latestFinishedTime thành ISO string nếu có
+    const formattedData = data.map(item => ({
+      lessonId: item.lessonId,
+      lessonName: item.lessonName,
+      latestFinishedTime: item.latestFinishedTime ? item.latestFinishedTime.toISOString() : null,
+      averageScore: item.averageScore,
+    }));
+
+    res.json(formattedData);
+  } catch (error) {
+    console.error('Error fetching lessons summary:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 module.exports = {
   insertIncorrectPhonemeController,
   getIncorrectPhonemesOfLessonController,
   getFeedbackSummaryController,
+  getLessonsSummaryController,
 };

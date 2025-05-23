@@ -67,10 +67,8 @@ const PasswordSettingsForm = () => {
                     phonenumber: formData.phonenumber
                 };
 
-                // // ✅ Update localStorage
-                // localStorage.setItem("user", JSON.stringify(updatedUser));
 
-                // ✅ Update Context
+                //  Update Context
                 setAuth(prev => ({
                     ...prev,
                     user: updatedUser
