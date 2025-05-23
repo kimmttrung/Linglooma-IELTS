@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import RecordRTC from "recordrtc";
 import { FaMicrophone } from "react-icons/fa6";
 import Button from "@/components/ui/Button";
-import "react-tooltip/dist/react-tooltip.css";
 import HighlightTextWithTooltip from "./HighlightText";
 import TextToSpeechButton from "./TextToSpeechButton";
 import axios from "@/utils/axios.customize";

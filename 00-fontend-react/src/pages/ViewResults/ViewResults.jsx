@@ -122,9 +122,9 @@ const ViewResultsPage = () => {
           <thead className="bg-white">
             <tr>
               <th className="border px-3 py-2">STT</th>
-              <th className="border px-3 py-2">Tên bài kiểm tra nói</th>
-              <th className="border px-3 py-2">Ngày kiểm tra</th>
-              <th className="border px-3 py-2 flex justify-center">Điểm trung bình</th>
+              <th className="border px-3 py-2">Speaking Test</th>
+              <th className="border px-3 py-2">Date</th>
+              <th className="border px-3 py-2 flex justify-center">Overall Average Score</th>
             </tr>
           </thead>
           <tbody>
@@ -149,7 +149,7 @@ const ViewResultsPage = () => {
             ))}
             <tr className="font-semibold">
               <td className="border px-3 py-2" colSpan="3">
-                Tổng điểm trung bình
+                Total Average Score
               </td>
               <td className="border px-3 py-2 flex justify-center items-center space-x-2">
                 <span>{averageScore}</span>
