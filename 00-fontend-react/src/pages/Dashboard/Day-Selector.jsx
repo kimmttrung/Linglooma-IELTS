@@ -18,6 +18,8 @@ const DaySelector = () => {
         { number: 21, day: "Wed" },
         { number: 22, day: "Thu" },
         { number: 23, day: "Fri" },
+        { number: 24, day: "Sat" },
+        { number: 25, day: "Sun" },
     ]
 
     return (
