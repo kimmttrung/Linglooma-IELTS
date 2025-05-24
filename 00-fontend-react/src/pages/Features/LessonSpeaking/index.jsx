@@ -41,13 +41,13 @@ const LessonSpeaking = () => {
                     lessonId={4}
                 />
                 <CourseCard
-                    title="Bài 5 Family"
-                    imageUrl="/images/family.jpg"
+                    title="Bài 5 Travel"
+                    imageUrl="https://cdn-images.vtv.vn/2019/12/10/untitled-15759663392891201724352.png"
                     lessonId={5}
                 />
                 <CourseCard
                     title="Bài 6 Love"
-                    imageUrl="/images/ewy1649149061.jpg"
+                    imageUrl="https://bazaarvietnam.vn/wp-content/uploads/2023/04/HBVN-vuong-tu-ky-vuong-ngoc-van-trong-tinh-yeu-anh-danh-cho-em.jpg"
                     lessonId={6}
                 />
             </div>
